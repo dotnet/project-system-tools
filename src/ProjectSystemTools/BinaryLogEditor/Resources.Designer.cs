@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools {
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class VSPackage {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal VSPackage() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.VisualStudio.ProjectSystem.Tools.VSPackage", typeof(VSPackage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,39 +61,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project System Tools.
+        ///   Looks up a localized string similar to Bad creation flags..
         /// </summary>
-        internal static string _110 {
+        internal static string BadCreateFlags {
             get {
-                return ResourceManager.GetString("110", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Tools for working with C#, VisualBasic, and F# projects..
-        /// </summary>
-        internal static string _112 {
-            get {
-                return ResourceManager.GetString("112", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MSBuild Binary Log Viewer.
-        /// </summary>
-        internal static string _113 {
-            get {
-                return ResourceManager.GetString("113", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon _400 {
-            get {
-                object obj = ResourceManager.GetObject("400", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ResourceManager.GetString("BadCreateFlags", resourceCulture);
             }
         }
     }

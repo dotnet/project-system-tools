@@ -8,6 +8,7 @@ using Task = System.Threading.Tasks.Task;
 using System.ComponentModel.Design;
 using Microsoft.Internal.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -20,6 +21,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
     [Guid(PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(BuildLoggingToolWindow), Style = VsDockStyle.Tabbed, Window = ToolWindowGuids.Outputwindow)]
+    [ProvideEditorExtension(typeof(BinaryLogEditorFactory), ".binlog", 0x10, NameResourceID = 113)]
+    [ProvideEditorLogicalView(typeof(BinaryLogEditorFactory), LogicalViewID.Designer)]
+    [ProvideEditorLogicalView(typeof(BinaryLogEditorFactory), LogicalViewID.Code)]
+    [ProvideEditorFactory(typeof(BinaryLogEditorFactory), 113)]
     public sealed class ProjectSystemToolsPackage : AsyncPackage
     {
         public const string PackageGuidString = "e3bfb509-b8fd-4692-b4c4-4b2f6ed62bc7";
@@ -36,6 +41,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
         public const int BuildLoggingToolbarMenuId = 0x0100;
         public const int BuildLoggingContextMenuId = 0x0105;
+
+        public const string BinaryLogEditorFactoryGuidString = "C5A2E7ED-F7E7-4199-BD68-17668AA2F2D4";
+
+        public static readonly Guid LogicalViewIdAnyGuid = new Guid(LogicalViewID.Any);
+        public static readonly Guid LogicalViewIdPrimaryGuid = new Guid(LogicalViewID.Primary);
+        public static readonly Guid LogicalViewIdDebuggingGuid = new Guid(LogicalViewID.Debugging);
+        public static readonly Guid LogicalViewIdCodeGuid = new Guid(LogicalViewID.Code);
+        public static readonly Guid LogicalViewIdDesignerGuid = new Guid(LogicalViewID.Designer);
+        public static readonly Guid LogicalViewIdTextViewGuid = new Guid(LogicalViewID.TextView);
 
         public static IVsUIShell VsUIShell { get; private set; }
 
@@ -59,6 +73,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
             var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             mcs?.AddCommand(new MenuCommand(ShowBuildLoggingToolWindow, new CommandID(CommandSetGuid, BuildLoggingCommandId)));
+
+            RegisterEditorFactory(new BinaryLogEditorFactory());
 
             Instance = this;
         }
