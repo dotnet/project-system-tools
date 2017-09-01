@@ -40,8 +40,36 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public void Initialize(IEventSource eventSource)
         {
             eventSource.ProjectStarted += ProjectStarted;
+            eventSource.TargetStarted += TargetStarted;
+            eventSource.TargetFinished += TargetFinished;
             eventSource.ProjectFinished += ProjectFinished;
             _binaryLogger.Initialize(eventSource);
+        }
+
+        private void TargetStarted(object sender, TargetStartedEventArgs e)
+        {
+            if (_build == null)
+            {
+                return;
+            }
+
+            if (string.Compare(_build.Project, Path.GetFileNameWithoutExtension(e.ProjectFile), StringComparison.Ordinal) == 0)
+            {
+                _build.TargetStarted(e.TargetName, e.TargetFile, e.Timestamp);
+            }
+        }
+
+        private void TargetFinished(object sender, TargetFinishedEventArgs e)
+        {
+            if (_build == null)
+            {
+                return;
+            }
+
+            if (string.Compare(_build.Project, Path.GetFileNameWithoutExtension(e.ProjectFile), StringComparison.Ordinal) == 0)
+            {
+                _build.TargetCompleted(e.TargetName, e.TargetFile, e.Timestamp);
+            }
         }
 
         private void ProjectFinished(object sender, ProjectFinishedEventArgs e)
@@ -51,8 +79,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
                 return;
             }
 
-            _build.Finish(e.Succeeded, e.Timestamp, _logPath);
-            _dataSource.NotifyChange();
+
+            _build.BuildFinish(e.Succeeded, e.Timestamp, _logPath);
+            _dataSource.NotifyBuildCompleted(_build);
         }
 
         private static IEnumerable<string> GatherDimensions(IDictionary<string, string> globalProperties)

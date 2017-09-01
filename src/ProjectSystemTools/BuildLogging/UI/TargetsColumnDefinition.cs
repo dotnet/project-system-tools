@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
 using Microsoft.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.Utilities;
 
@@ -28,10 +29,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
         public override bool TryCreateStringContent(ITableEntryHandle entry, bool truncatedText, bool singleColumnView, out string content)
         {
             if (entry.TryGetValue(TableKeyNames.Targets, out var value) && value != null && 
-                value is IEnumerable<string> targets &&
+                value is IDictionary<string, TargetInfo> targets &&
                 targets.Any())
             {
-                content = targets.Aggregate((current, next) => $"{current};{next}");
+                content = targets.Select(kvp => kvp.Value.Name).Aggregate((current, next) => $"{current};{next}");
                 return true;
             }
 

@@ -59,6 +59,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             NotifyChange();
         }
 
+        internal void NotifyBuildCompleted(Build build)
+        {
+            OnBuildCompleted?.Invoke(this, new BuildCompletedEventArgs(build));
+            NotifyChange();
+        }
+
+        public event EventHandler<BuildCompletedEventArgs> OnBuildCompleted;
+
         public ILogger CreateLogger(bool isDesignTime) => new BuildTableLogger(this, isDesignTime);
 
         public IDisposable Subscribe(ITableDataSink sink)

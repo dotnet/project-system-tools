@@ -13,6 +13,8 @@ using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
 using Microsoft.VisualStudio.TextManager.Interop;
+using Microsoft.VisualStudio.ProjectSystem.Tools.Infobar;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools
 {
@@ -59,6 +61,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
         internal static ITableManagerProvider TableManagerProvider { get; private set; }
         public static IWpfTableControlProvider TableControlProvider { get; private set; }
+        internal static BuildWatcher BuildWatcher { get; private set; }
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
@@ -73,6 +76,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
             var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             mcs?.AddCommand(new MenuCommand(ShowBuildLoggingToolWindow, new CommandID(CommandSetGuid, BuildLoggingCommandId)));
+
+            //TODO Move this to a different package that loads when CPS or the native project system loads
+            var infoBarService = componentModel?.GetService<IInfoBarService>();
+            var buildTableDataSource = componentModel?.GetService<IBuildTableDataSource>();
+            var watcher = new BuildWatcher(infoBarService, buildTableDataSource);
+            BuildWatcher = watcher;
+            BuildWatcher.StartListening();
 
             RegisterEditorFactory(new BinaryLogEditorFactory());
 
