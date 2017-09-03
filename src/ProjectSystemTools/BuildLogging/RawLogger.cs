@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using Microsoft.Build.Framework;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 {
@@ -65,6 +66,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 _streamWriter = new StreamWriter(FilePath);
                 _jsonSerializer = JsonSerializer.Create();
+                _jsonSerializer.Converters.Add(new StringEnumConverter(true));
                 _jsonWriter = new JsonTextWriter(_streamWriter) {Formatting = Formatting.Indented};
                 _jsonWriter.WriteStartArray();
             }
@@ -262,12 +264,37 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                     break;
 
                 case BuildMessageEventArgs buildMessageEventArgs:
+                    SerializeProperty("importance", buildMessageEventArgs.Importance);
+                    WriteProperty("subcategory", buildMessageEventArgs.Subcategory);
+                    WriteProperty("code", buildMessageEventArgs.Code);
+                    WriteProperty("file", buildMessageEventArgs.File);
+                    WriteProperty("lineNumber", buildMessageEventArgs.LineNumber);
+                    WriteProperty("columnNumber", buildMessageEventArgs.ColumnNumber);
+                    WriteProperty("endLineNumber", buildMessageEventArgs.EndLineNumber);
+                    WriteProperty("endColumnNumber", buildMessageEventArgs.EndColumnNumber);
+                    WriteProperty("projectFile", buildMessageEventArgs.ProjectFile);
                     break;
 
                 case BuildWarningEventArgs buildWarningEventArgs:
+                    WriteProperty("subcategory", buildWarningEventArgs.Subcategory);
+                    WriteProperty("code", buildWarningEventArgs.Code);
+                    WriteProperty("file", buildWarningEventArgs.File);
+                    WriteProperty("lineNumber", buildWarningEventArgs.LineNumber);
+                    WriteProperty("columnNumber", buildWarningEventArgs.ColumnNumber);
+                    WriteProperty("endLineNumber", buildWarningEventArgs.EndLineNumber);
+                    WriteProperty("endColumnNumber", buildWarningEventArgs.EndColumnNumber);
+                    WriteProperty("projectFile", buildWarningEventArgs.ProjectFile);
                     break;
 
                 case BuildErrorEventArgs buildErrorEventArgs:
+                    WriteProperty("subcategory", buildErrorEventArgs.Subcategory);
+                    WriteProperty("code", buildErrorEventArgs.Code);
+                    WriteProperty("file", buildErrorEventArgs.File);
+                    WriteProperty("lineNumber", buildErrorEventArgs.LineNumber);
+                    WriteProperty("columnNumber", buildErrorEventArgs.ColumnNumber);
+                    WriteProperty("endLineNumber", buildErrorEventArgs.EndLineNumber);
+                    WriteProperty("endColumnNumber", buildErrorEventArgs.EndColumnNumber);
+                    WriteProperty("projectFile", buildErrorEventArgs.ProjectFile);
                     break;
 
                 case CustomBuildEventArgs customBuildEventArgs:
