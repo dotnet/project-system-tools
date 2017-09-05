@@ -27,6 +27,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
     [ProvideEditorLogicalView(typeof(BinaryLogEditorFactory), LogicalViewID.Designer)]
     [ProvideEditorLogicalView(typeof(BinaryLogEditorFactory), LogicalViewID.Code)]
     [ProvideEditorFactory(typeof(BinaryLogEditorFactory), 113)]
+    [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class ProjectSystemToolsPackage : AsyncPackage
     {
         public const string PackageGuidString = "e3bfb509-b8fd-4692-b4c4-4b2f6ed62bc7";
@@ -77,7 +78,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
             var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             mcs?.AddCommand(new MenuCommand(ShowBuildLoggingToolWindow, new CommandID(CommandSetGuid, BuildLoggingCommandId)));
 
-            //TODO Move this to a different package that loads when CPS or the native project system loads
             var infoBarService = componentModel?.GetService<IInfoBarService>();
             var buildTableDataSource = componentModel?.GetService<IBuildTableDataSource>();
             var watcher = new BuildWatcher(infoBarService, buildTableDataSource);

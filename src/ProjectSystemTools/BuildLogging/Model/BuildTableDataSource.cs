@@ -92,7 +92,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public void NotifyChange()
         {
             CurrentVersionNumber++;
-            _tableDataSink.FactorySnapshotChanged(this);
+
+            // Notify subscribers if they exist
+            _tableDataSink?.FactorySnapshotChanged(this);
         }
 
         public ITableEntriesSnapshot GetCurrentSnapshot()
