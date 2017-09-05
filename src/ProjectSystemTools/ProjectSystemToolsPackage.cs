@@ -1,20 +1,20 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
+using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Microsoft.VisualStudio.Shell;
-using Task = System.Threading.Tasks.Task;
-using System.ComponentModel.Design;
 using Microsoft.Internal.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
+using Microsoft.VisualStudio.ProjectSystem.Tools.Infobar;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Infobar;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
+using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools
 {
