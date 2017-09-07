@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.ProjectSystem.Tools.RemoteControl;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
-using Constants = Microsoft.VisualStudio.ProjectSystem.Tools.RemoteControl.Constants;
+using RemoteControlConstants = Microsoft.VisualStudio.ProjectSystem.Tools.RemoteControl.RemoteControlConstants;
 using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
@@ -21,14 +21,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
         private readonly IBuildTableDataSource _buildTableDataSource;
         private readonly IProjectSystemToolsSetttingsService _settings;
         private static bool IsInfoBarShowing = false;
-
+        private static bool IgnoreForSession = false;
         private static readonly InfoBarUI OpenToolWindowButton = new InfoBarUI("Show Me", InfoBarUI.UIKind.Button, async () => await LaunchToolWindowAsync());
         private static readonly InfoBarUI IgnoreButton = new InfoBarUI("Ignore", InfoBarUI.UIKind.Button, () => DisableWatcherForSession());
-        private static readonly InfoBarUI IgnoreForeverButton = new InfoBarUI("Ignore", InfoBarUI.UIKind.Button, () => DisableWatcherForAllSessions());
         private static readonly InfoBarUI CloseButton = new InfoBarUI(string.Empty, InfoBarUI.UIKind.Close, () => IsInfoBarShowing = false);
 
-        private bool TryGetDesignTimeBuildThreshHold(out double threshHold) => _settings.TryGetSetting(Constants.DesignTimeBuildThreshHold, out threshHold);
-        private bool TryGetListOfKnownTargets(out string[] knownTargetNames) => _settings.TryGetSetting(Constants.ListOfKnownTargets, out knownTargetNames);
+        private bool TryGetDesignTimeBuildThreshHold(out double threshHold) => _settings.TryGetSetting(RemoteControlConstants.DesignTimeBuildThreshHold, out threshHold);
+        private bool TryGetListOfKnownTargets(out string[] knownTargetNames) => _settings.TryGetSetting(RemoteControlConstants.ListOfKnownTargets, out knownTargetNames);
 
         [ImportingConstructor]
         public BuildWatcher(IInfoBarService infobarService, IBuildTableDataSource buildTableDataSource, IProjectSystemToolsSetttingsService settings)
@@ -53,6 +52,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
 
         private void OnBuildCompleted(object sender, BuildCompletedEventArgs e)
         {
+            if (IgnoreForSession)
+            {
+                // User has disabled infobar
+                return;
+            }
+
             if(!TryGetDesignTimeBuildThreshHold(out var threshHold))
             {
                 // couldn't get settings, do nothing
@@ -118,16 +123,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
-        private static void DisableWatcherForAllSessions()
-        {
-            // TODO  enable per session disable/enable
-            IsInfoBarShowing = false;
-        }
-
         private static void DisableWatcherForSession()
         {
-            // TODO  enable per session disable/enable
             IsInfoBarShowing = false;
+            IgnoreForSession = true;
         }
 
         private bool IsKnowTarget(string name)
