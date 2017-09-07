@@ -2,22 +2,24 @@
 
 using System;
 using System.ComponentModel.Composition;
+using System.Linq;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
+using Microsoft.VisualStudio.ProjectSystem.Tools.RemoteControl;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Threading;
+using Constants = Microsoft.VisualStudio.ProjectSystem.Tools.RemoteControl.Constants;
 using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
 {
     internal class BuildWatcher
     {
-        // TODO read this value from  the remote control file
-        private const double ThreshHold = 0.3;
+        private const string ServerPath = "DesignTimeBuildPerfHelper/Latest.xml";
         private readonly IInfoBarService _infobarService;
         private readonly IBuildTableDataSource _buildTableDataSource;
-
+        private readonly IProjectSystemToolsSetttingsService _settings;
         private static bool IsInfoBarShowing = false;
 
         private static readonly InfoBarUI OpenToolWindowButton = new InfoBarUI("Show Me", InfoBarUI.UIKind.Button, async () => await LaunchToolWindowAsync());
@@ -25,11 +27,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
         private static readonly InfoBarUI IgnoreForeverButton = new InfoBarUI("Ignore", InfoBarUI.UIKind.Button, () => DisableWatcherForAllSessions());
         private static readonly InfoBarUI CloseButton = new InfoBarUI(string.Empty, InfoBarUI.UIKind.Close, () => IsInfoBarShowing = false);
 
+        private bool TryGetDesignTimeBuildThreshHold(out double threshHold) => _settings.TryGetSetting(Constants.DesignTimeBuildThreshHold, out threshHold);
+        private bool TryGetListOfKnownTargets(out string[] knownTargetNames) => _settings.TryGetSetting(Constants.ListOfKnownTargets, out knownTargetNames);
+
         [ImportingConstructor]
-        public BuildWatcher(IInfoBarService infobarService, IBuildTableDataSource buildTableDataSource)
+        public BuildWatcher(IInfoBarService infobarService, IBuildTableDataSource buildTableDataSource, IProjectSystemToolsSetttingsService settings)
         {
             _infobarService = infobarService;
             _buildTableDataSource = buildTableDataSource;
+            _settings = settings;
+            Task.Run(() => _settings.UpdateContinuouslyAsync(ServerPath, token: default));
         }
 
         public void StartListening()
@@ -46,6 +53,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
 
         private void OnBuildCompleted(object sender, BuildCompletedEventArgs e)
         {
+            if(!TryGetDesignTimeBuildThreshHold(out var threshHold))
+            {
+                // couldn't get settings, do nothing
+                return;
+            }
+
             // run work on the threadpool
             Task.Run(async () =>
             {
@@ -61,7 +74,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
 
                     var targetElapsedTime = target.Elapsed;
                     var newPercentage = targetElapsedTime.TotalMilliseconds / totalBuildTime.TotalMilliseconds;
-                    if (newPercentage > ThreshHold && newPercentage > percentage)
+                    if (newPercentage > threshHold && newPercentage > percentage)
                     {
                         targetName = target.Name;
                         percentage = newPercentage;
@@ -119,8 +132,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
 
         private bool IsKnowTarget(string name)
         {
-            // TODO  get list of known targets from  the remote control file
-            return false;
+            // get list of known targets from  the remote control file
+            if (!TryGetListOfKnownTargets(out var knownTargetNames))
+            {
+                return false;
+            }
+
+            return knownTargetNames.Contains(name, StringComparer.OrdinalIgnoreCase);
         }
     }
 }
