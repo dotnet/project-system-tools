@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -121,12 +123,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RemoteControl
         {
             if (TryGetDesignTimeBuildThreshHold(lastSyncedSettingsRoot, out var threshHold))
             {
-                settings[Constants.DesignTimeBuildThreshHold] = threshHold;
+                settings[RemoteControlConstants.DesignTimeBuildThreshHold] = threshHold;
             }
 
             if (TryGetListOfKnownTargets(lastSyncedSettingsRoot, out var knownTargets))
             {
-                settings[Constants.ListOfKnownTargets] = threshHold;
+                settings[RemoteControlConstants.ListOfKnownTargets] = threshHold;
             }
         }
 
