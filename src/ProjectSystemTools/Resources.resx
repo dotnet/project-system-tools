@@ -120,4 +120,13 @@
   <data name="BadCreateFlags" xml:space="preserve">
     <value>Bad creation flags.</value>
   </data>
+  <data name="Ignore" xml:space="preserve">
+    <value>Ignore</value>
+  </data>
+  <data name="Show_Me" xml:space="preserve">
+    <value>Show Me</value>
+  </data>
+  <data name="Target_0_is_taking_up_1_of_the_build_time" xml:space="preserve">
+    <value>Target {0} is taking up {1:P} of the build time</value>
+  </data>
 </root>

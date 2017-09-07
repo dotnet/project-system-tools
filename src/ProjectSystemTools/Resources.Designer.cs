@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor {
+namespace Microsoft.VisualStudio.ProjectSystem.Tools {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.VisualStudio.ProjectSystem.Tools.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -66,6 +66,33 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor {
         internal static string BadCreateFlags {
             get {
                 return ResourceManager.GetString("BadCreateFlags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore.
+        /// </summary>
+        internal static string Ignore {
+            get {
+                return ResourceManager.GetString("Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Me.
+        /// </summary>
+        internal static string Show_Me {
+            get {
+                return ResourceManager.GetString("Show_Me", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target {0} is taking up {1:P} of the build time.
+        /// </summary>
+        internal static string Target_0_is_taking_up_1_of_the_build_time {
+            get {
+                return ResourceManager.GetString("Target_0_is_taking_up_1_of_the_build_time", resourceCulture);
             }
         }
     }

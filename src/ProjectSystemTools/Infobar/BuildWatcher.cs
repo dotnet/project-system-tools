@@ -22,8 +22,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
         private readonly IProjectSystemToolsSetttingsService _settings;
         private static bool IsInfoBarShowing = false;
         private static bool IgnoreForSession = false;
-        private static readonly InfoBarUI OpenToolWindowButton = new InfoBarUI("Show Me", InfoBarUI.UIKind.Button, async () => await LaunchToolWindowAsync());
-        private static readonly InfoBarUI IgnoreButton = new InfoBarUI("Ignore", InfoBarUI.UIKind.Button, () => DisableWatcherForSession());
+        private static readonly InfoBarUI OpenToolWindowButton = new InfoBarUI(Resources.Show_Me, InfoBarUI.UIKind.Button, async () => await LaunchToolWindowAsync());
+        private static readonly InfoBarUI IgnoreButton = new InfoBarUI(Resources.Ignore, InfoBarUI.UIKind.Button, () => DisableWatcherForSession());
         private static readonly InfoBarUI CloseButton = new InfoBarUI(string.Empty, InfoBarUI.UIKind.Close, () => IsInfoBarShowing = false);
 
         private bool TryGetDesignTimeBuildThreshHold(out double threshHold) => _settings.TryGetSetting(RemoteControlConstants.DesignTimeBuildThreshHold, out threshHold);
@@ -104,7 +104,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Infobar
             IsInfoBarShowing = true;
 
             await _infobarService.ShowInfoBarInGlobalViewAsync(
-                $"Target {targetName} is taking up {percentage:P} of the build time.",
+                string.Format(Resources.Target_0_is_taking_up_1_of_the_build_time, targetName, percentage),
                 OpenToolWindowButton,
                 IgnoreButton,
                 CloseButton);

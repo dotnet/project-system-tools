@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Infobar;
+using Microsoft.VisualStudio.ProjectSystem.Tools.RemoteControl;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -80,7 +81,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
             var infoBarService = componentModel?.GetService<IInfoBarService>();
             var buildTableDataSource = componentModel?.GetService<IBuildTableDataSource>();
-            var watcher = new BuildWatcher(infoBarService, buildTableDataSource);
+            var projectSystemToolsSetttingsService = componentModel?.GetService<IProjectSystemToolsSetttingsService>();
+            var watcher = new BuildWatcher(infoBarService, buildTableDataSource, projectSystemToolsSetttingsService);
             BuildWatcher = watcher;
             BuildWatcher.StartListening();
 
