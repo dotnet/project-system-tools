@@ -3,11 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel
 {
-    internal sealed class Message : NodeWithName
+    internal sealed class Message
     {
         public string Text { get; set; }
-
-        public override string LookupKey => Text;
 
         private static readonly Regex PropertyReassignment = new Regex(@"^Property reassignment: \$\(\w+\)=.+ \(previous value: .*\) at (?<File>.*) \((?<Line>\d+),(\d+)\)$", RegexOptions.Compiled);
 

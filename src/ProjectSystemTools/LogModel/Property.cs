@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel
 {
-    internal sealed class Property : Node
+    internal sealed class Property
     {
         public string Name { get; set; }
         public string Value { get; set; }

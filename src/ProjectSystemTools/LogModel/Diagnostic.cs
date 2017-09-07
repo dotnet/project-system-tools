@@ -2,7 +2,7 @@
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel
 {
-    internal sealed class Diagnostic : NodeWithName
+    internal sealed class Diagnostic
     {
         public bool IsError { get; set; }
         public DateTime Timestamp { get; set; }

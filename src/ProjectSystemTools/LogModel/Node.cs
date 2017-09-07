@@ -1,38 +1,33 @@
-﻿namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel
+﻿using System;
+using System.Collections.Immutable;
+
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel
 {
     internal abstract class Node
     {
-        private NodeWithName _parent;
+        public DateTime StartTime { get; }
+        public DateTime EndTime { get; }
+        public TimeSpan Duration => EndTime - StartTime;
 
-        public NodeWithName Parent
+        public ImmutableList<string> Messages { get; }
+
+        public bool Succeeded { get; }
+
+        protected Node(ImmutableList<string> messages, DateTime startTime, DateTime endTime, bool succeeded)
         {
-            get => _parent;
-            set
-            {
-#if DEBUG
-                if (_parent != null)
-                {
-                    throw new System.InvalidOperationException("A node is being reparented");
-                }
-#endif
-
-                _parent = value;
-            }
+            Messages = messages;
+            StartTime = startTime;
+            EndTime = endTime;
+            Succeeded = succeeded;
         }
 
-        public T GetNearestParent<T>() where T : Node
+        public string DurationText
         {
-            var current = this;
-            while (current.Parent != null)
+            get
             {
-                current = current.Parent;
-                if (current is T value)
-                {
-                    return value;
-                }
+                var result = Duration.ToString(@"s\.fff");
+                return result == "0.000" ? "" : $" ({result}s)";
             }
-
-            return null;
         }
     }
 }

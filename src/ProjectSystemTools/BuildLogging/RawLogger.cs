@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+
+using System;
 using System.Collections;
 using System.IO;
 using Microsoft.Build.Framework;
@@ -136,6 +138,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         private void WriteTaskItem(ITaskItem taskItem)
         {
+            _jsonWriter.WriteStartObject();
             WriteProperty("evaluatedInclude", taskItem.ItemSpec);
 
             _jsonWriter.WritePropertyName("metadata");
@@ -145,6 +148,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                 _jsonWriter.WritePropertyName(Convert.ToString(metadataName.Key));
                 _jsonWriter.WriteValue(Convert.ToString(metadataName.Value));
             }
+            _jsonWriter.WriteEndObject();
+            _jsonWriter.WriteEndObject();
         }
 
         private void WriteItems(IEnumerable items)

@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel
 {
-    internal sealed class Parameter : NodeWithName
+    internal sealed class Parameter
     {
     }
 }

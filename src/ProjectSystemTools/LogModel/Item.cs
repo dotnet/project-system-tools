@@ -1,14 +1,17 @@
-﻿namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel
+﻿using System.Collections.Immutable;
+
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel
 {
-    internal sealed class Item : NodeWithName
+    internal sealed class Item
     {
-        public string Text { get; set; }
+        public string Name { get; }
 
-        public string NameAndEquals => string.IsNullOrWhiteSpace(Name) ? "" : Name + " = ";
+        public ImmutableDictionary<string, string> Metadata { get; }
 
-        public override string ToString()
+        public Item(string name, ImmutableDictionary<string, string> metadata)
         {
-            return string.IsNullOrWhiteSpace(Name) ? Text : NameAndEquals + Text;
+            Name = name;
+            Metadata = metadata;
         }
     }
 }

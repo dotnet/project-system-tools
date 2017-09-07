@@ -1,13 +1,22 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel
 {
-    internal sealed class Build : NodeWithTiming
+    internal sealed class Build : Node
     {
-        public bool Succeeded { get; set; }
+        public Project Project { get; }
 
-        public ImmutableDictionary<string, string> Environment { get; set; }
+        public ImmutableDictionary<string, string> Environment { get; }
 
-        public override string ToString() => "Build " + (Succeeded ? "succeeded" : "failed");
+        public ImmutableList<EvaluatedProject> EvaluatedProjects { get; }
+
+        public Build(ImmutableList<string> messages, DateTime startTime, DateTime endTime, Project project, bool succeeded, ImmutableDictionary<string, string> environment, ImmutableList<EvaluatedProject> evaluatedProjects)
+            : base(messages, startTime, endTime, succeeded)
+        {
+            Project = project;
+            Environment = environment;
+            EvaluatedProjects = evaluatedProjects;
+        }
     }
 }
