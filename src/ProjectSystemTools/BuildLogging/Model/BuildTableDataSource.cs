@@ -50,12 +50,24 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public void Clear()
         {
+            foreach (var build in _entries)
+            {
+                build.Dispose();
+            }
             _entries = ImmutableList<Build>.Empty;
             CurrentVersionNumber++;
             NotifyChange();
         }
 
-        public ILogger CreateLogger() => new BuildTableLogger(this);
+        internal void NotifyBuildCompleted(Build build)
+        {
+            OnBuildCompleted?.Invoke(this, new BuildCompletedEventArgs(build));
+            NotifyChange();
+        }
+
+        public event EventHandler<BuildCompletedEventArgs> OnBuildCompleted;
+
+        public ILogger CreateLogger(bool isDesignTime) => new BuildTableLogger(this, isDesignTime);
 
         public IDisposable Subscribe(ITableDataSink sink)
         {
@@ -67,12 +79,22 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             return this;
         }
 
-        public void Dispose() => Manager = null;
+        public void Dispose()
+        {
+            foreach (var build in _entries)
+            {
+                build.Dispose();
+            }
+            _entries = ImmutableList<Build>.Empty;
+            Manager = null;
+        }
 
         public void NotifyChange()
         {
             CurrentVersionNumber++;
-            _tableDataSink.FactorySnapshotChanged(this);
+
+            // Notify subscribers if they exist
+            _tableDataSink?.FactorySnapshotChanged(this);
         }
 
         public ITableEntriesSnapshot GetCurrentSnapshot()

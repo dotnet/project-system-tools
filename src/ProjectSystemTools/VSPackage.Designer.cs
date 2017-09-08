@@ -79,6 +79,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MSBuild Binary Log Viewer.
+        /// </summary>
+        internal static string _113 {
+            get {
+                return ResourceManager.GetString("113", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon _400 {

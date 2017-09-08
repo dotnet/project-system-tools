@@ -117,7 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CannotSetProperty" xml:space="preserve">
+  <data name="BadCreateFlags" xml:space="preserve">
+    <value>Bad creation flags.</value>
+  </data>
+  <data name="Ignore" xml:space="preserve">
+    <value>Ignore</value>
+  </data>
+  <data name="Show_Me" xml:space="preserve">
+    <value>Show Me</value>
+  </data>
+  <data name="Target_0_is_taking_up_1_of_the_build_time" xml:space="preserve">
+    <value>Target {0} is taking up {1:P} of the build time</value>
+  </data>
+    <data name="CannotSetProperty" xml:space="preserve">
     <value>Cannot set property.</value>
   </data>
   <data name="DesignTimeHeaderLabel" xml:space="preserve">
@@ -128,6 +140,9 @@
   </data>
   <data name="ElapsedHeaderLabel" xml:space="preserve">
     <value>Elapsed</value>
+  </data>
+  <data name="LogFolderDescription" xml:space="preserve">
+    <value>Save logs to:</value>
   </data>
   <data name="OpenCommand" xml:space="preserve">
     <value>Open</value>
@@ -143,5 +158,65 @@
   </data>
   <data name="TargetsHeaderLabel" xml:space="preserve">
     <value>Targets</value>
+  </data>
+  <data name="BadCreationFlags" xml:space="preserve">
+    <value>Bad creation flags.</value>
+  </data>
+    <data name="UnexpectedMessage" xml:space="preserve">
+    <value>Unexpected message.</value>
+  </data>
+  <data name="CannotFindEvaluatedProject" xml:space="preserve">
+    <value>Cannot find evaluated project.</value>
+  </data>
+  <data name="CannotFindProject" xml:space="preserve">
+    <value>Cannot find project.</value>
+  </data>
+  <data name="DoubleCreationOfProject" xml:space="preserve">
+    <value>Double creation of project.</value>
+  </data>
+  <data name="DuplicateTarget" xml:space="preserve">
+    <value>Duplicate target.</value>
+  </data>
+  <data name="CannotFindTarget" xml:space="preserve">
+    <value>Cannot find target.</value>
+  </data>
+  <data name="DuplicateTask" xml:space="preserve">
+    <value>Duplicate task.</value>
+  </data>
+  <data name="MissingTask" xml:space="preserve">
+    <value>Missing task.</value>
+  </data>
+  <data name="CannotFindTask" xml:space="preserve">
+    <value>Cannot find task.</value>
+  </data>
+  <data name="BadMetadataContinuation" xml:space="preserve">
+    <value>Bad metadata continuation.</value>
+  </data>
+  <data name="ExpectedItemGroup" xml:space="preserve">
+    <value>Expected item group.</value>
+  </data>
+  <data name="ExpectedProperty" xml:space="preserve">
+    <value>Expected property.</value>
+  </data>
+  <data name="CannotFindProperty" xml:space="preserve">
+    <value>Cannot find property.</value>
+  </data>
+  <data name="CannotFindItem" xml:space="preserve">
+    <value>Cannot find item.</value>
+  </data>
+  <data name="ExpectedMetadata" xml:space="preserve">
+    <value>Expected metadata.</value>
+  </data>
+  <data name="CannotFindPropertyGroup" xml:space="preserve">
+    <value>Cannot find property group.</value>
+  </data>
+  <data name="UnexpectedProjectStartMessage" xml:space="preserve">
+    <value>Unexpected project start message.</value>
+  </data>
+  <data name="OverwritingMetadata" xml:space="preserve">
+    <value>Overwriting metadata.</value>
+  </data>
+  <data name="ExpectedItemGroupName" xml:space="preserve">
+    <value>Expected item group name.</value>
   </data>
 </root>

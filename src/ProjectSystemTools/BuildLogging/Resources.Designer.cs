@@ -61,6 +61,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bad creation flags..
+        /// </summary>
+        internal static string BadCreationFlags {
+            get {
+                return ResourceManager.GetString("BadCreationFlags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot set property..
         /// </summary>
         internal static string CannotSetProperty {
@@ -93,6 +102,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging {
         internal static string ElapsedHeaderLabel {
             get {
                 return ResourceManager.GetString("ElapsedHeaderLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save logs to:.
+        /// </summary>
+        internal static string LogFolderDescription {
+            get {
+                return ResourceManager.GetString("LogFolderDescription", resourceCulture);
             }
         }
         

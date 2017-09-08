@@ -1,17 +1,21 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
+using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Microsoft.VisualStudio.Shell;
-using Task = System.Threading.Tasks.Task;
-using System.ComponentModel.Design;
 using Microsoft.Internal.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
+using Microsoft.VisualStudio.ProjectSystem.Tools.Infobar;
+using Microsoft.VisualStudio.ProjectSystem.Tools.RemoteControl;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
 using Microsoft.VisualStudio.TextManager.Interop;
+using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools
 {
@@ -20,6 +24,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
     [Guid(PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(BuildLoggingToolWindow), Style = VsDockStyle.Tabbed, Window = ToolWindowGuids.Outputwindow)]
+    [ProvideEditorExtension(typeof(BinaryLogEditorFactory), ".binlog", 0x10, NameResourceID = 113)]
+    [ProvideEditorLogicalView(typeof(BinaryLogEditorFactory), LogicalViewID.Designer)]
+    [ProvideEditorLogicalView(typeof(BinaryLogEditorFactory), LogicalViewID.Code)]
+    [ProvideEditorFactory(typeof(BinaryLogEditorFactory), 113)]
+    [ProvideAutoLoad(UIContextGuids.SolutionExists)]
     public sealed class ProjectSystemToolsPackage : AsyncPackage
     {
         public const string PackageGuidString = "e3bfb509-b8fd-4692-b4c4-4b2f6ed62bc7";
@@ -30,10 +39,21 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
         public const int StartLoggingCommandId = 0x0101;
         public const int StopLoggingCommandId = 0x0102;
         public const int ClearCommandId = 0x0103;
+        public const int SaveLogsCommandId = 0x0107;
 
-        public static readonly Guid UIGroupGuid = new Guid("629080DF-2A44-40E5-9AF4-371D4B727D16");
+        public static readonly Guid UIGuid = new Guid("629080DF-2A44-40E5-9AF4-371D4B727D16");
 
         public const int BuildLoggingToolbarMenuId = 0x0100;
+        public const int BuildLoggingContextMenuId = 0x0105;
+
+        public const string BinaryLogEditorFactoryGuidString = "C5A2E7ED-F7E7-4199-BD68-17668AA2F2D4";
+
+        public static readonly Guid LogicalViewIdAnyGuid = new Guid(LogicalViewID.Any);
+        public static readonly Guid LogicalViewIdPrimaryGuid = new Guid(LogicalViewID.Primary);
+        public static readonly Guid LogicalViewIdDebuggingGuid = new Guid(LogicalViewID.Debugging);
+        public static readonly Guid LogicalViewIdCodeGuid = new Guid(LogicalViewID.Code);
+        public static readonly Guid LogicalViewIdDesignerGuid = new Guid(LogicalViewID.Designer);
+        public static readonly Guid LogicalViewIdTextViewGuid = new Guid(LogicalViewID.TextView);
 
         public static IVsUIShell VsUIShell { get; private set; }
 
@@ -43,6 +63,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
         internal static ITableManagerProvider TableManagerProvider { get; private set; }
         public static IWpfTableControlProvider TableControlProvider { get; private set; }
+        internal static BuildWatcher BuildWatcher { get; private set; }
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
@@ -57,6 +78,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
             var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             mcs?.AddCommand(new MenuCommand(ShowBuildLoggingToolWindow, new CommandID(CommandSetGuid, BuildLoggingCommandId)));
+
+            var infoBarService = componentModel?.GetService<IInfoBarService>();
+            var buildTableDataSource = componentModel?.GetService<IBuildTableDataSource>();
+            var projectSystemToolsSetttingsService = componentModel?.GetService<IProjectSystemToolsSetttingsService>();
+            var watcher = new BuildWatcher(infoBarService, buildTableDataSource, projectSystemToolsSetttingsService);
+            BuildWatcher = watcher;
+            BuildWatcher.StartListening();
+
+            RegisterEditorFactory(new BinaryLogEditorFactory());
 
             Instance = this;
         }

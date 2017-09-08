@@ -4,6 +4,18 @@
       "commandName": "Executable",
       "executablePath": "$(DevEnvDir)devenv.exe",
       "commandLineArgs": "/rootsuffix RoslynDev /log"
+    },
+    "StructuredTextLogger": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Preview\\Enterprise\\MSBuild\\15.0\\bin\\msbuild.exe",
+      "commandLineArgs": "c:\\users\\paulv\\desktop\\msbuild.binlog /v:diag /logger:StructuredTextLogger,\"Microsoft.VisualStudio.ProjectSystem.Tools.dll\";foo.structuredlog",
+      "workingDirectory": "D:\\project-system-tools\\src\\ProjectSystemTools\\bin\\Debug\\net46"
+    },
+    "RawLogger": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Preview\\Enterprise\\MSBuild\\15.0\\bin\\msbuild.exe",
+      "commandLineArgs": "c:\\users\\paulv\\desktop\\msbuild.binlog /noconlog /logger:RawLogger,\"Microsoft.VisualStudio.ProjectSystem.Tools.dll\";foo.json",
+      "workingDirectory": "D:\\project-system-tools\\src\\ProjectSystemTools\\bin\\Debug\\net46"
     }
   }
 }
