@@ -61,6 +61,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bad creation flags..
+        /// </summary>
+        internal static string BadCreationFlags {
+            get {
+                return ResourceManager.GetString("BadCreationFlags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot set property..
         /// </summary>
         internal static string CannotSetProperty {
