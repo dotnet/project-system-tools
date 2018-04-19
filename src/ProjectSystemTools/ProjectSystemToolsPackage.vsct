@@ -47,6 +47,9 @@
       <Group guid="UIGuid" id="MessageListToolbarGroupId" priority="0x0000">
         <Parent guid="UIGuid" id="MessageListToolbarMenuId"/>
       </Group>
+      <Group guid="UIGuid" id="ProjectQueryCommandGroupId" priority="0x0200">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      </Group>
     </Groups>
     <Buttons>
       <Button guid="CommandSetGuid" id="BuildLoggingCommandId" type="Button">
@@ -111,6 +114,16 @@
           <ButtonText>Build Log Message List</ButtonText>
         </Strings>
       </Button>
+      <Button guid="CommandSetGuid" id="QueryMSBuildPropertyCommandId" type="Button">
+        <Strings>
+          <ButtonText>Get MSBuild Property...</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="CommandSetGuid" id="QueryOutputGroupCommandId" type="Button">
+        <Strings>
+          <ButtonText>Get Output Group...</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
     <Combos>
       <Combo guid="CommandSetGuid" id="BuildTypeComboCommandId" defaultWidth="150" type="DropDownCombo" idCommandList="BuildTypeComboGetListCommandId">
@@ -166,6 +179,12 @@
     <CommandPlacement guid="guidVSStd2K" id="cmdidErrorListShowMessages" priority="0x0100">
       <Parent guid="UIGuid" id="MessageListToolbarGroupId"/>
     </CommandPlacement>
+    <CommandPlacement guid="CommandSetGuid" id="QueryMSBuildPropertyCommandId" priority="0x0010">
+      <Parent guid="UIGuid" id="ProjectQueryCommandGroupId"/>
+    </CommandPlacement>
+    <CommandPlacement guid="CommandSetGuid" id="QueryOutputGroupCommandId" priority="0x0020">
+      <Parent guid="UIGuid" id="ProjectQueryCommandGroupId"/>
+    </CommandPlacement>
   </CommandPlacements>
   <Symbols>
     <GuidSymbol name="PackageGuid" value="{e3bfb509-b8fd-4692-b4c4-4b2f6ed62bc7}" />
@@ -182,6 +201,8 @@
       <IDSymbol name="ExploreLogsCommandId" value="0x0109"/>
       <IDSymbol name="AddLogCommandId" value="0x010a"/>
       <IDSymbol name="MessageListCommandId" value="0x010b" />
+      <IDSymbol name="QueryMSBuildPropertyCommandId" value="0x010c" />
+      <IDSymbol name="QueryOutputGroupCommandId" value="0x010d" />
     </GuidSymbol>
     <GuidSymbol name="UIGuid" value="{629080DF-2A44-40E5-9AF4-371D4B727D16}">
       <IDSymbol name="BuildLoggingToolbarMenuId" value="0x0100" />
@@ -193,6 +214,7 @@
       <IDSymbol name="MessageListToolbarMenuId" value="0x0106" />
       <IDSymbol name="MessageListToolbarGroupId" value="0x0107" />
       <IDSymbol name="WindowCommandGroupId" value="0x0108" />
+      <IDSymbol name="ProjectQueryCommandGroupId" value="0x0109" />
     </GuidSymbol>
     <GuidSymbol name="ImageCatalogGuid" value="{ae27a6b0-e345-4288-96df-5eaf394ee369}">
       <IDSymbol name="Play" value="2356" />
