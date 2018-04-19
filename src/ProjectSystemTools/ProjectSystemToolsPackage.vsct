@@ -32,6 +32,9 @@
       </Menu>
     </Menus>
     <Groups>
+      <Group guid="UIGuid" id="WindowCommandGroupId" priority="0x0100">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_WINDOWS" />
+      </Group>
       <Group guid="UIGuid" id="BuildLoggingToolbarGroupId" priority="0x0000">
         <Parent guid="UIGuid" id="BuildLoggingToolbarMenuId"/>
       </Group>
@@ -118,8 +121,8 @@
     </Combos>
   </Commands>
   <CommandPlacements>
-    <CommandPlacement guid="CommandSetGuid" id="BuildLoggingCommandId" priority="0x0100">
-      <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+    <CommandPlacement guid="CommandSetGuid" id="BuildLoggingCommandId" priority="0x0010">
+      <Parent guid="UIGuid" id="WindowCommandGroupId" />
     </CommandPlacement>
     <CommandPlacement guid="CommandSetGuid" id="StartLoggingCommandId" priority="0x0000">
       <Parent guid="UIGuid" id="BuildLoggingToolbarGroupId" />
@@ -142,8 +145,8 @@
     <CommandPlacement guid="CommandSetGuid" id="ExploreLogsCommandId" priority="0x0020">
       <Parent guid="UIGuid" id="BuildLoggingContextGroupId"/>
     </CommandPlacement>
-    <CommandPlacement guid="CommandSetGuid" id="BuildLogExplorerCommandId" priority="0x0100">
-      <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+    <CommandPlacement guid="CommandSetGuid" id="BuildLogExplorerCommandId" priority="0x0020">
+      <Parent guid="UIGuid" id="WindowCommandGroupId" />
     </CommandPlacement>
     <CommandPlacement guid="CommandSetGuid" id="AddLogCommandId" priority="0x0000">
       <Parent guid="UIGuid" id="BuildLogExplorerToolbarGroupId" />
@@ -151,8 +154,8 @@
     <CommandPlacement guid="CommandSetGuid" id="ClearCommandId" priority="0x0010">
       <Parent guid="UIGuid" id="BuildLogExplorerToolbarGroupId" />
     </CommandPlacement>
-    <CommandPlacement guid="CommandSetGuid" id="MessageListCommandId" priority="0x0100">
-      <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+    <CommandPlacement guid="CommandSetGuid" id="MessageListCommandId" priority="0x0030">
+      <Parent guid="UIGuid" id="WindowCommandGroupId" />
     </CommandPlacement>
     <CommandPlacement guid="guidVSStd2K" id="cmdidErrorListShowErrors" priority="0x0100">
       <Parent guid="UIGuid" id="MessageListToolbarGroupId"/>
@@ -189,6 +192,7 @@
       <IDSymbol name="BuildLogExplorerToolbarGroupId" value="0x0105" />
       <IDSymbol name="MessageListToolbarMenuId" value="0x0106" />
       <IDSymbol name="MessageListToolbarGroupId" value="0x0107" />
+      <IDSymbol name="WindowCommandGroupId" value="0x0108" />
     </GuidSymbol>
     <GuidSymbol name="ImageCatalogGuid" value="{ae27a6b0-e345-4288-96df-5eaf394ee369}">
       <IDSymbol name="Play" value="2356" />
