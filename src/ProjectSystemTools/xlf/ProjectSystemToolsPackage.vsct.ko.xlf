@@ -97,6 +97,16 @@
         <target state="new">Build Log Message List</target>
         <note />
       </trans-unit>
+      <trans-unit id="QueryMSBuildPropertyCommandId|ButtonText">
+        <source>Get MSBuild Property...</source>
+        <target state="new">Get MSBuild Property...</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="QueryOutputGroupCommandId|ButtonText">
+        <source>Get Output Group...</source>
+        <target state="new">Get Output Group...</target>
+        <note />
+      </trans-unit>
     </body>
   </file>
 </xliff>
