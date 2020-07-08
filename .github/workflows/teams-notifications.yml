@@ -13,6 +13,5 @@ jobs:
     steps:
       - name: Notify
         uses: davidwengier/PostAdaptiveCard@v1.0.0
-        if: github.repository == 'dotnet/project-system-tools'
         with:
           webhook-uri: ${{ secrets.TeamsWebhook }}
