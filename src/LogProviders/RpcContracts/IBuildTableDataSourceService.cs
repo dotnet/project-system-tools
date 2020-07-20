@@ -7,7 +7,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
 {
     public interface IBuildTableDataSourceService
     {
-        Task<bool> IsLogging { get; }
+        Task<bool> IsLogging();
 
         Task<bool> Start();  // Should this be void return type?
 
@@ -19,7 +19,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
 
         Task<bool> NotifyBuildFinished();  // Should this be void return type?
 
-        Task<Log> RetrieveLogForBuild();
+        Task<Log> RetrieveLogForBuild(BuildHandle handle);
 
+        Task<bool> SaveBuildLogToServer();  // Would it be a good idea to have this?
     }
 }

@@ -29,4 +29,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Utilities" Version="$(MicrosoftVisualStudioUtilitiesVersion)" />
     <PackageReference Include="System.Composition" Version="$(SystemCompositionVersion)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LogModel\LogModel.csproj" />
+  </ItemGroup>
 </Project>
