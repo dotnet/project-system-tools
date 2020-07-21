@@ -1,0 +1,60 @@
+[1mdiff --git a/src/LogProviders/RpcContracts/IBuildTableDataSourceService.cs b/src/LogProviders/RpcContracts/IBuildTableDataSourceService.cs[m
+[1mindex 5d4db3f..6a061f2 100644[m
+[1m--- a/src/LogProviders/RpcContracts/IBuildTableDataSourceService.cs[m
+[1m+++ b/src/LogProviders/RpcContracts/IBuildTableDataSourceService.cs[m
+[36m@@ -7,20 +7,54 @@[m [mnamespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts[m
+ {[m
+     public interface IBuildTableDataSourceService[m
+     {[m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        /// Returns whether or not the build logging window is currently tracking logs or not[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        /// <returns>True if build logging window is tracking logs and false otherwise</returns>[m
+         Task<bool> IsLogging();[m
+ [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        /// Tell build logging to start tracking logs[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        /// <returns>True is operation succeeded and false if not</returns>[m
+         Task<bool> Start();  // Should this be void return type?[m
+ [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        /// Tell build logging to stop tracking logs[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        /// <returns>True if operation succeeded and false if not</returns>[m
+         Task<bool> Stop();  // Should this be void return type?[m
+ [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        /// Tell build logging to clear out all the accumulated logs from the build logging window[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        /// <returns>True if operation succeeded and false if not</returns>[m
+         Task<bool> Clear();  // Would it be a good idea to have this? Technically the client could probably handle that logic and just clear the UI[m
+ [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        /// Send a notification through that a build has started[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        /// <returns>A handle that the user can use to retrieve the given build</returns>[m
+         Task<BuildHandle> NotifyBuildStart();[m
+ [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        /// Send a notification through that a build has finished[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        /// <returns>True if operation succeeded and false if not</returns>[m
+         Task<bool> NotifyBuildFinished();  // Should this be void return type?[m
+ [m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        /// Gives the user a log of a requested build[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        /// <param name="handle">an ID (type BuildHandle) used to retrieve a unique log for a build</param>[m
+[32m+[m[32m        /// <returns>The log tied to the requested BuildHandle</returns>[m
+         Task<Log> RetrieveLogForBuild(BuildHandle handle);[m
+ [m
+[31m-        Task<bool> SaveBuildLogToServer();  // Would it be a good idea to have this?[m
+[32m+[m[32m        /// <summary>[m
+[32m+[m[32m        /// Gives the user a requested build[m
+[32m+[m[32m        /// </summary>[m
+[32m+[m[32m        /// <param name="handle">an ID (type BuildHandle) used to retrieve a unique build</param>[m
+[32m+[m[32m        /// <returns>The Build tied to the requested BuildHandle</returns>[m
+[32m+[m[32m        Task<Build> RetrieveBuild(BuildHandle handle);[m
+     }[m
+ }[m
