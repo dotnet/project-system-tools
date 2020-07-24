@@ -21,19 +21,19 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
         /// Tell build logging to start tracking logs
         /// </summary>
         /// <returns>True is operation succeeded and false if not</returns>
-        Task<bool> Start();  // Should this be void return type?
+        Task<bool> Start();
 
         /// <summary>
         /// Tell build logging to stop tracking logs
         /// </summary>
         /// <returns>True if operation succeeded and false if not</returns>
-        Task<bool> Stop();  // Should this be void return type?
+        Task<bool> Stop();
 
         /// <summary>
-        /// Tell build logging to clear out all the accumulated logs from the build logging window
+        /// Tell build logging to clear out all the accumulated logs contained on the server.
         /// </summary>
         /// <returns>True if operation succeeded and false if not</returns>
-        Task<bool> Clear();  // Would it be a good idea to have this? Technically the client could probably handle that logic and just clear the UI
+        Task<bool> Clear();
 
         ///// <summary>
         ///// Send a notification through that a build has started
