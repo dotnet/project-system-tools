@@ -349,19 +349,19 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             return handled ? VSConstants.S_OK : (int)Constants.OLECMDERR_E_NOTSUPPORTED;
         }
 
-        private string[] GetBuildFilterComboItems() =>
-            (_dataSource as BuildTableDataSource)?.SupportRoslynLogging ?? false
-                ? new[]
-                {
-                    BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
-                    BuildLoggingResources.FilterBuildDesignTimeBuilds, BuildLoggingResources.FilterBuildBuilds,
-                    BuildLoggingResources.FilterBuildRoslyn
-                }
-                : new[]
-                {
-                    BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
-                    BuildLoggingResources.FilterBuildDesignTimeBuilds, BuildLoggingResources.FilterBuildBuilds
-                };
+        //private string[] GetBuildFilterComboItems() =>
+        //    (_dataSource as BuildTableDataSource)?.SupportRoslynLogging ?? false
+        //        ? new[]
+        //        {
+        //            BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
+        //            BuildLoggingResources.FilterBuildDesignTimeBuilds, BuildLoggingResources.FilterBuildBuilds,
+        //            BuildLoggingResources.FilterBuildRoslyn
+        //        }
+        //        : new[]
+        //        {
+        //            BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
+        //            BuildLoggingResources.FilterBuildDesignTimeBuilds, BuildLoggingResources.FilterBuildBuilds
+        //        };
 
         private IEnumerable<string> GetExcluded(string include) => Enum.GetNames(typeof(BuildType))
             .Where(name => name != nameof(BuildType.None) && name != nameof(BuildType.All))
@@ -457,10 +457,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
                     break;
 
-                case ProjectSystemToolsPackage.BuildTypeComboGetListCommandId:
-                    var outParam = pvaOut;
-                    Marshal.GetNativeVariantForObject(GetBuildFilterComboItems(), outParam);
-                    break;
+                //case ProjectSystemToolsPackage.BuildTypeComboGetListCommandId:
+                //    var outParam = pvaOut;
+                //    Marshal.GetNativeVariantForObject(GetBuildFilterComboItems(), outParam);
+                //    break;
 
                 default:
                     handled = false;

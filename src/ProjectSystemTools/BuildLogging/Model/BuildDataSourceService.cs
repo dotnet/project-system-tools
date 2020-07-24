@@ -17,7 +17,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     /// <summary>
     /// Implements the IBuildDataSourceService that interacts with Codespaces
     /// </summary>
-    [Export(typeof(IBuildTableDataSource))]
+    [Export(typeof(IBuildDataSourceService))]
     internal sealed class BuildDataSourceService : IBuildDataSourceService
     {
         IBuildTableDataSource _dataSource;
