@@ -27,7 +27,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         public const string BuildLogging = "BuildLogging";
         public const string BuildLoggingToolWindowGuidString = "391238ea-dad7-488c-94d1-e2b6b5172bf3";
 
-        private readonly IBuildTableDataSource _dataSource;
+        private readonly IUIBuildTableDataSource _dataSource;
         private readonly IVsUIShellOpenDocument _openDocument;
 
         private BuildType _filterType = BuildType.All;
@@ -43,7 +43,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         public BuildLoggingToolWindow()
         {
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
-            _dataSource = componentModel.GetService<IBuildTableDataSource>();
+            _dataSource = componentModel.GetService<IUIBuildTableDataSource>();
 
             _openDocument = (IVsUIShellOpenDocument)GetService(typeof(SVsUIShellOpenDocument));
 

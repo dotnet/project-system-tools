@@ -19,7 +19,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         private readonly BinaryLogger _binaryLogger;
         private Build _build;
 
-        public ProjectLogger(BuildTableDataSource dataSource, bool isDesignTime) :
+        public ProjectLogger(BackendBuildTableDataSource dataSource, bool isDesignTime) :
             base(dataSource)
         {
             _logPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.binlog");

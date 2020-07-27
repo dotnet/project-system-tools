@@ -17,10 +17,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
     [Export(typeof(IVsBuildLoggerProvider))]
     internal sealed class BuildLoggerProvider : IBuildLoggerProviderAsync, IVsBuildLoggerProvider
     {
-        private readonly IBuildTableDataSource _dataSource;
+        private readonly IBackendBuildTableDataSource _dataSource;
 
         [ImportingConstructor]
-        public BuildLoggerProvider(IBuildTableDataSource dataSource)
+        public BuildLoggerProvider(IBackendBuildTableDataSource dataSource)
         {
             _dataSource = dataSource;
         }

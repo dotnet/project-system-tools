@@ -13,7 +13,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     {
         private static readonly ImmutableHashSet<string> RoslynEventSet;
 
-        private readonly BuildTableDataSource _dataSource;
+        private readonly BackendBuildTableDataSource _dataSource;
 
         // lazily set but once set, will never change again
         private Action<TraceSource> _setLoggerCall;
@@ -58,7 +58,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
                 "StorageDatabase_Exceptions");
         }
 
-        public RoslynLogger(BuildTableDataSource dataSource)
+        public RoslynLogger(BackendBuildTableDataSource dataSource)
         {
             _dataSource = dataSource;
         }

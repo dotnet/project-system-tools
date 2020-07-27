@@ -47,7 +47,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         private readonly Dictionary<int, Evaluation> _evaluations = new Dictionary<int, Evaluation>();
 
-        public EvaluationLogger(BuildTableDataSource dataSource) :
+        public EvaluationLogger(BackendBuildTableDataSource dataSource) :
             base(dataSource)
         {
         }

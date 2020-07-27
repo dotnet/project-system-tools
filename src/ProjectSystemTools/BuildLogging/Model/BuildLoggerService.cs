@@ -15,33 +15,33 @@ using Microsoft.VisualStudio.Shell.TableManager;
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
     /// <summary>
-    /// Implements the IBuildDataSourceService that interacts with Codespaces
+    /// Implements IBuildLoggerService that interacts with Codespaces
     /// </summary>
-    [Export(typeof(IBuildDataSourceService))]
-    internal sealed class BuildDataSourceService : IBuildDataSourceService
+    [Export(typeof(IBuildLoggerService))]
+    internal sealed class BuildLoggerService : IBuildLoggerService
     {
-        IBuildTableDataSource _dataSource;
-        
-        public BuildDataSourceService(IBuildTableDataSource dataSource) {
+        IBackendBuildTableDataSource _dataSource;
+
+        public BuildLoggerService(IBackendBuildTableDataSource dataSource) {
             _dataSource = dataSource;
         }
 
-        Task<bool> IBuildDataSourceService.IsLogging()
+        Task<bool> IBuildLoggerService.IsLogging()
         {
             return Task.FromResult(_dataSource.IsLogging);
         }
 
-        Task<bool> IBuildDataSourceService.Start()
+        Task<bool> IBuildLoggerService.Start()
         {
             throw new NotImplementedException();
         }
 
-        Task<bool> IBuildDataSourceService.Stop()
+        Task<bool> IBuildLoggerService.Stop()
         {
             throw new NotImplementedException();
         }
 
-        Task<bool> IBuildDataSourceService.Clear()
+        Task<bool> IBuildLoggerService.Clear()
         {
             throw new NotImplementedException();
         }
