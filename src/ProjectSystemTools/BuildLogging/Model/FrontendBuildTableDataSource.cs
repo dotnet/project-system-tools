@@ -3,16 +3,15 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
+using Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts;
 using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
-    [Export(typeof(IUIBuildTableDataSource))]
-    internal sealed class UIBuildTableDataSource : ITableEntriesSnapshotFactory, IUIBuildTableDataSource
+    [Export(typeof(IFrontendBuildTableDataSource))]
+    internal sealed class FrontendBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontendBuildTableDataSource
     {
         private const string BuildDataSourceDisplayName = "Build Data Source";
         private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
@@ -26,6 +25,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         private ITableDataSink _tableDataSink;
         private BuildTableEntriesSnapshot _lastSnapshot;
         private ImmutableList<Build> _entries = ImmutableList<Build>.Empty;
+
+        private readonly IBuildLoggerService _loggerService;
 
         public string SourceTypeIdentifier => BuildTableDataSourceSourceTypeIdentifier;
 
@@ -52,8 +53,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             }
         }
 
-        public UIBuildTableDataSource()
+        public FrontendBuildTableDataSource()
         {
+            //TODO: Connect to Codespaces API
+            _loggerService = null;
             //_evaluationLogger = new EvaluationLogger(this);
             //_roslynLogger = new RoslynLogger(this);
         }
@@ -61,6 +64,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public void Start()
         {
             // TODO: Add connection to Codespaces API
+            _loggerService.Start();
             IsLogging = true;
             //ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
             //_roslynLogger.Start();

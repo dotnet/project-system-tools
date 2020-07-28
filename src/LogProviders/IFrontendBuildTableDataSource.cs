@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 {
-    public interface IBuildTableDataSource : ITableDataSource
+    public interface IFrontendBuildTableDataSource : ITableDataSource
     {
         ITableManager Manager { get; set; }
 
@@ -16,7 +16,5 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
         void Stop();
 
         void Clear();
-
-        ILogger CreateLogger(bool isDesignTime);
     }
 }

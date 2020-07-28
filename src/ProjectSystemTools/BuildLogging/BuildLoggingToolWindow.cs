@@ -27,7 +27,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         public const string BuildLogging = "BuildLogging";
         public const string BuildLoggingToolWindowGuidString = "391238ea-dad7-488c-94d1-e2b6b5172bf3";
 
-        private readonly IUIBuildTableDataSource _dataSource;
+        private readonly IFrontendBuildTableDataSource _dataSource;
         private readonly IVsUIShellOpenDocument _openDocument;
 
         private BuildType _filterType = BuildType.All;
@@ -43,7 +43,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         public BuildLoggingToolWindow()
         {
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
-            _dataSource = componentModel.GetService<IUIBuildTableDataSource>();
+            _dataSource = componentModel.GetService<IFrontendBuildTableDataSource>();
 
             _openDocument = (IVsUIShellOpenDocument)GetService(typeof(SVsUIShellOpenDocument));
 
@@ -349,19 +349,19 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             return handled ? VSConstants.S_OK : (int)Constants.OLECMDERR_E_NOTSUPPORTED;
         }
 
-        //private string[] GetBuildFilterComboItems() =>
-        //    (_dataSource as BuildTableDataSource)?.SupportRoslynLogging ?? false
-        //        ? new[]
-        //        {
-        //            BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
-        //            BuildLoggingResources.FilterBuildDesignTimeBuilds, BuildLoggingResources.FilterBuildBuilds,
-        //            BuildLoggingResources.FilterBuildRoslyn
-        //        }
-        //        : new[]
-        //        {
-        //            BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
-        //            BuildLoggingResources.FilterBuildDesignTimeBuilds, BuildLoggingResources.FilterBuildBuilds
-        //        };
+        private string[] GetBuildFilterComboItems() =>
+            (_dataSource as FrontendBuildTableDataSource)?.SupportRoslynLogging ?? false
+                ? new[]
+                {
+                    BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
+                    BuildLoggingResources.FilterBuildDesignTimeBuilds, BuildLoggingResources.FilterBuildBuilds,
+                    BuildLoggingResources.FilterBuildRoslyn
+                }
+                : new[]
+                {
+                    BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
+                    BuildLoggingResources.FilterBuildDesignTimeBuilds, BuildLoggingResources.FilterBuildBuilds
+                };
 
         private IEnumerable<string> GetExcluded(string include) => Enum.GetNames(typeof(BuildType))
             .Where(name => name != nameof(BuildType.None) && name != nameof(BuildType.All))
@@ -457,10 +457,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
                     break;
 
-                //case ProjectSystemToolsPackage.BuildTypeComboGetListCommandId:
-                //    var outParam = pvaOut;
-                //    Marshal.GetNativeVariantForObject(GetBuildFilterComboItems(), outParam);
-                //    break;
+                case ProjectSystemToolsPackage.BuildTypeComboGetListCommandId:
+                    var outParam = pvaOut;
+                    Marshal.GetNativeVariantForObject(GetBuildFilterComboItems(), outParam);
+                    break;
 
                 default:
                     handled = false;
