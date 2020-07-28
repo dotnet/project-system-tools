@@ -18,8 +18,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         private const string BuildTableDataSourceSourceTypeIdentifier = nameof(BuildTableDataSourceSourceTypeIdentifier);
 
         private readonly object _gate = new object();
-        //private readonly EvaluationLogger _evaluationLogger;
-        //private readonly RoslynLogger _roslynLogger;
 
         private ITableManager _manager;
         private ITableDataSink _tableDataSink;
@@ -34,7 +32,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public string DisplayName => BuildDataSourceDisplayName;
 
-        // TODO: How do I await the information to come back from server?
+        // TODO: Figure out the syntax to await this information from the server
         //public bool SupportRoslynLogging => _roslynLogger.Supported;
         public bool SupportRoslynLogging => false;
 
@@ -57,25 +55,22 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         {
             //TODO: Connect to Codespaces API
             _loggerService = null;
-            //_evaluationLogger = new EvaluationLogger(this);
-            //_roslynLogger = new RoslynLogger(this);
+            throw new NotImplementedException();
         }
 
         public void Start()
         {
             // TODO: Add connection to Codespaces API
-            _loggerService.Start();
+            //_loggerService.Start();
             IsLogging = true;
-            //ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
-            //_roslynLogger.Start();
+            throw new NotImplementedException();
         }
 
         public void Stop()
         {
             // TODO: Add connection to Codespaces API
             IsLogging = false;
-            //ProjectCollection.GlobalProjectCollection.UnregisterAllLoggers();
-            //_roslynLogger.Stop();
+            throw new NotImplementedException();
         }
 
         public void Clear()
@@ -88,9 +83,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             _entries = ImmutableList<Build>.Empty;
             CurrentVersionNumber++;
             NotifyChange();
+            throw new NotImplementedException();
         }
-
-        //public ILogger CreateLogger(bool isDesignTime) => new ProjectLogger(this, isDesignTime);
 
         public IDisposable Subscribe(ITableDataSink sink)
         {
