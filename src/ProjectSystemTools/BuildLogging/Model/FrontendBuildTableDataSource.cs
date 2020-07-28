@@ -61,7 +61,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public void Start()
         {
             // TODO: Add connection to Codespaces API
-            //_loggerService.Start();
+            _loggerService.Start();
             IsLogging = true;
             throw new NotImplementedException();
         }
