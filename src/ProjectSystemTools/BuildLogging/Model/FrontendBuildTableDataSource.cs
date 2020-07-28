@@ -51,11 +51,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             }
         }
 
-        public FrontendBuildTableDataSource()
+        [ImportingConstructor]
+        public FrontendBuildTableDataSource(IBuildLoggerService loggerService)
         {
             //TODO: Connect to Codespaces API
-            _loggerService = null;
-            throw new NotImplementedException();
+            _loggerService = loggerService;
         }
 
         public void Start()
@@ -63,7 +63,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             // TODO: Add connection to Codespaces API
             _loggerService.Start();
             IsLogging = true;
-            throw new NotImplementedException();
         }
 
         public void Stop()
