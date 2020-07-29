@@ -11,8 +11,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
     /// </summary>
     public interface IBuildLoggerService
     {
-        //Task<ITableManager> Manager { get; set; }
-
         /// <summary>
         /// Returns whether or not the build logging window is currently tracking logs or not
         /// </summary>

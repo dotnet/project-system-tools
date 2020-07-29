@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts;
@@ -36,8 +37,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         //public bool SupportRoslynLogging => _roslynLogger.Supported;
         public bool SupportRoslynLogging => false;
 
-        public bool IsLogging { get; private set; }
-
         public int CurrentVersionNumber { get; private set; }
 
         public ITableManager Manager
@@ -58,23 +57,30 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             _loggerService = loggerService;
         }
 
+        public async Task<bool> IsLoggingAsync()
+        {
+            Task<bool> taskResult = _loggerService.IsLogging();
+            bool result = await taskResult;
+            return result;
+        }
+
         public void Start()
         {
             // TODO: Add connection to Codespaces API
-            _loggerService.Start();
-            IsLogging = true;
+            Task<bool> taskResult = _loggerService.Start();
+            //bool result = await taskResult;
         }
 
         public void Stop()
         {
             // TODO: Add connection to Codespaces API
-            IsLogging = false;
-            throw new NotImplementedException();
+            Task<bool> taskResult = _loggerService.Stop();
         }
 
         public void Clear()
         {
             // TODO: Add connection to Codespaces API
+            Task<bool> taskResult = _loggerService.Clear();
             foreach (var build in _entries)
             {
                 build.Dispose();
@@ -82,7 +88,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             _entries = ImmutableList<Build>.Empty;
             CurrentVersionNumber++;
             NotifyChange();
-            throw new NotImplementedException();
         }
 
         public IDisposable Subscribe(ITableDataSink sink)

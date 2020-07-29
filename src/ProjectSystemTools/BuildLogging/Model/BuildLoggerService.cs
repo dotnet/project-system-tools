@@ -28,12 +28,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         Task<bool> IBuildLoggerService.Start()
         {
-            throw new NotImplementedException();
+            _dataSource.Start();
+            return Task.FromResult(true);
         }
 
         Task<bool> IBuildLoggerService.Stop()
         {
-            throw new NotImplementedException();
+            _dataSource.Stop();
+            return Task.FromResult(true);
         }
 
         Task<bool> IBuildLoggerService.Clear()
