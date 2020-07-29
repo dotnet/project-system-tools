@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -13,6 +14,7 @@ using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -301,17 +303,25 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             var enabled = false;
             var visible = false;
             var latched = false;
-
             switch (cmd.cmdID)
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
                     visible = true;
-                    enabled = !_dataSource.IsLogging;
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        Task<bool> isLoggingTask = _dataSource.IsLoggingAsync();
+                        enabled = !await isLoggingTask;
+                    });
+                    
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
                     visible = true;
-                    enabled = _dataSource.IsLogging;
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        Task<bool> isLoggingTask = _dataSource.IsLoggingAsync();
+                        enabled = await isLoggingTask;
+                    });
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:
