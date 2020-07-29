@@ -75,12 +75,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public void Dispose()
         {
-            foreach (var build in _entries)
-            {
-                build.Dispose();
-            }
-            _entries = ImmutableList<Build>.Empty;
-            //Manager = null;
+            Clear();
         }
 
         public void NotifyChange()

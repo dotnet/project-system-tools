@@ -40,7 +40,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         Task<bool> IBuildLoggerService.Clear()
         {
-            throw new NotImplementedException();
+            _dataSource.Clear();
+            return Task.FromResult(true);
         }
     }
 }

@@ -11,10 +11,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 
         Task<bool> IsLoggingAsync();
 
-        void Start();
+        Task<bool> StartAsync();
 
-        void Stop();
+        Task<bool> StopAsync();
 
-        void Clear();
+        Task<bool> ClearAsync();
     }
 }

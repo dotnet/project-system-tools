@@ -64,20 +64,21 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             return result;
         }
 
-        public void Start()
+        public async Task<bool> StartAsync()
         {
-            // TODO: Add connection to Codespaces API
             Task<bool> taskResult = _loggerService.Start();
-            //bool result = await taskResult;
+            bool result = await taskResult;
+            return result;
         }
 
-        public void Stop()
+        public async Task<bool> StopAsync()
         {
-            // TODO: Add connection to Codespaces API
             Task<bool> taskResult = _loggerService.Stop();
+            bool result = await taskResult;
+            return result;
         }
 
-        public void Clear()
+        public async Task<bool> ClearAsync()
         {
             // TODO: Add connection to Codespaces API
             Task<bool> taskResult = _loggerService.Clear();
@@ -88,6 +89,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             _entries = ImmutableList<Build>.Empty;
             CurrentVersionNumber++;
             NotifyChange();
+            bool result = await taskResult;
+            return result;
         }
 
         public IDisposable Subscribe(ITableDataSink sink)

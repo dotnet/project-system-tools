@@ -389,15 +389,24 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             switch (commandId)
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
-                    _dataSource.Start();
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        bool result = await _dataSource.StartAsync();
+                    });
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
-                    _dataSource.Stop();
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        bool result = await _dataSource.StopAsync();
+                    });
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:
-                    _dataSource.Clear();
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        bool result = await _dataSource.ClearAsync();
+                    });
                     break;
 
                 case ProjectSystemToolsPackage.SaveLogsCommandId:
