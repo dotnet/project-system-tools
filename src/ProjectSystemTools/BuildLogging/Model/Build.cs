@@ -12,15 +12,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     // server side data (deals with log files)
     internal sealed class Build : IComparable<Build>, IDisposable
     {
-        public static int SharedBuildID { get; }
-        public int BuildID { get; }
+        public static int SharedBuildID { get; private set; }
         public BuildSummary BuildSummary { get; private set; }
         public string LogPath { get; private set; }
 
         public Build(string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
-            BuildID = SharedBuildID;
-            BuildSummary = new BuildSummary(projectPath, dimensions, targets, buildType, startTime);
+            BuildSummary = new BuildSummary(SharedBuildID, projectPath, dimensions, targets, buildType, startTime);
+            SharedBuildID++;
         }
 
         public void Finish(bool succeeded, DateTime time)

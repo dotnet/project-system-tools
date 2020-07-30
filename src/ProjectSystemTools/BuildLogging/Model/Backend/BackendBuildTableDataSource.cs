@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using Microsoft.Build.Evaluation;
@@ -83,12 +84,23 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             // TODO: Loggers need NotifyChange(), maybe include this in the interface?
             //CurrentVersionNumber++;
             //_tableDataSink.FactorySnapshotChanged(this);
+            /*NotifyChangeEventFire();*/
         }
 
         public void AddEntry(Build build)
         {
             _entries = _entries.Add(build);
             NotifyChange();
+        }
+
+        public ImmutableList<BuildSummary> RetrieveAllBuilds()
+        {
+            ImmutableList<BuildSummary> buildSummaries = ImmutableList<BuildSummary>.Empty;
+            foreach (Build build in _entries) 
+            {
+                buildSummaries.Add(build.BuildSummary);
+            }
+            return buildSummaries;
         }
     }
 }

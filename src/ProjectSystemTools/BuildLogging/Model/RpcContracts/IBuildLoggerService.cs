@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
 
@@ -50,15 +51,21 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
         ///// <summary>
         ///// Gives the user a log of a requested build
         ///// </summary>
-        ///// <param name="handle">an ID (type BuildHandle) used to retrieve a unique log for a build</param>
+        ///// <param name="handle">an ID used to retrieve a unique log for a build</param>
         ///// <returns>The log tied to the requested BuildHandle</returns>
         //Log RetrieveLogForBuild(int buildID);
 
         ///// <summary>
         ///// Gives the user a requested build
         ///// </summary>
-        ///// <param name="handle">an ID (type BuildHandle) used to retrieve a unique build</param>
-        ///// <returns>The Build tied to the requested BuildHandle</returns>
+        ///// <param name="handle">an ID used to retrieve a unique build</param>
+        ///// <returns>The Build summary information tied to the requested Build ID</returns>
         BuildSummary RetrieveBuild(int buildID);
+
+        ///// <summary>
+        ///// Gives the user a requested build
+        ///// </summary>
+        ///// <returns>List of summary information of all builds on the server</returns>
+        ImmutableList<BuildSummary> RetrieveAllBuilds();
     }
 }

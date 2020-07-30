@@ -23,7 +23,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         private ITableManager _manager;
         private ITableDataSink _tableDataSink;
         private BuildTableEntriesSnapshot _lastSnapshot;
-        private ImmutableList<Build> _entries = ImmutableList<Build>.Empty;
+        private ImmutableList<BuildSummary> _entries = ImmutableList<BuildSummary>.Empty;
 
         private readonly IBuildLoggerService _loggerService;
 
@@ -53,7 +53,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         [ImportingConstructor]
         public FrontendBuildTableDataSource(IBuildLoggerService loggerService)
         {
-            //TODO: Connect to Codespaces API
             _loggerService = loggerService;
         }
 
@@ -87,9 +86,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             //Task<bool> taskResult = 
             foreach (var build in _entries)
             {
-                build.Dispose();
+                // TODO: How does this change later in server context
+                //build.Dispose();
             }
-            _entries = ImmutableList<Build>.Empty;
+            _entries = ImmutableList<BuildSummary>.Empty;
             CurrentVersionNumber++;
             NotifyChange();
             //bool result = await taskResult;
@@ -110,9 +110,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         {
             foreach (var build in _entries)
             {
-                build.Dispose();
+                // TODO: How does this change later in server context
+                //build.Dispose();
             }
-            _entries = ImmutableList<Build>.Empty;
+            _entries = ImmutableList<BuildSummary>.Empty;
             Manager = null;
         }
 
@@ -156,10 +157,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             return null;
         }
 
-        public void AddEntry(Build build)
+        //public void AddEntry(Build build)
+        //{
+        //    _entries = _entries.Add(build);
+        //    NotifyChange();
+        //}
+        private void UpdateEntries()
         {
-            _entries = _entries.Add(build);
-            NotifyChange();
+            _entries = _loggerService.RetrieveAllBuilds();
         }
     }
 }
