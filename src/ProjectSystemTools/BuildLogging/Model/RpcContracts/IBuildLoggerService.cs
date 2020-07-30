@@ -53,7 +53,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
         ///// </summary>
         ///// <param name="handle">an ID used to retrieve a unique log for a build</param>
         ///// <returns>The log tied to the requested BuildHandle</returns>
-        //Log RetrieveLogForBuild(int buildID);
+        string RetrieveLogForBuild(int buildID);
 
         ///// <summary>
         ///// Gives the user a requested build

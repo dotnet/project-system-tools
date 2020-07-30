@@ -103,9 +103,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
                     break;
 
                 // TODO: Need new approach for LogPath
-                //case TableKeyNames.LogPath:
-                //    content = LogPath;
-                //    break;
+                case TableKeyNames.BuildID:
+                    content = BuildID;
+                    break;
 
                 default:
                     content = null;

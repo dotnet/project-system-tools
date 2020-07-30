@@ -76,6 +76,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         {
             UpdateEntries();
             _loggerService.Stop();
+            string result = RetrieveLogForBuild(1);
             //Task<bool> taskResult = 
             //bool result = await taskResult;
             //return result;
@@ -158,11 +159,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             return null;
         }
 
-        //public void AddEntry(Build build)
-        //{
-        //    _entries = _entries.Add(build);
-        //    NotifyChange();
-        //}
+        public string RetrieveLogForBuild(int buildID)
+        {
+            return _loggerService.RetrieveLogForBuild(buildID);
+        }
 
         private void UpdateEntries()
         {

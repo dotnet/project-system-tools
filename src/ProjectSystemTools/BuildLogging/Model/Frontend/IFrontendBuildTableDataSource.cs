@@ -17,5 +17,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
         void Stop();
 
         void Clear();
+
+        string RetrieveLogForBuild(int buildID);
     }
 }

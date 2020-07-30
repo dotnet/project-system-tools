@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts;
@@ -46,11 +47,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             //return Task.FromResult(true);
         }
 
-        // TODO: Find Log type to transfer to client
-        //Log IBuildLoggerService.RetrieveLogForBuild(int buildID)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        // TODO: Change how data is transfered later in an async / server client scenario
+        string IBuildLoggerService.RetrieveLogForBuild(int buildID)
+        {
+            return _dataSource.RetrieveLogForBuild(buildID);
+        }
 
         BuildSummary IBuildLoggerService.RetrieveBuild(int buildID)
         {

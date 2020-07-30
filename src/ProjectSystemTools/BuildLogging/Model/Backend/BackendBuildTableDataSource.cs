@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
@@ -64,16 +65,39 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public ILogger CreateLogger(bool isDesignTime) => new ProjectLogger(this, isDesignTime);
 
-        // TODO: removing Subscribe() breaks the ITableDataSource interface, is this needed?
-        //public IDisposable Subscribe(ITableDataSink sink)
-        //{
-        //    _tableDataSink = sink;
+        /// <summary>
+        /// (Temporary) return log path on server for a given build
+        /// If buildID cannot be found, will return null
+        /// </summary>
+        /// <param name="buildID">ID to return build for</param>
+        /// <returns>(Temporary) returns filepath to log path (on server)</returns>
+        public string RetrieveLogForBuild(int buildID)
+        {
+            Build match = findBuildByID(buildID);
+            return match.LogPath;
+        }
 
-        //    _tableDataSink.AddFactory(this, removeAllFactories: true);
-        //    _tableDataSink.IsStable = true;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buildID">ID to return build for</param>
+        /// <returns>Build matching the given ID, if no match, return null</returns>
+        private Build findBuildByID(int buildID)
+        {
+            return _entries.Find(x => x.BuildSummary.BuildID == buildID);
+        }
 
-        //    return this;
-        //}
+        public ImmutableList<BuildSummary> RetrieveAllBuilds()
+        {
+            ImmutableList<BuildSummary> buildSummaries = ImmutableList<BuildSummary>.Empty;
+            IEnumerator<Build> builds = _entries.GetEnumerator();
+            while (builds.MoveNext())
+            {
+                Build current = builds.Current;
+                buildSummaries = buildSummaries.Add(current.BuildSummary);
+            }
+            return buildSummaries;
+        }
 
         public void Dispose()
         {
@@ -92,18 +116,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         {
             _entries = _entries.Add(build);
             NotifyChange();
-        }
-
-        public ImmutableList<BuildSummary> RetrieveAllBuilds()
-        {
-            ImmutableList<BuildSummary> buildSummaries = ImmutableList<BuildSummary>.Empty;
-            IEnumerator<Build> builds = _entries.GetEnumerator();
-            while (builds.MoveNext()) 
-            {
-                Build current = builds.Current;
-                buildSummaries = buildSummaries.Add(current.BuildSummary);
-            }
-            return buildSummaries;
         }
     }
 }

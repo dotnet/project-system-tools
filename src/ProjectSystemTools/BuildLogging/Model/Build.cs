@@ -12,6 +12,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     // server side data (deals with log files)
     internal sealed class Build : IComparable<Build>, IDisposable
     {
+        // TODO: If needed, make an issue: implement more robust ID system (that doesn't use ints)
         public static int SharedBuildID { get; private set; }
         public BuildSummary BuildSummary { get; private set; }
         public string LogPath { get; private set; }
@@ -37,54 +38,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public void SetLogPath(string logPath)
         {
             LogPath = logPath;
-        }
-
-        public bool TryGetValue(string keyName, out object content)
-        {
-            switch (keyName)
-            {
-                case TableKeyNames.Dimensions:
-                    content = BuildSummary.Dimensions;
-                    break;
-
-                case TableKeyNames.Targets:
-                    content = BuildSummary.Targets;
-                    break;
-
-                case TableKeyNames.Elapsed:
-                    content = BuildSummary.Elapsed;
-                    break;
-
-                case TableKeyNames.BuildType:
-                    content = BuildSummary.BuildType;
-                    break;
-
-                case TableKeyNames.Status:
-                    content = BuildSummary.Status;
-                    break;
-
-                case StandardTableKeyNames.ProjectName:
-                    content = Path.GetFileNameWithoutExtension(BuildSummary.ProjectPath);
-                    break;
-
-                case TableKeyNames.ProjectType:
-                    content = Path.GetExtension(BuildSummary.ProjectPath);
-                    break;
-
-                case TableKeyNames.StartTime:
-                    content = BuildSummary.StartTime;
-                    break;
-
-                case TableKeyNames.LogPath:
-                    content = LogPath;
-                    break;
-
-                default:
-                    content = null;
-                    break;
-            }
-
-            return content != null;
         }
 
         public int CompareTo(Build other)

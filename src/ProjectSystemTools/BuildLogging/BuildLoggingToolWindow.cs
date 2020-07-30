@@ -196,11 +196,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
             foreach (var entry in TableControl.SelectedEntries)
             {
-                if (!entry.TryGetValue(TableKeyNames.LogPath, out string logPath))
+                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
                 {
                     continue;
                 }
 
+                string logPath = _dataSource.RetrieveLogForBuild(buildID);
                 var filename = Path.GetFileName(logPath);
 
                 if (filename == null)
@@ -248,12 +249,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         public void OpenLog(ITableEntryHandle tableEntry)
         {
-            if (!tableEntry.TryGetValue(TableKeyNames.LogPath, out string logPath))
+            if (!tableEntry.TryGetValue(TableKeyNames.BuildID, out int buildID))
             {
                 return;
             }
 
             var guid = VSConstants.LOGVIEWID_Primary;
+            string logPath = _dataSource.RetrieveLogForBuild(buildID);
             _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
             frame?.Show();
         }
@@ -262,11 +264,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         {
             foreach (var entry in TableControl.SelectedEntries)
             {
-                if (!entry.TryGetValue(TableKeyNames.LogPath, out string logPath))
+                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
                 {
                     continue;
                 }
 
+                string logPath = _dataSource.RetrieveLogForBuild(buildID);
                 try
                 {
                     Process.Start(logPath);
