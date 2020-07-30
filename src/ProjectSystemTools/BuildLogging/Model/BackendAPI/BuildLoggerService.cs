@@ -21,27 +21,39 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             _dataSource = dataSource;
         }
 
-        Task<bool> IBuildLoggerService.IsLogging()
+        bool IBuildLoggerService.IsLogging()
         {
-            return Task.FromResult(_dataSource.IsLogging);
+            return _dataSource.IsLogging;
+            //return Task.FromResult(_dataSource.IsLogging);
         }
 
-        Task<bool> IBuildLoggerService.Start()
+        void IBuildLoggerService.Start()
         {
             _dataSource.Start();
-            return Task.FromResult(true);
+            //return Task.FromResult(true);
         }
 
-        Task<bool> IBuildLoggerService.Stop()
+        void IBuildLoggerService.Stop()
         {
             _dataSource.Stop();
-            return Task.FromResult(true);
+            //return Task.FromResult(true);
         }
 
-        Task<bool> IBuildLoggerService.Clear()
+        void IBuildLoggerService.Clear()
         {
             _dataSource.Clear();
-            return Task.FromResult(true);
+            //return Task.FromResult(true);
+        }
+
+        // TODO: Find Log type to transfer to client
+        //Log IBuildLoggerService.RetrieveLogForBuild(int buildID)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        BuildSummary IBuildLoggerService.RetrieveBuild(int buildID)
+        {
+            throw new NotImplementedException();
         }
     }
 }

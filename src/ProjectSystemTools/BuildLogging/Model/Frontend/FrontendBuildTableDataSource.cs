@@ -57,31 +57,34 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             _loggerService = loggerService;
         }
 
-        public async Task<bool> IsLoggingAsync()
+        public bool IsLogging()
         {
-            Task<bool> taskResult = _loggerService.IsLogging();
-            bool result = await taskResult;
-            return result;
+            return _loggerService.IsLogging();
+            //Task<bool> taskResult = 
+            //bool result = await taskResult;
+            //return result;
         }
 
-        public async Task<bool> StartAsync()
+        public void Start()
         {
-            Task<bool> taskResult = _loggerService.Start();
-            bool result = await taskResult;
-            return result;
+            _loggerService.Start();
+            //Task<bool> taskResult = 
+            //bool result = await taskResult;
+            //return result;
         }
 
-        public async Task<bool> StopAsync()
+        public void Stop()
         {
-            Task<bool> taskResult = _loggerService.Stop();
-            bool result = await taskResult;
-            return result;
+            _loggerService.Stop();
+            //Task<bool> taskResult = 
+            //bool result = await taskResult;
+            //return result;
         }
 
-        public async Task<bool> ClearAsync()
+        public void Clear()
         {
-            // TODO: Add connection to Codespaces API
-            Task<bool> taskResult = _loggerService.Clear();
+            _loggerService.Clear();
+            //Task<bool> taskResult = 
             foreach (var build in _entries)
             {
                 build.Dispose();
@@ -89,8 +92,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             _entries = ImmutableList<Build>.Empty;
             CurrentVersionNumber++;
             NotifyChange();
-            bool result = await taskResult;
-            return result;
+            //bool result = await taskResult;
+            //return result;
         }
 
         public IDisposable Subscribe(ITableDataSink sink)

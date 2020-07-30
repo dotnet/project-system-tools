@@ -307,21 +307,23 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
                     visible = true;
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        Task<bool> isLoggingTask = _dataSource.IsLoggingAsync();
-                        enabled = !await isLoggingTask;
-                    });
+                    enabled = !_dataSource.IsLogging();
+                    //ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    //{
+                    //    Task<bool> isLoggingTask = _dataSource.IsLoggingAsync();
+                    //    enabled = !await isLoggingTask;
+                    //});
                     
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
                     visible = true;
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        Task<bool> isLoggingTask = _dataSource.IsLoggingAsync();
-                        enabled = await isLoggingTask;
-                    });
+                    enabled = _dataSource.IsLogging();
+                    //ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    //{
+                    //    Task<bool> isLoggingTask = _dataSource.IsLoggingAsync();
+                    //    enabled = await isLoggingTask;
+                    //});
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:
@@ -389,24 +391,29 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             switch (commandId)
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        bool result = await _dataSource.StartAsync();
-                    });
+                    //ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    //{
+                    //    bool result = await _dataSource.StartAsync();
+                    //});
+                    _dataSource.Start();
+                    
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        bool result = await _dataSource.StopAsync();
-                    });
+                    //ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    //{
+                    //    bool result = await _dataSource.StopAsync();
+                    //});
+                    _dataSource.Stop();
+
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        bool result = await _dataSource.ClearAsync();
-                    });
+                    //ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    //{
+                    //    bool result = await _dataSource.ClearAsync();
+                    //});
+                    _dataSource.Clear();
                     break;
 
                 case ProjectSystemToolsPackage.SaveLogsCommandId:

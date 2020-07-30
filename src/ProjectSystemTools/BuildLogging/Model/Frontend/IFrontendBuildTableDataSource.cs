@@ -9,12 +9,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
     {
         ITableManager Manager { get; set; }
 
-        Task<bool> IsLoggingAsync();
+        bool IsLogging();
 
-        Task<bool> StartAsync();
+        void Start();
 
-        Task<bool> StopAsync();
+        void Stop();
 
-        Task<bool> ClearAsync();
+        void Clear();
     }
 }

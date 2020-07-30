@@ -5,7 +5,7 @@ using System;
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
     [Flags]
-    internal enum BuildType
+    public enum BuildType
     {
         None = 0x0,
         Build = 0x1,

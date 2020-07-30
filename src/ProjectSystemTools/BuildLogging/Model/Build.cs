@@ -9,43 +9,30 @@ using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
+    // server side data (deals with log files)
     internal sealed class Build : IComparable<Build>, IDisposable
     {
-        public BuildType BuildType { get; }
-
-        public IEnumerable<string> Dimensions { get; }
-
-        public IEnumerable<string> Targets { get; }
-
-        public DateTime StartTime { get; }
-
-        public TimeSpan Elapsed { get; private set; }
-
-        public BuildStatus Status { get; private set; }
-
-        public string ProjectPath { get; }
-
+        public static int SharedBuildID { get; }
+        public int BuildID { get; }
+        public BuildSummary BuildSummary { get; private set; }
         public string LogPath { get; private set; }
 
         public Build(string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
-            ProjectPath = projectPath;
-            Dimensions = dimensions.ToArray();
-            Targets = targets?.ToArray() ?? Enumerable.Empty<string>();
-            BuildType = buildType;
-            StartTime = startTime;
-            Status = BuildStatus.Running;
+            BuildID = SharedBuildID;
+            BuildSummary = new BuildSummary(projectPath, dimensions, targets, buildType, startTime);
         }
 
         public void Finish(bool succeeded, DateTime time)
         {
-            if (Status != BuildStatus.Running)
+            if (BuildSummary.Status != BuildStatus.Running)
             {
                 throw new InvalidOperationException();
             }
 
-            Status = succeeded ? BuildStatus.Finished : BuildStatus.Failed;
-            Elapsed = time - StartTime;
+            BuildStatus newStatus = succeeded ? BuildStatus.Finished : BuildStatus.Failed;
+            var elapsedTime = time - BuildSummary.StartTime;
+            BuildSummary = new BuildSummary(BuildSummary, newStatus, elapsedTime);
         }
 
         public void SetLogPath(string logPath)
@@ -58,35 +45,35 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             switch (keyName)
             {
                 case TableKeyNames.Dimensions:
-                    content = Dimensions;
+                    content = BuildSummary.Dimensions;
                     break;
 
                 case TableKeyNames.Targets:
-                    content = Targets;
+                    content = BuildSummary.Targets;
                     break;
 
                 case TableKeyNames.Elapsed:
-                    content = Elapsed;
+                    content = BuildSummary.Elapsed;
                     break;
 
                 case TableKeyNames.BuildType:
-                    content = BuildType;
+                    content = BuildSummary.BuildType;
                     break;
 
                 case TableKeyNames.Status:
-                    content = Status;
+                    content = BuildSummary.Status;
                     break;
 
                 case StandardTableKeyNames.ProjectName:
-                    content = Path.GetFileNameWithoutExtension(ProjectPath);
+                    content = Path.GetFileNameWithoutExtension(BuildSummary.ProjectPath);
                     break;
 
                 case TableKeyNames.ProjectType:
-                    content = Path.GetExtension(ProjectPath);
+                    content = Path.GetExtension(BuildSummary.ProjectPath);
                     break;
 
                 case TableKeyNames.StartTime:
-                    content = StartTime;
+                    content = BuildSummary.StartTime;
                     break;
 
                 case TableKeyNames.LogPath:
@@ -113,8 +100,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
                 return 1;
             }
 
-            var startComparison = StartTime.CompareTo(other.StartTime);
-            return startComparison != 0 ? startComparison : string.Compare(ProjectPath, other.ProjectPath, StringComparison.Ordinal);
+            return BuildSummary.CompareTo(other.BuildSummary);
+            //var startComparison = BuildSummary.StartTime.CompareTo(other.BuildSummary.StartTime);
+            //return startComparison != 0 ? startComparison : string.Compare(BuildSummary.ProjectPath, other.BuildSummary.ProjectPath, StringComparison.Ordinal);
         }
 
         public void Dispose()
