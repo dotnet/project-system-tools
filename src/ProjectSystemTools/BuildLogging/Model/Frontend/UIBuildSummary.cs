@@ -12,7 +12,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     /// <summary>
     /// Immutable Type
     /// </summary>
-    public sealed class BuildSummary : IComparable<BuildSummary>
+    public sealed class UIBuildSummary : IComparable<UIBuildSummary>
     {
         public int BuildID { get; }
         public BuildType BuildType { get; }
@@ -29,7 +29,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public string ProjectPath { get; }
 
-        public BuildSummary(int buildID, string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
+        public UIBuildSummary(int buildID, string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
             BuildID = buildID;
             ProjectPath = projectPath;
@@ -39,7 +39,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             StartTime = startTime;
             Status = BuildStatus.Running;
         }
-        public BuildSummary(BuildSummary other, BuildStatus status, TimeSpan elapsed) {
+        public UIBuildSummary(UIBuildSummary other, BuildStatus status, TimeSpan elapsed)
+        {
             BuildID = other.BuildID;
             BuildType = other.BuildType;
             // TODO: Check if this needs deep copying
@@ -50,6 +51,19 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
             Elapsed = elapsed;
             Status = status;
+        }
+        public UIBuildSummary(BuildSummary other)
+        {
+            BuildID = other.BuildID;
+            BuildType = other.BuildType;
+            // TODO: Check if this needs deep copying
+            Dimensions = other.Dimensions;
+            Targets = other.Targets;
+            StartTime = other.StartTime;
+            ProjectPath = other.ProjectPath;
+
+            Elapsed = other.Elapsed;
+            Status = other.Status;
         }
 
         public bool TryGetValue(string keyName, out object content)
@@ -100,8 +114,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
             return content != null;
         }
-
-        public int CompareTo(BuildSummary other)
+        public int CompareTo(UIBuildSummary other)
         {
             if (ReferenceEquals(this, other))
             {

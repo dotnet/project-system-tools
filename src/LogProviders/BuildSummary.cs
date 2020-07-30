@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
@@ -50,55 +49,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
             Elapsed = elapsed;
             Status = status;
-        }
-
-        public bool TryGetValue(string keyName, out object content)
-        {
-            switch (keyName)
-            {
-                case TableKeyNames.Dimensions:
-                    content = Dimensions;
-                    break;
-
-                case TableKeyNames.Targets:
-                    content = Targets;
-                    break;
-
-                case TableKeyNames.Elapsed:
-                    content = Elapsed;
-                    break;
-
-                case TableKeyNames.BuildType:
-                    content = BuildType;
-                    break;
-
-                case TableKeyNames.Status:
-                    content = Status;
-                    break;
-
-                case StandardTableKeyNames.ProjectName:
-                    content = Path.GetFileNameWithoutExtension(ProjectPath);
-                    break;
-
-                case TableKeyNames.ProjectType:
-                    content = Path.GetExtension(ProjectPath);
-                    break;
-
-                case TableKeyNames.StartTime:
-                    content = StartTime;
-                    break;
-
-                // TODO: Need new approach for LogPath
-                //case TableKeyNames.LogPath:
-                //    content = LogPath;
-                //    break;
-
-                default:
-                    content = null;
-                    break;
-            }
-
-            return content != null;
         }
 
         public int CompareTo(BuildSummary other)

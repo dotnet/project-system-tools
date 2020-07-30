@@ -23,7 +23,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         private ITableManager _manager;
         private ITableDataSink _tableDataSink;
         private BuildTableEntriesSnapshot _lastSnapshot;
-        private ImmutableList<BuildSummary> _entries = ImmutableList<BuildSummary>.Empty;
+        private ImmutableList<UIBuildSummary> _entries = ImmutableList<UIBuildSummary>.Empty;
 
         private readonly IBuildLoggerService _loggerService;
 
@@ -74,6 +74,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public void Stop()
         {
+            UpdateEntries();
             _loggerService.Stop();
             //Task<bool> taskResult = 
             //bool result = await taskResult;
@@ -89,7 +90,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
                 // TODO: How does this change later in server context
                 //build.Dispose();
             }
-            _entries = ImmutableList<BuildSummary>.Empty;
+            _entries = ImmutableList<UIBuildSummary>.Empty;
             CurrentVersionNumber++;
             NotifyChange();
             //bool result = await taskResult;
@@ -113,7 +114,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
                 // TODO: How does this change later in server context
                 //build.Dispose();
             }
-            _entries = ImmutableList<BuildSummary>.Empty;
+            _entries = ImmutableList<UIBuildSummary>.Empty;
             Manager = null;
         }
 
@@ -162,9 +163,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         //    _entries = _entries.Add(build);
         //    NotifyChange();
         //}
+
         private void UpdateEntries()
         {
-            _entries = _loggerService.RetrieveAllBuilds();
+            ImmutableList<BuildSummary> newData = _loggerService.RetrieveAllBuilds();
+            _entries = ImmutableList<UIBuildSummary>.Empty;
+            foreach (BuildSummary summary in newData)
+            {
+                _entries = _entries.Add(new UIBuildSummary(summary));
+            }
+            NotifyChange();
         }
     }
 }

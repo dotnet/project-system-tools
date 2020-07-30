@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
@@ -96,9 +97,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public ImmutableList<BuildSummary> RetrieveAllBuilds()
         {
             ImmutableList<BuildSummary> buildSummaries = ImmutableList<BuildSummary>.Empty;
-            foreach (Build build in _entries) 
+            IEnumerator<Build> builds = _entries.GetEnumerator();
+            while (builds.MoveNext()) 
             {
-                buildSummaries.Add(build.BuildSummary);
+                Build current = builds.Current;
+                buildSummaries = buildSummaries.Add(current.BuildSummary);
             }
             return buildSummaries;
         }
