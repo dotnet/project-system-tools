@@ -34,14 +34,18 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public bool IsLogging { get; private set; }
 
+        private NotifyCallback NotifyUI { get; set; }
+
         public BackendBuildTableDataSource()
         {
             _evaluationLogger = new EvaluationLogger(this);
             _roslynLogger = new RoslynLogger(this);
         }
 
-        public void Start()
+        public void Start(NotifyCallback notifyCallback)
         {
+            NotifyUI = notifyCallback;
+
             IsLogging = true;
             ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
             _roslynLogger.Start();
@@ -49,6 +53,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public void Stop()
         {
+            NotifyUI = null;
+
             IsLogging = false;
             ProjectCollection.GlobalProjectCollection.UnregisterAllLoggers();
             _roslynLogger.Stop();
@@ -106,6 +112,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public void NotifyChange()
         {
+            if (NotifyUI != null) 
+            {
+                NotifyUI();
+            }
+
             // TODO: Loggers need NotifyChange(), maybe include this in the interface?
             //CurrentVersionNumber++;
             //_tableDataSink.FactorySnapshotChanged(this);

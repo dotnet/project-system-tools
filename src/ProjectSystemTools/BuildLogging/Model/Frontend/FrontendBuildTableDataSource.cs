@@ -66,7 +66,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public void Start()
         {
-            _loggerService.Start();
+            _loggerService.Start(UpdateEntries);
             //Task<bool> taskResult = 
             //bool result = await taskResult;
             //return result;
@@ -74,9 +74,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public void Stop()
         {
-            UpdateEntries();
             _loggerService.Stop();
-            string result = RetrieveLogForBuild(1);
+            //string result = RetrieveLogForBuild(1);
+
             //Task<bool> taskResult = 
             //bool result = await taskResult;
             //return result;

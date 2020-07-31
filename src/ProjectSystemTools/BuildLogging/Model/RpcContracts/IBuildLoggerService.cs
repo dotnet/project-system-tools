@@ -22,7 +22,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
         /// Tell build logging to start tracking logs
         /// </summary>
         /// <returns>True is operation succeeded and false if not</returns>
-        void Start();
+        void Start(NotifyCallback notifyCallback);
 
         /// <summary>
         /// Tell build logging to stop tracking logs

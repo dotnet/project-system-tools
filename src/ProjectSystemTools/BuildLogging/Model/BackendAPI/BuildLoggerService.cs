@@ -29,9 +29,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             //return Task.FromResult(_dataSource.IsLogging);
         }
 
-        void IBuildLoggerService.Start()
+        void IBuildLoggerService.Start(NotifyCallback notifyCallback)
         {
-            _dataSource.Start();
+            _dataSource.Start(notifyCallback);
             //return Task.FromResult(true);
         }
 

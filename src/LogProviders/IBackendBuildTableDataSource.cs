@@ -11,7 +11,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
     {
         bool IsLogging { get; }
 
-        void Start();
+        void Start(NotifyCallback notifyCallback);
 
         void Stop();
 

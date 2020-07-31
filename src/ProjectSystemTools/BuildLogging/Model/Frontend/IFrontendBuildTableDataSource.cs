@@ -3,6 +3,7 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
 using Microsoft.VisualStudio.Shell.TableManager;
+using Microsoft.VisualStudio.Text.Editor;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 {
