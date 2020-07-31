@@ -37,17 +37,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// <returns>True if operation succeeded and false if not</returns>
         void Clear();
 
-        ///// <summary>
-        ///// Gives the user a log of a requested build
-        ///// </summary>
-        ///// <param name="handle">an ID used to retrieve a unique log for a build</param>
-        ///// <returns>The log tied to the requested BuildHandle</returns>
+        /// <summary>
+        /// Gives the user a log of a requested build
+        /// </summary>
+        /// <param name="handle">an ID used to retrieve a unique log for a build</param>
+        /// <returns>The log tied to the requested BuildHandle</returns>
         string RetrieveLogForBuild(int buildID);
 
-        ///// <summary>
-        ///// Gives the user a requested build
-        ///// </summary>
-        ///// <returns>List of summary information of all builds on the server</returns>
+        /// <summary>
+        /// Gives the user a requested build
+        /// </summary>
+        /// <returns>List of summary information of all builds on the server</returns>
         ImmutableList<IBuildSummary> RetrieveAllBuilds();
     }
 }
