@@ -18,6 +18,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
         /// <returns>True if build logging window is tracking logs and false otherwise</returns>
         bool IsLogging();
 
+        bool SupportsRoslynLogging();
+
         /// <summary>
         /// Tell build logging to start tracking logs
         /// </summary>
@@ -37,18 +39,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
         void Clear();
 
         ///// <summary>
-        ///// Send a notification through that a build has started
-        ///// </summary>
-        ///// <returns>A handle that the user can use to retrieve the given build</returns>
-        //Task<BuildHandle> NotifyBuildStart();
-
-        ///// <summary>
-        ///// Send a notification through that a build has finished
-        ///// </summary>
-        ///// <returns>True if operation succeeded and false if not</returns>
-        //Task<bool> NotifyBuildFinished();  // Should this be void return type?
-
-        ///// <summary>
         ///// Gives the user a log of a requested build
         ///// </summary>
         ///// <param name="handle">an ID used to retrieve a unique log for a build</param>
@@ -60,7 +50,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
         ///// </summary>
         ///// <param name="handle">an ID used to retrieve a unique build</param>
         ///// <returns>The Build summary information tied to the requested Build ID</returns>
-        BuildSummary RetrieveBuild(int buildID);
+        //BuildSummary RetrieveBuild(int buildID);
 
         ///// <summary>
         ///// Gives the user a requested build

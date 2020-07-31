@@ -29,6 +29,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             //return Task.FromResult(_dataSource.IsLogging);
         }
 
+        bool IBuildLoggerService.SupportsRoslynLogging()
+        {
+            return _dataSource.SupportsRoslynLogging;
+        }
+
         void IBuildLoggerService.Start(NotifyCallback notifyCallback)
         {
             _dataSource.Start(notifyCallback);
@@ -53,10 +58,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             return _dataSource.RetrieveLogForBuild(buildID);
         }
 
-        BuildSummary IBuildLoggerService.RetrieveBuild(int buildID)
-        {
-            throw new NotImplementedException();
-        }
+        //BuildSummary IBuildLoggerService.RetrieveBuild(int buildID)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         ImmutableList<BuildSummary> IBuildLoggerService.RetrieveAllBuilds()
         {

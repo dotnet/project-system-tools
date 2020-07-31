@@ -34,6 +34,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public bool IsLogging { get; private set; }
 
+        public bool SupportsRoslynLogging => _roslynLogger.Supported;
+
         private NotifyCallback NotifyUI { get; set; }
 
         public BackendBuildTableDataSource()
@@ -116,11 +118,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             {
                 NotifyUI();
             }
-
-            // TODO: Loggers need NotifyChange(), maybe include this in the interface?
-            //CurrentVersionNumber++;
-            //_tableDataSink.FactorySnapshotChanged(this);
-            /*NotifyChangeEventFire();*/
         }
 
         public void AddEntry(Build build)

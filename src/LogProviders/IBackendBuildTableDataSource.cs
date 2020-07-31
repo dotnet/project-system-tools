@@ -10,7 +10,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
     public interface IBackendBuildTableDataSource // : ITableDataSource
     {
         bool IsLogging { get; }
-
+        bool SupportsRoslynLogging { get; }
         void Start(NotifyCallback notifyCallback);
 
         void Stop();

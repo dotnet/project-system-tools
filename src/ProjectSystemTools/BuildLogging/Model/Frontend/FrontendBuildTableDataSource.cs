@@ -35,7 +35,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         // TODO: Figure out the syntax to await this information from the server
         //public bool SupportRoslynLogging => _roslynLogger.Supported;
-        public bool SupportRoslynLogging => false;
+        public bool SupportRoslynLogging { get; private set; }
 
         public int CurrentVersionNumber { get; private set; }
 
@@ -54,6 +54,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public FrontendBuildTableDataSource(IBuildLoggerService loggerService)
         {
             _loggerService = loggerService;
+            SupportRoslynLogging = _loggerService.SupportsRoslynLogging();
         }
 
         public bool IsLogging()
