@@ -47,13 +47,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         ///// <summary>
         ///// Gives the user a requested build
         ///// </summary>
-        ///// <param name="handle">an ID used to retrieve a unique build</param>
-        ///// <returns>The Build summary information tied to the requested Build ID</returns>
-        //BuildSummary RetrieveBuild(int buildID);
-
-        ///// <summary>
-        ///// Gives the user a requested build
-        ///// </summary>
         ///// <returns>List of summary information of all builds on the server</returns>
         ImmutableList<IBuildSummary> RetrieveAllBuilds();
     }

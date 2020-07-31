@@ -23,7 +23,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
         bool IBuildLoggerService.IsLogging()
         {
             return _dataSource.IsLogging;
-            //return Task.FromResult(_dataSource.IsLogging);
         }
 
         bool IBuildLoggerService.SupportsRoslynLogging()
@@ -34,19 +33,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
         void IBuildLoggerService.Start(NotifyCallback notifyCallback)
         {
             _dataSource.Start(notifyCallback);
-            //return Task.FromResult(true);
         }
 
         void IBuildLoggerService.Stop()
         {
             _dataSource.Stop();
-            //return Task.FromResult(true);
         }
 
         void IBuildLoggerService.Clear()
         {
             _dataSource.Clear();
-            //return Task.FromResult(true);
         }
 
         // TODO: Change how data is transfered later in an async / server client scenario
@@ -54,11 +50,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
         {
             return _dataSource.RetrieveLogForBuild(buildID);
         }
-
-        //IBuildSummary IBuildLoggerService.RetrieveBuild(int buildID)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         ImmutableList<IBuildSummary> IBuildLoggerService.RetrieveAllBuilds()
         {
