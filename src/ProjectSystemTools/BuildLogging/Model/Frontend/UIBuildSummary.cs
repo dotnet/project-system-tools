@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 {
     /// <summary>
     /// Immutable Type

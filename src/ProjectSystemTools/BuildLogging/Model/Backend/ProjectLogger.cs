@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 {
     internal sealed class ProjectLogger : LoggerBase
     {

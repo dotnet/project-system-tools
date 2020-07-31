@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.Shell.TableManager;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 {
     public interface IBuildSummary : IComparable<IBuildSummary>
     {

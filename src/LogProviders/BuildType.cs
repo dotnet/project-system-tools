@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 {
     [Flags]
     public enum BuildType

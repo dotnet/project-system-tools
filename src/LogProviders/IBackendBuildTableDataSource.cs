@@ -2,12 +2,10 @@
 
 using System.Collections.Immutable;
 using Microsoft.Build.Framework;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
-//using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 {
-    public interface IBackendBuildTableDataSource // : ITableDataSource
+    public interface IBackendBuildTableDataSource
     {
         bool IsLogging { get; }
         bool SupportsRoslynLogging { get; }

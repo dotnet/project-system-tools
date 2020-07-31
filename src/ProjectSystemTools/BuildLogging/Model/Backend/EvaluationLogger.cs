@@ -6,7 +6,7 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 {
     internal sealed class EvaluationLogger : LoggerBase
     {

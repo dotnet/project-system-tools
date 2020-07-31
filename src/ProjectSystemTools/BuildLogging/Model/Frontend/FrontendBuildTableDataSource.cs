@@ -3,13 +3,12 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts;
 using Microsoft.VisualStudio.Shell.TableManager;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 {
     [Export(typeof(IFrontendBuildTableDataSource))]
     internal sealed class FrontendBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontendBuildTableDataSource

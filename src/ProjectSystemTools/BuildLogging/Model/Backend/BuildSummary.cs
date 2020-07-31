@@ -2,11 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.Shell.TableManager;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 {
     /// <summary>
     /// Immutable Type
