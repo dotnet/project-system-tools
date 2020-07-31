@@ -2,7 +2,6 @@
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
-    // TODO: Fix visibility errors (make this internal ideally)
     public enum BuildStatus
     {
         Running,

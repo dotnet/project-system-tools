@@ -56,6 +56,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts
         ///// Gives the user a requested build
         ///// </summary>
         ///// <returns>List of summary information of all builds on the server</returns>
-        ImmutableList<BuildSummary> RetrieveAllBuilds();
+        ImmutableList<IBuildSummary> RetrieveAllBuilds();
     }
 }

@@ -21,6 +21,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 
         string RetrieveLogForBuild(int buildID);
 
-        ImmutableList<BuildSummary> RetrieveAllBuilds();
+        ImmutableList<IBuildSummary> RetrieveAllBuilds();
     }
 }

@@ -95,9 +95,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             return _entries.Find(x => x.BuildSummary.BuildID == buildID);
         }
 
-        public ImmutableList<BuildSummary> RetrieveAllBuilds()
+        public ImmutableList<IBuildSummary> RetrieveAllBuilds()
         {
-            ImmutableList<BuildSummary> buildSummaries = ImmutableList<BuildSummary>.Empty;
+            ImmutableList<IBuildSummary> buildSummaries = ImmutableList<IBuildSummary>.Empty;
             IEnumerator<Build> builds = _entries.GetEnumerator();
             while (builds.MoveNext())
             {

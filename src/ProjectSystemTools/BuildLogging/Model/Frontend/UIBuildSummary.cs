@@ -12,7 +12,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     /// <summary>
     /// Immutable Type
     /// </summary>
-    public sealed class UIBuildSummary : IComparable<UIBuildSummary>
+    public sealed class UIBuildSummary : IBuildSummary
     {
         public int BuildID { get; }
         public BuildType BuildType { get; }
@@ -39,7 +39,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             StartTime = startTime;
             Status = BuildStatus.Running;
         }
-        public UIBuildSummary(UIBuildSummary other, BuildStatus status, TimeSpan elapsed)
+        public UIBuildSummary(IBuildSummary other, BuildStatus status, TimeSpan elapsed)
         {
             BuildID = other.BuildID;
             BuildType = other.BuildType;
@@ -52,7 +52,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             Elapsed = elapsed;
             Status = status;
         }
-        public UIBuildSummary(BuildSummary other)
+        public UIBuildSummary(IBuildSummary other)
         {
             BuildID = other.BuildID;
             BuildType = other.BuildType;
@@ -113,7 +113,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
             return content != null;
         }
-        public int CompareTo(UIBuildSummary other)
+        public int CompareTo(IBuildSummary other)
         {
             if (ReferenceEquals(this, other))
             {

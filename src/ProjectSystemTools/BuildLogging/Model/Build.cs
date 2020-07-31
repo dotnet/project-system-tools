@@ -53,8 +53,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             }
 
             return BuildSummary.CompareTo(other.BuildSummary);
-            //var startComparison = BuildSummary.StartTime.CompareTo(other.BuildSummary.StartTime);
-            //return startComparison != 0 ? startComparison : string.Compare(BuildSummary.ProjectPath, other.BuildSummary.ProjectPath, StringComparison.Ordinal);
         }
 
         public void Dispose()

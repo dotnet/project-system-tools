@@ -58,12 +58,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             return _dataSource.RetrieveLogForBuild(buildID);
         }
 
-        //BuildSummary IBuildLoggerService.RetrieveBuild(int buildID)
+        //IBuildSummary IBuildLoggerService.RetrieveBuild(int buildID)
         //{
         //    throw new NotImplementedException();
         //}
 
-        ImmutableList<BuildSummary> IBuildLoggerService.RetrieveAllBuilds()
+        ImmutableList<IBuildSummary> IBuildLoggerService.RetrieveAllBuilds()
         {
             return _dataSource.RetrieveAllBuilds();
         }

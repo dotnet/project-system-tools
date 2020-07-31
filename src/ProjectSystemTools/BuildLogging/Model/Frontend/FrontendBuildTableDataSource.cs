@@ -141,9 +141,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         private void UpdateEntries()
         {
-            ImmutableList<BuildSummary> newData = _loggerService.RetrieveAllBuilds();
+            ImmutableList<IBuildSummary> newData = _loggerService.RetrieveAllBuilds();
             _entries = ImmutableList<UIBuildSummary>.Empty;
-            foreach (BuildSummary summary in newData)
+            foreach (IBuildSummary summary in newData)
             {
                 _entries = _entries.Add(new UIBuildSummary(summary));
             }

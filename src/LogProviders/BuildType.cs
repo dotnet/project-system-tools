@@ -4,7 +4,6 @@ using System;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
-    // TODO: Fix visibility errors (change this to internal ideally)
     [Flags]
     public enum BuildType
     {

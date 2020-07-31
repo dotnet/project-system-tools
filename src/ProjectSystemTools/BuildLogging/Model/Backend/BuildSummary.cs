@@ -11,9 +11,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     /// <summary>
     /// Immutable Type
     /// </summary>
-    public sealed class BuildSummary : IComparable<BuildSummary>
+    public sealed class BuildSummary : IBuildSummary
     {
         public int BuildID { get; }
+
         public BuildType BuildType { get; }
 
         public IEnumerable<string> Dimensions { get; }
@@ -38,7 +39,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             StartTime = startTime;
             Status = BuildStatus.Running;
         }
-        public BuildSummary(BuildSummary other, BuildStatus status, TimeSpan elapsed) {
+        public BuildSummary(IBuildSummary other, BuildStatus status, TimeSpan elapsed) {
             BuildID = other.BuildID;
             BuildType = other.BuildType;
             // TODO: Do the IEnumerable types need deep copying?
@@ -52,7 +53,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             Status = status;
         }
 
-        public int CompareTo(BuildSummary other)
+        public int CompareTo(IBuildSummary other)
         {
             if (ReferenceEquals(this, other))
             {
