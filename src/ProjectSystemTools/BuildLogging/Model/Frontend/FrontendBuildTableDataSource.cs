@@ -33,8 +33,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public string DisplayName => BuildDataSourceDisplayName;
 
-        // TODO: Figure out the syntax to await this information from the server
-        //public bool SupportRoslynLogging => _roslynLogger.Supported;
         public bool SupportRoslynLogging { get; private set; }
 
         public int CurrentVersionNumber { get; private set; }
@@ -60,43 +58,24 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public bool IsLogging()
         {
             return _loggerService.IsLogging();
-            //Task<bool> taskResult = 
-            //bool result = await taskResult;
-            //return result;
         }
 
         public void Start()
         {
             _loggerService.Start(UpdateEntries);
-            //Task<bool> taskResult = 
-            //bool result = await taskResult;
-            //return result;
         }
 
         public void Stop()
         {
-            _loggerService.Stop();
-            //string result = RetrieveLogForBuild(1);
-
-            //Task<bool> taskResult = 
-            //bool result = await taskResult;
-            //return result;
+            _loggerService.Stop();;
         }
 
         public void Clear()
         {
             _loggerService.Clear();
-            //Task<bool> taskResult = 
-            foreach (var build in _entries)
-            {
-                // TODO: How does this change later in server context
-                //build.Dispose();
-            }
             _entries = ImmutableList<UIBuildSummary>.Empty;
             CurrentVersionNumber++;
             NotifyChange();
-            //bool result = await taskResult;
-            //return result;
         }
 
         public IDisposable Subscribe(ITableDataSink sink)
@@ -111,11 +90,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public void Dispose()
         {
-            foreach (var build in _entries)
-            {
-                // TODO: How does this change later in server context
-                //build.Dispose();
-            }
             _entries = ImmutableList<UIBuildSummary>.Empty;
             Manager = null;
         }

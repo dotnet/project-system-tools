@@ -11,8 +11,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
         public const string Elapsed = "elapsed";
         public const string Status = "status";
         public const string Targets = "targets";
-        // TODO: Decide on which TableKeyNames to keep
-        //public const string LogPath = "logpath";
         public const string BuildID = "buildid";
 
         public const string Filename = "filename";

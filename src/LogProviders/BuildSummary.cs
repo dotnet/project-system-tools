@@ -41,9 +41,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public BuildSummary(BuildSummary other, BuildStatus status, TimeSpan elapsed) {
             BuildID = other.BuildID;
             BuildType = other.BuildType;
-            // TODO: Check if this needs deep copying
+            // TODO: Do the IEnumerable types need deep copying?
             Dimensions = other.Dimensions;
             Targets = other.Targets;
+
             StartTime = other.StartTime;
             ProjectPath = other.ProjectPath;
 

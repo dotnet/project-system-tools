@@ -102,7 +102,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
                     content = StartTime;
                     break;
 
-                // TODO: Need new approach for LogPath
                 case TableKeyNames.BuildID:
                     content = BuildID;
                     break;
