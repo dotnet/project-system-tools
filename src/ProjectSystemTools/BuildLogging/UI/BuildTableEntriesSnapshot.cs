@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System.Collections.Immutable;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend;
 using Microsoft.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
 
@@ -8,13 +9,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 {
     internal sealed class BuildTableEntriesSnapshot : WpfTableEntriesSnapshotBase
     {
-        private readonly ImmutableList<Model.UIBuildSummary> _builds;
+        private readonly ImmutableList<UIBuildSummary> _builds;
         
         public override int VersionNumber { get; }
 
         public override int Count => _builds.Count;
 
-        public BuildTableEntriesSnapshot(ImmutableList<Model.UIBuildSummary> builds, int versionNumber)
+        public BuildTableEntriesSnapshot(ImmutableList<UIBuildSummary> builds, int versionNumber)
         {
             _builds = builds;
             VersionNumber = versionNumber;

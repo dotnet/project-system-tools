@@ -2,8 +2,8 @@
 
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers.RpcContracts;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendAPI
 {
