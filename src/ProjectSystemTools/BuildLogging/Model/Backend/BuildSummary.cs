@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 {
     /// <summary>
     /// Immutable Type

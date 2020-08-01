@@ -42,12 +42,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// </summary>
         /// <param name="handle">an ID used to retrieve a unique log for a build</param>
         /// <returns>The log tied to the requested BuildHandle</returns>
-        string RetrieveLogForBuild(int buildID);
+        string GetLogForBuild(int buildID);
 
         /// <summary>
         /// Gives the user a requested build
         /// </summary>
         /// <returns>List of summary information of all builds on the server</returns>
-        ImmutableList<IBuildSummary> RetrieveAllBuilds();
+        ImmutableList<IBuildSummary> GetAllBuilds();
     }
 }

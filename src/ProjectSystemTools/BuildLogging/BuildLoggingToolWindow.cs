@@ -311,12 +311,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
                     visible = true;
-                    enabled = !_dataSource.IsLogging();
+                    enabled = !_dataSource.IsLogging;
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
                     visible = true;
-                    enabled = _dataSource.IsLogging();
+                    enabled = _dataSource.IsLogging;
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:

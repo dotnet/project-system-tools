@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 {
     internal class RoslynLogger
     {

@@ -17,8 +17,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 
         ILogger CreateLogger(bool isDesignTime);
 
-        string RetrieveLogForBuild(int buildID);
+        string GetLogForBuild(int buildID);
 
-        ImmutableList<IBuildSummary> RetrieveAllBuilds();
+        ImmutableList<IBuildSummary> GetAllBuilds();
     }
 }

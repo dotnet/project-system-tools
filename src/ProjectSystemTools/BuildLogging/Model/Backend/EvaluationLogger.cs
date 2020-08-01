@@ -7,7 +7,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Logging;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 {
     internal sealed class EvaluationLogger : LoggerBase
     {

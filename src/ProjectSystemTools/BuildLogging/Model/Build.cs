@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
@@ -11,11 +11,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     // server side data (deals with log files)
     internal sealed class Build : IComparable<Build>, IDisposable
     {
-        // TODO: If needed, make an issue: implement more robust ID system (that doesn't use ints)
-        public static int SharedBuildID { get; private set; }
         public BuildSummary BuildSummary { get; private set; }
         public string LogPath { get; private set; }
-
+        private static int SharedBuildID { get; set; }
         public Build(string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
             BuildSummary = new BuildSummary(SharedBuildID, projectPath, dimensions, targets, buildType, startTime);

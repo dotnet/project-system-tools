@@ -7,7 +7,7 @@ using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 {
 
     [Export(typeof(IBackendBuildTableDataSource))]
@@ -77,7 +77,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         /// </summary>
         /// <param name="buildID">ID to return build for</param>
         /// <returns>(Temporary) returns filepath to log path (on server)</returns>
-        public string RetrieveLogForBuild(int buildID)
+        public string GetLogForBuild(int buildID)
         {
             Build match = findBuildByID(buildID);
             return match.LogPath;
@@ -93,7 +93,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             return _entries.Find(x => x.BuildSummary.BuildId == buildID);
         }
 
-        public ImmutableList<IBuildSummary> RetrieveAllBuilds()
+        public ImmutableList<IBuildSummary> GetAllBuilds()
         {
             ImmutableList<IBuildSummary> buildSummaries = ImmutableList<IBuildSummary>.Empty;
             IEnumerator<Build> builds = _entries.GetEnumerator();

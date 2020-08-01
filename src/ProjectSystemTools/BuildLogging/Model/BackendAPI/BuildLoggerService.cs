@@ -16,7 +16,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
         private readonly IBackendBuildTableDataSource _dataSource;
 
         [ImportingConstructor]
-        public BuildLoggerService(IBackendBuildTableDataSource dataSource) {
+        public BuildLoggerService(IBackendBuildTableDataSource dataSource)
+        {
             _dataSource = dataSource;
         }
 
@@ -46,14 +47,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
         }
 
         // TODO: Change how data is transfered later in an async / server client scenario
-        string IBuildLoggerService.RetrieveLogForBuild(int buildID)
+        string IBuildLoggerService.GetLogForBuild(int buildID)
         {
-            return _dataSource.RetrieveLogForBuild(buildID);
+            return _dataSource.GetLogForBuild(buildID);
         }
 
-        ImmutableList<IBuildSummary> IBuildLoggerService.RetrieveAllBuilds()
+        ImmutableList<IBuildSummary> IBuildLoggerService.GetAllBuilds()
         {
-            return _dataSource.RetrieveAllBuilds();
+            return _dataSource.GetAllBuilds();
         }
     }
 }

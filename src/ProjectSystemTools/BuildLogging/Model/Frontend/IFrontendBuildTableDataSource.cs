@@ -8,7 +8,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
     {
         ITableManager Manager { get; set; }
 
-        bool IsLogging();
+        bool IsLogging { get; }
 
         void Start();
 

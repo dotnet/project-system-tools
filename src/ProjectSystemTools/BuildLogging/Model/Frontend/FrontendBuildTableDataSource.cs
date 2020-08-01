@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.Linq;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
@@ -32,7 +32,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 
         public string DisplayName => BuildDataSourceDisplayName;
 
-        public bool SupportRoslynLogging { get; private set; }
+        public bool SupportRoslynLogging { get; }
 
         public int CurrentVersionNumber { get; private set; }
 
@@ -54,9 +54,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
             SupportRoslynLogging = _loggerService.SupportsRoslynLogging();
         }
 
-        public bool IsLogging()
+        public bool IsLogging
         {
-            return _loggerService.IsLogging();
+            get
+            {
+                return _loggerService.IsLogging();
+            }
         }
 
         public void Start()
@@ -66,7 +69,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 
         public void Stop()
         {
-            _loggerService.Stop();;
+            _loggerService.Stop();
         }
 
         public void Clear()
@@ -135,18 +138,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 
         public string RetrieveLogForBuild(int buildID)
         {
-            return _loggerService.RetrieveLogForBuild(buildID);
+            return _loggerService.GetLogForBuild(buildID);
         }
 
         private void UpdateEntries()
         {
-            ImmutableList<IBuildSummary> newData = _loggerService.RetrieveAllBuilds();
-            _entries = ImmutableList<UIBuildSummary>.Empty;
-            foreach (IBuildSummary summary in newData)
-            {
-                _entries = _entries.Add(new UIBuildSummary(summary));
-            }
-            NotifyChange();
+            _entries = _loggerService
+                .GetAllBuilds()
+                .Select(summary => new UIBuildSummary(summary))
+                .ToImmutableList();
         }
     }
 }
