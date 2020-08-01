@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
     /// <summary>
     /// Immutable Type
     /// </summary>
     public sealed class BuildSummary : IBuildSummary
     {
-        public int BuildID { get; }
+        public int BuildId { get; }
 
         public BuildType BuildType { get; }
 
@@ -28,9 +28,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 
         public string ProjectPath { get; }
 
-        public BuildSummary(int buildID, string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
+        public BuildSummary(int buildId, string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
-            BuildID = buildID;
+            BuildId = buildId;
             ProjectPath = projectPath;
             Dimensions = dimensions.ToArray();
             Targets = targets?.ToArray() ?? Enumerable.Empty<string>();
@@ -39,7 +39,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
             Status = BuildStatus.Running;
         }
         public BuildSummary(IBuildSummary other, BuildStatus status, TimeSpan elapsed) {
-            BuildID = other.BuildID;
+            BuildId = other.BuildId;
             BuildType = other.BuildType;
             // TODO: Do the IEnumerable types need deep copying?
             Dimensions = other.Dimensions;

@@ -10,7 +10,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 {
     public interface IBuildSummary : IComparable<IBuildSummary>
     {
-        public int BuildID { get; }
+        public int BuildId { get; }
 
         public BuildType BuildType { get; }
 

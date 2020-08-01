@@ -13,7 +13,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
     [Export(typeof(IBuildLoggerService))]
     internal sealed class BuildLoggerService : IBuildLoggerService
     {
-        IBackendBuildTableDataSource _dataSource;
+        private readonly IBackendBuildTableDataSource _dataSource;
 
         [ImportingConstructor]
         public BuildLoggerService(IBackendBuildTableDataSource dataSource) {

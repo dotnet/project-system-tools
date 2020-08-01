@@ -7,7 +7,7 @@ using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
 
     [Export(typeof(IBackendBuildTableDataSource))]
@@ -90,7 +90,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
         /// <returns>Build matching the given ID, if no match, return null</returns>
         private Build findBuildByID(int buildID)
         {
-            return _entries.Find(x => x.BuildSummary.BuildID == buildID);
+            return _entries.Find(x => x.BuildSummary.BuildId == buildID);
         }
 
         public ImmutableList<IBuildSummary> RetrieveAllBuilds()

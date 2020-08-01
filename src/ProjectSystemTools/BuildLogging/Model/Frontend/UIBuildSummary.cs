@@ -15,7 +15,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
     /// </summary>
     public sealed class UIBuildSummary : IBuildSummary
     {
-        public int BuildID { get; }
+        public int BuildId { get; }
         public BuildType BuildType { get; }
 
         public IEnumerable<string> Dimensions { get; }
@@ -32,7 +32,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 
         public UIBuildSummary(int buildID, string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
-            BuildID = buildID;
+            BuildId = buildID;
             ProjectPath = projectPath;
             Dimensions = dimensions.ToArray();
             Targets = targets?.ToArray() ?? Enumerable.Empty<string>();
@@ -42,7 +42,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
         }
         public UIBuildSummary(IBuildSummary other, BuildStatus status, TimeSpan elapsed)
         {
-            BuildID = other.BuildID;
+            BuildId = other.BuildId;
             BuildType = other.BuildType;
             // TODO: Check if this needs deep copying
             Dimensions = other.Dimensions;
@@ -55,7 +55,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
         }
         public UIBuildSummary(IBuildSummary other)
         {
-            BuildID = other.BuildID;
+            BuildId = other.BuildId;
             BuildType = other.BuildType;
             // TODO: Check if this needs deep copying
             Dimensions = other.Dimensions;
@@ -104,7 +104,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
                     break;
 
                 case TableKeyNames.BuildID:
-                    content = BuildID;
+                    content = BuildId;
                     break;
 
                 default:

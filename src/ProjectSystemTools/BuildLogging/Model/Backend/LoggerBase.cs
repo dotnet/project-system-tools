@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
     internal abstract class LoggerBase : ILogger
     {

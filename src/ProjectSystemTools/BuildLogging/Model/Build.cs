@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
