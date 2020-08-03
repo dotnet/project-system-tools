@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -34,12 +33,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
         {
             BuildId = other.BuildId;
             BuildType = other.BuildType;
-            // TODO: Check if this needs deep copying
             Dimensions = other.Dimensions;
             Targets = other.Targets;
             StartTime = other.StartTime;
             ProjectPath = other.ProjectPath;
-
             Elapsed = other.Elapsed;
             Status = other.Status;
         }

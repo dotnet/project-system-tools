@@ -17,6 +17,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// <returns>True if build logging window is tracking logs and false otherwise</returns>
         bool IsLogging();
 
+        /// <summary>
+        /// Returns whether or not build logging supports roslyn logging
+        /// </summary>
+        /// <returns>True if build logging supports roslyn logging, false if otherwise</returns>
         bool SupportsRoslynLogging();
 
         /// <summary>
@@ -28,19 +32,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// <summary>
         /// Tell build logging to stop tracking logs
         /// </summary>
-        /// <returns>True if operation succeeded and false if not</returns>
         void Stop();
 
         /// <summary>
         /// Tell build logging to clear out all the accumulated logs contained on the server.
         /// </summary>
-        /// <returns>True if operation succeeded and false if not</returns>
         void Clear();
 
         /// <summary>
         /// Gives the user a log of a requested build
         /// </summary>
-        /// <param name="handle">an ID used to retrieve a unique log for a build</param>
+        /// <param name="buildID">an ID used to retrieve a unique log for a build</param>
         /// <returns>The log tied to the requested BuildHandle</returns>
         string GetLogForBuild(int buildID);
 

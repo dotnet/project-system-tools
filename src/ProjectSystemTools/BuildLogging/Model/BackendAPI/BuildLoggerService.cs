@@ -46,7 +46,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
             _dataSource.Clear();
         }
 
-        // TODO: Change how data is transfered later in an async / server client scenario
         string IBuildLoggerService.GetLogForBuild(int buildID)
         {
             return _dataSource.GetLogForBuild(buildID);
