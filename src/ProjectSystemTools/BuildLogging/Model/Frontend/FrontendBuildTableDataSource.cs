@@ -147,6 +147,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
                 .GetAllBuilds()
                 .Select(summary => new UIBuildSummary(summary))
                 .ToImmutableList();
+
+            NotifyChange();
         }
     }
 }
