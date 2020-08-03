@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 {
-    public interface IBuildSummary : IComparable<IBuildSummary>
+    public interface IBuildSummary
     {
         public int BuildId { get; }
 
@@ -21,7 +21,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
         public DateTime StartTime { get; }
 
         public TimeSpan Elapsed { get; }
-
+        
         public BuildStatus Status { get; }
 
         public string ProjectPath { get; }

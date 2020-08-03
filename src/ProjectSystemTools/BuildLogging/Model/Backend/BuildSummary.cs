@@ -41,7 +41,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
         public BuildSummary(IBuildSummary other, BuildStatus status, TimeSpan elapsed) {
             BuildId = other.BuildId;
             BuildType = other.BuildType;
-            // TODO: Do the IEnumerable types need deep copying?
+
             Dimensions = other.Dimensions;
             Targets = other.Targets;
 
@@ -50,22 +50,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 
             Elapsed = elapsed;
             Status = status;
-        }
-
-        public int CompareTo(IBuildSummary other)
-        {
-            if (ReferenceEquals(this, other))
-            {
-                return 0;
-            }
-
-            if (other is null)
-            {
-                return 1;
-            }
-
-            var startComparison = StartTime.CompareTo(other.StartTime);
-            return startComparison != 0 ? startComparison : string.Compare(ProjectPath, other.ProjectPath, StringComparison.Ordinal);
         }
     }
 }

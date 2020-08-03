@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
     // server side data (deals with log files)
-    internal sealed class Build : IComparable<Build>, IDisposable
+    internal sealed class Build : IDisposable
     {
         public BuildSummary BuildSummary { get; private set; }
         public string LogPath { get; private set; }
@@ -35,21 +35,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         public void SetLogPath(string logPath)
         {
             LogPath = logPath;
-        }
-
-        public int CompareTo(Build other)
-        {
-            if (ReferenceEquals(this, other))
-            {
-                return 0;
-            }
-
-            if (other is null)
-            {
-                return 1;
-            }
-
-            return BuildSummary.CompareTo(other.BuildSummary);
         }
 
         public void Dispose()

@@ -13,7 +13,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
     /// <summary>
     /// Immutable Type
     /// </summary>
-    public sealed class UIBuildSummary : IBuildSummary
+    public sealed class UIBuildSummary : IBuildSummary, IComparable<UIBuildSummary>
     {
         public int BuildId { get; }
         public BuildType BuildType { get; }
@@ -30,29 +30,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 
         public string ProjectPath { get; }
 
-        public UIBuildSummary(int buildID, string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
-        {
-            BuildId = buildID;
-            ProjectPath = projectPath;
-            Dimensions = dimensions.ToArray();
-            Targets = targets?.ToArray() ?? Enumerable.Empty<string>();
-            BuildType = buildType;
-            StartTime = startTime;
-            Status = BuildStatus.Running;
-        }
-        public UIBuildSummary(IBuildSummary other, BuildStatus status, TimeSpan elapsed)
-        {
-            BuildId = other.BuildId;
-            BuildType = other.BuildType;
-            // TODO: Check if this needs deep copying
-            Dimensions = other.Dimensions;
-            Targets = other.Targets;
-            StartTime = other.StartTime;
-            ProjectPath = other.ProjectPath;
-
-            Elapsed = elapsed;
-            Status = status;
-        }
         public UIBuildSummary(IBuildSummary other)
         {
             BuildId = other.BuildId;
@@ -69,52 +46,22 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 
         public bool TryGetValue(string keyName, out object content)
         {
-            switch (keyName)
+            content = keyName switch
             {
-                case TableKeyNames.Dimensions:
-                    content = Dimensions;
-                    break;
-
-                case TableKeyNames.Targets:
-                    content = Targets;
-                    break;
-
-                case TableKeyNames.Elapsed:
-                    content = Elapsed;
-                    break;
-
-                case TableKeyNames.BuildType:
-                    content = BuildType;
-                    break;
-
-                case TableKeyNames.Status:
-                    content = Status;
-                    break;
-
-                case StandardTableKeyNames.ProjectName:
-                    content = Path.GetFileNameWithoutExtension(ProjectPath);
-                    break;
-
-                case TableKeyNames.ProjectType:
-                    content = Path.GetExtension(ProjectPath);
-                    break;
-
-                case TableKeyNames.StartTime:
-                    content = StartTime;
-                    break;
-
-                case TableKeyNames.BuildID:
-                    content = BuildId;
-                    break;
-
-                default:
-                    content = null;
-                    break;
-            }
-
+                TableKeyNames.Dimensions => Dimensions,
+                TableKeyNames.Targets => Targets,
+                TableKeyNames.Elapsed => Elapsed,
+                TableKeyNames.BuildType => BuildType,
+                TableKeyNames.Status => Status,
+                StandardTableKeyNames.ProjectName => Path.GetFileNameWithoutExtension(ProjectPath),
+                TableKeyNames.ProjectType => Path.GetExtension(ProjectPath),
+                TableKeyNames.StartTime => StartTime,
+                TableKeyNames.BuildID => BuildId,
+                _ => null,
+            };
             return content != null;
         }
-        public int CompareTo(IBuildSummary other)
+        public int CompareTo(UIBuildSummary other)
         {
             if (ReferenceEquals(this, other))
             {

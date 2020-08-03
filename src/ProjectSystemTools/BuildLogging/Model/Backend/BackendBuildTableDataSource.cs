@@ -3,8 +3,10 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.Linq;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
@@ -79,43 +81,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
         /// <returns>(Temporary) returns filepath to log path (on server)</returns>
         public string GetLogForBuild(int buildID)
         {
-            Build match = findBuildByID(buildID);
-            return match.LogPath;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="buildID">ID to return build for</param>
-        /// <returns>Build matching the given ID, if no match, return null</returns>
-        private Build findBuildByID(int buildID)
-        {
-            return _entries.Find(x => x.BuildSummary.BuildId == buildID);
+            return _entries.Find(x => x.BuildSummary.BuildId == buildID).LogPath;
         }
 
         public ImmutableList<IBuildSummary> GetAllBuilds()
         {
-            ImmutableList<IBuildSummary> buildSummaries = ImmutableList<IBuildSummary>.Empty;
-            IEnumerator<Build> builds = _entries.GetEnumerator();
-            while (builds.MoveNext())
-            {
-                Build current = builds.Current;
-                buildSummaries = buildSummaries.Add(current.BuildSummary);
-            }
-            return buildSummaries;
-        }
-
-        public void Dispose()
-        {
-            Clear();
+            return _entries.Select(build => build.BuildSummary).ToImmutableList<IBuildSummary>();
         }
 
         public void NotifyChange()
         {
-            if (NotifyUI != null) 
-            {
-                NotifyUI();
-            }
+            NotifyUI?.Invoke();
         }
 
         public void AddEntry(Build build)
