@@ -50,6 +50,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// Gives the user a requested build
         /// </summary>
         /// <returns>List of summary information of all builds on the server</returns>
-        ImmutableList<IBuildSummary> GetAllBuilds();
+        ImmutableList<BuildSummary> GetAllBuilds();
     }
 }

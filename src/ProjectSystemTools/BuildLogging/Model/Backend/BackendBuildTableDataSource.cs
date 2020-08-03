@@ -82,9 +82,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
             return _entries.Find(x => x.BuildSummary.BuildId == buildID).LogPath;
         }
 
-        public ImmutableList<IBuildSummary> GetAllBuilds()
+        public ImmutableList<BuildSummary> GetAllBuilds()
         {
-            return _entries.Select(build => build.BuildSummary).ToImmutableList<IBuildSummary>();
+            return _entries.Select(build => build.BuildSummary).ToImmutableList<BuildSummary>();
         }
 
         public void NotifyChange()

@@ -12,7 +12,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
     /// <summary>
     /// Immutable Type
     /// </summary>
-    public sealed class UIBuildSummary : IBuildSummary, IComparable<UIBuildSummary>
+    public sealed class UIBuildSummary : IComparable<UIBuildSummary>
     {
         public int BuildId { get; }
         public BuildType BuildType { get; }
@@ -29,7 +29,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 
         public string ProjectPath { get; }
 
-        public UIBuildSummary(IBuildSummary other)
+        public UIBuildSummary(BuildSummary other)
         {
             BuildId = other.BuildId;
             BuildType = other.BuildType;

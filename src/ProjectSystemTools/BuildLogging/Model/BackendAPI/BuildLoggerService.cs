@@ -51,7 +51,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
             return _dataSource.GetLogForBuild(buildID);
         }
 
-        ImmutableList<IBuildSummary> IBuildLoggerService.GetAllBuilds()
+        ImmutableList<BuildSummary> IBuildLoggerService.GetAllBuilds()
         {
             return _dataSource.GetAllBuilds();
         }

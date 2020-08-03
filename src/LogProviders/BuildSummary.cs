@@ -2,15 +2,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 {
     /// <summary>
     /// Immutable Type
     /// </summary>
-    public sealed class BuildSummary : IBuildSummary
+    public sealed class BuildSummary
     {
         public int BuildId { get; }
 
@@ -28,17 +29,20 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 
         public string ProjectPath { get; }
 
+        public string ProjectName { get; }
+
         public BuildSummary(int buildId, string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
             BuildId = buildId;
             ProjectPath = projectPath;
+            ProjectName = Path.GetFileName(ProjectPath);
             Dimensions = dimensions.ToArray();
             Targets = targets?.ToArray() ?? Enumerable.Empty<string>();
             BuildType = buildType;
             StartTime = startTime;
             Status = BuildStatus.Running;
         }
-        public BuildSummary(IBuildSummary other, BuildStatus status, TimeSpan elapsed) {
+        public BuildSummary(BuildSummary other, BuildStatus status, TimeSpan elapsed) {
             BuildId = other.BuildId;
             BuildType = other.BuildType;
 
