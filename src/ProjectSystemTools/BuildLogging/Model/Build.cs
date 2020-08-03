@@ -14,10 +14,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     {
         public BuildSummary BuildSummary { get; private set; }
         public string LogPath { get; private set; }
-        private static int SharedBuildID;
+        private static int SharedBuildId;
         public Build(string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
-            int nextId = Interlocked.Increment(ref SharedBuildID);
+            int nextId = Interlocked.Increment(ref SharedBuildId);
             BuildSummary = new BuildSummary(nextId, projectPath, dimensions, targets, buildType, startTime);
         }
 
