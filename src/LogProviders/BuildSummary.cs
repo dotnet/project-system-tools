@@ -2,9 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 {
@@ -17,9 +16,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 
         public BuildType BuildType { get; }
 
-        public IEnumerable<string> Dimensions { get; }
+        public ImmutableArray<string> Dimensions { get; }
 
-        public IEnumerable<string> Targets { get; }
+        public ImmutableArray<string> Targets { get; }
 
         public DateTime StartTime { get; }
 
@@ -36,8 +35,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
             BuildId = buildId;
             ProjectPath = projectPath;
             ProjectName = Path.GetFileName(ProjectPath);
-            Dimensions = dimensions.ToArray();
-            Targets = targets?.ToArray() ?? Enumerable.Empty<string>();
+            Dimensions = dimensions.ToImmutableArray();
+            Targets = targets?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
             BuildType = buildType;
             StartTime = startTime;
             Status = BuildStatus.Running;
@@ -45,13 +44,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
         public BuildSummary(BuildSummary other, BuildStatus status, TimeSpan elapsed) {
             BuildId = other.BuildId;
             BuildType = other.BuildType;
-
             Dimensions = other.Dimensions;
             Targets = other.Targets;
-
             StartTime = other.StartTime;
             ProjectPath = other.ProjectPath;
-
+            ProjectName = other.ProjectName;
             Elapsed = elapsed;
             Status = status;
         }

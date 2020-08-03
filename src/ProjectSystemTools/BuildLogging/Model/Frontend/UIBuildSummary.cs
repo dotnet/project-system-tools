@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
@@ -17,9 +18,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
         public int BuildId { get; }
         public BuildType BuildType { get; }
 
-        public IEnumerable<string> Dimensions { get; }
+        public ImmutableArray<string> Dimensions { get; }
 
-        public IEnumerable<string> Targets { get; }
+        public ImmutableArray<string> Targets { get; }
 
         public DateTime StartTime { get; }
 
@@ -27,7 +28,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
 
         public BuildStatus Status { get; }
 
-        public string ProjectPath { get; }
+        public string ProjectName { get; }
 
         public UIBuildSummary(BuildSummary other)
         {
@@ -36,7 +37,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
             Dimensions = other.Dimensions;
             Targets = other.Targets;
             StartTime = other.StartTime;
-            ProjectPath = other.ProjectPath;
+            ProjectName = other.ProjectName;
             Elapsed = other.Elapsed;
             Status = other.Status;
         }
@@ -50,8 +51,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
                 TableKeyNames.Elapsed => Elapsed,
                 TableKeyNames.BuildType => BuildType,
                 TableKeyNames.Status => Status,
-                StandardTableKeyNames.ProjectName => Path.GetFileNameWithoutExtension(ProjectPath),
-                TableKeyNames.ProjectType => Path.GetExtension(ProjectPath),
+                StandardTableKeyNames.ProjectName => Path.GetFileNameWithoutExtension(ProjectName),
+                TableKeyNames.ProjectType => Path.GetExtension(ProjectName),
                 TableKeyNames.StartTime => StartTime,
                 TableKeyNames.BuildID => BuildId,
                 _ => null,
@@ -71,7 +72,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
             }
 
             var startComparison = StartTime.CompareTo(other.StartTime);
-            return startComparison != 0 ? startComparison : string.Compare(ProjectPath, other.ProjectPath, StringComparison.Ordinal);
+            return startComparison != 0 ? startComparison : string.Compare(ProjectName, other.ProjectName, StringComparison.Ordinal);
         }
     }
 }
