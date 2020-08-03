@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
@@ -13,11 +14,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
     {
         public BuildSummary BuildSummary { get; private set; }
         public string LogPath { get; private set; }
-        private static int SharedBuildID { get; set; }
+        private static int SharedBuildID;
         public Build(string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
-            BuildSummary = new BuildSummary(SharedBuildID, projectPath, dimensions, targets, buildType, startTime);
-            SharedBuildID++;
+            int nextId = Interlocked.Increment(ref SharedBuildID);
+            BuildSummary = new BuildSummary(nextId, projectPath, dimensions, targets, buildType, startTime);
         }
 
         public void Finish(bool succeeded, DateTime time)
