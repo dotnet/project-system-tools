@@ -14,7 +14,7 @@ using Microsoft.VisualStudio.Threading;
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
     [Export(typeof(IFrontEndBuildTableDataSource))]
-    internal sealed class FrontendBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontEndBuildTableDataSource
+    internal sealed class FrontEndBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontEndBuildTableDataSource
     {
         private const string BuildDataSourceDisplayName = "Build Data Source";
         private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
@@ -51,7 +51,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         }
 
         [ImportingConstructor]
-        public FrontendBuildTableDataSource(IBuildLoggerService loggerService)
+        public FrontEndBuildTableDataSource(IBuildLoggerService loggerService)
         {
             _loggerService = loggerService;
             
@@ -143,7 +143,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return null;
         }
 
-        public string RetrieveLogForBuild(int buildID)
+        public string GetLogForBuild(int buildID)
         {
             string result;
             result = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
