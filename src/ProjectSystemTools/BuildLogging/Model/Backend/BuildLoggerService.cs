@@ -35,29 +35,32 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             return Task.FromResult(_dataSource.SupportsRoslynLogging);
         }
 
-        public async Task Start(Action notifyCallback)
+        public Task Start(Action notifyCallback)
         {
             _dataSource.Start(notifyCallback);
+            return Task.CompletedTask;
         }
 
-        public async Task Stop()
+        public Task Stop()
         {
             _dataSource.Stop();
+            return Task.CompletedTask;
         }
 
-        public async Task Clear()
+        public Task Clear()
         {
             _dataSource.Clear();
+            return Task.CompletedTask;
         }
 
-        public async Task<string> GetLogForBuild(int buildID)
+        public Task<string> GetLogForBuild(int buildID)
         {
-            return _dataSource.GetLogForBuild(buildID);
+            return Task.FromResult(_dataSource.GetLogForBuild(buildID));
         }
 
-        public async Task<ImmutableList<BuildSummary>> GetAllBuilds()
+        public Task<ImmutableList<BuildSummary>> GetAllBuilds()
         {
-            return _dataSource.GetAllBuilds();
+            return Task.FromResult(_dataSource.GetAllBuilds());
         }
     }
 }

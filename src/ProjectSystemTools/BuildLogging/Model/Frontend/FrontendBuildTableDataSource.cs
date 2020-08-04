@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableManager;
-using Microsoft.VisualStudio.Threading;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
@@ -143,21 +142,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return null;
         }
 
-        public string GetLogForBuild(int buildID)
+        public async Task<string> GetLogForBuild(int buildID)
         {
-            string result;
-            result = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                string result = await _loggerService.GetLogForBuild(buildID);
-                return result;
-            });
-            return result;
+            return await _loggerService.GetLogForBuild(buildID);
         }
 
-        private void UpdateEntries()
+        private async void UpdateEntries()
         {
-            _entries = _loggerService
-                .GetAllBuilds()
+            _entries = (await _loggerService.GetAllBuilds())
                 .Select(summary => new UIBuildSummary(summary))
                 .ToImmutableList();
 
