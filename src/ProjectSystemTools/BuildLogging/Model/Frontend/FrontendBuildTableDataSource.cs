@@ -136,7 +136,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return null;
         }
 
-        public string RetrieveLogForBuild(int buildID)
+        public string GetLogForBuild(int buildID)
         {
             return _loggerService.GetLogForBuild(buildID);
         }

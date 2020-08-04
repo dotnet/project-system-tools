@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
 
@@ -10,6 +9,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
     /// <summary>
     /// Immutable Type
+    /// 
+    /// A wrapper class for the BuildSummary class,
+    /// used only on the client side.
+    /// This has some extra behavior to give the UI
+    /// access to data on this UIBuildSummary, and sorting order.
     /// </summary>
     public sealed class UIBuildSummary : IComparable<UIBuildSummary>
     {

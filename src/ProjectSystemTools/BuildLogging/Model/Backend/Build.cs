@@ -5,11 +5,18 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Threading;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
-    // server side data (deals with log files)
+    /// <summary>
+    /// Represents a build collected by the loggers
+    /// Deals with data needed by the client as well as data related to log files
+    /// and the file system on the server.
+    /// 
+    /// Build should only be used on the server side,
+    /// where BuildSummary type (a subset of this type)
+    /// can be sent to the client side
+    /// </summary>
     internal sealed class Build : IDisposable
     {
         public BuildSummary BuildSummary { get; set; }

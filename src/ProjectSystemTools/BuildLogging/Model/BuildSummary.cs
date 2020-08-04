@@ -9,6 +9,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
     /// <summary>
     /// Immutable Type
+    /// 
+    /// Contains data about builds that are necessary on the client and server side.
+    /// Each BuildSummary also has a unique int Id to be referred by.
+    /// This type can be sent to the client side.
     /// </summary>
     public sealed class BuildSummary
     {

@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
