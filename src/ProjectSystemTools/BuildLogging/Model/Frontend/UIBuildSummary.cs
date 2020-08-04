@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
@@ -15,46 +14,26 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
     /// </summary>
     public sealed class UIBuildSummary : IComparable<UIBuildSummary>
     {
-        public int BuildId { get; }
-        public BuildType BuildType { get; }
-
-        public ImmutableArray<string> Dimensions { get; }
-
-        public ImmutableArray<string> Targets { get; }
-
-        public DateTime StartTime { get; }
-
-        public TimeSpan Elapsed { get; }
-
-        public BuildStatus Status { get; }
-
-        public string ProjectName { get; }
+        private BuildSummary buildSummary;
 
         public UIBuildSummary(BuildSummary other)
         {
-            BuildId = other.BuildId;
-            BuildType = other.BuildType;
-            Dimensions = other.Dimensions;
-            Targets = other.Targets;
-            StartTime = other.StartTime;
-            ProjectName = other.ProjectName;
-            Elapsed = other.Elapsed;
-            Status = other.Status;
+            buildSummary = other;
         }
 
         public bool TryGetValue(string keyName, out object content)
         {
             content = keyName switch
             {
-                TableKeyNames.Dimensions => Dimensions,
-                TableKeyNames.Targets => Targets,
-                TableKeyNames.Elapsed => Elapsed,
-                TableKeyNames.BuildType => BuildType,
-                TableKeyNames.Status => Status,
-                StandardTableKeyNames.ProjectName => Path.GetFileNameWithoutExtension(ProjectName),
-                TableKeyNames.ProjectType => Path.GetExtension(ProjectName),
-                TableKeyNames.StartTime => StartTime,
-                TableKeyNames.BuildID => BuildId,
+                TableKeyNames.Dimensions => buildSummary.Dimensions,
+                TableKeyNames.Targets => buildSummary.Targets,
+                TableKeyNames.Elapsed => buildSummary.Elapsed,
+                TableKeyNames.BuildType => buildSummary.BuildType,
+                TableKeyNames.Status => buildSummary.Status,
+                StandardTableKeyNames.ProjectName => Path.GetFileNameWithoutExtension(buildSummary.ProjectName),
+                TableKeyNames.ProjectType => Path.GetExtension(buildSummary.ProjectName),
+                TableKeyNames.StartTime => buildSummary.StartTime,
+                TableKeyNames.BuildID => buildSummary.BuildId,
                 _ => null,
             };
             return content != null;
@@ -71,8 +50,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
                 return 1;
             }
 
-            var startComparison = StartTime.CompareTo(other.StartTime);
-            return startComparison != 0 ? startComparison : string.Compare(ProjectName, other.ProjectName, StringComparison.Ordinal);
+            var startComparison = buildSummary.StartTime.CompareTo(other.buildSummary.StartTime);
+            return startComparison != 0 ? startComparison : string.Compare(buildSummary.ProjectName, other.buildSummary.ProjectName, StringComparison.Ordinal);
         }
     }
 }
