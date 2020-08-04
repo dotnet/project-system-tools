@@ -8,10 +8,10 @@ using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
 using Microsoft.VisualStudio.Shell.TableManager;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
-    [Export(typeof(IFrontendBuildTableDataSource))]
-    internal sealed class FrontendBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontendBuildTableDataSource
+    [Export(typeof(IFrontEndBuildTableDataSource))]
+    internal sealed class FrontendBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontEndBuildTableDataSource
     {
         private const string BuildDataSourceDisplayName = "Build Data Source";
         private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);

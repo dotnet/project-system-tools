@@ -7,7 +7,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Logging;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
     internal sealed class EvaluationLogger : LoggerBase
     {
@@ -48,7 +48,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 
         private readonly Dictionary<int, Evaluation> _evaluations = new Dictionary<int, Evaluation>();
 
-        public EvaluationLogger(BackendBuildTableDataSource dataSource) :
+        public EvaluationLogger(BackEndBuildTableDataSource dataSource) :
             base(dataSource)
         {
         }

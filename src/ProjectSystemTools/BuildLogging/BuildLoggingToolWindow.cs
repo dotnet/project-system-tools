@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -27,7 +27,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         public const string BuildLogging = "BuildLogging";
         public const string BuildLoggingToolWindowGuidString = "391238ea-dad7-488c-94d1-e2b6b5172bf3";
 
-        private readonly IFrontendBuildTableDataSource _dataSource;
+        private readonly IFrontEndBuildTableDataSource _dataSource;
         private readonly IVsUIShellOpenDocument _openDocument;
 
         private BuildType _filterType = BuildType.All;
@@ -43,7 +43,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         public BuildLoggingToolWindow()
         {
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
-            _dataSource = componentModel.GetService<IFrontendBuildTableDataSource>();
+            _dataSource = componentModel.GetService<IFrontEndBuildTableDataSource>();
 
             _openDocument = (IVsUIShellOpenDocument)GetService(typeof(SVsUIShellOpenDocument));
 

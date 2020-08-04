@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
     // server side data (deals with log files)
     internal sealed class Build : IDisposable

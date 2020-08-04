@@ -8,11 +8,11 @@ using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
     [Export(typeof(ILoggingController))]
     [Export(typeof(ILoggingDataSource))]
-    internal sealed class BackendBuildTableDataSource : ILoggingController, ILoggingDataSource
+    internal sealed class BackEndBuildTableDataSource : ILoggingController, ILoggingDataSource
     {
         private const string BuildDataSourceDisplayName = "Build Data Source";
         private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
@@ -37,7 +37,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 
         private Action NotifyUI { get; set; }
 
-        public BackendBuildTableDataSource()
+        public BackEndBuildTableDataSource()
         {
             _evaluationLogger = new EvaluationLogger(this);
             _roslynLogger = new RoslynLogger(this);

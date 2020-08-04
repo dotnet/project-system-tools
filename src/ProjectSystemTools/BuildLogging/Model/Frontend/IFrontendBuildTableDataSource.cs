@@ -2,9 +2,9 @@
 
 using Microsoft.VisualStudio.Shell.TableManager;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
-    public interface IFrontendBuildTableDataSource : ITableDataSource
+    public interface IFrontEndBuildTableDataSource : ITableDataSource
     {
         ITableManager Manager { get; set; }
 

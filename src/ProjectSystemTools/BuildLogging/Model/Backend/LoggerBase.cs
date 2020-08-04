@@ -4,17 +4,17 @@ using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
     internal abstract class LoggerBase : ILogger
     {
-        protected readonly BackendBuildTableDataSource DataSource;
+        protected readonly BackEndBuildTableDataSource DataSource;
 
         public LoggerVerbosity Verbosity { get => LoggerVerbosity.Diagnostic; set { } }
 
         public string Parameters { get; set; }
 
-        protected LoggerBase(BackendBuildTableDataSource dataSource)
+        protected LoggerBase(BackEndBuildTableDataSource dataSource)
         {
             DataSource = dataSource;
         }
