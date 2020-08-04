@@ -36,7 +36,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public int CurrentVersionNumber { get; private set; }
 
-        public ITableManager Manager
+        private ITableManager Manager
         {
             get => _manager;
             set
