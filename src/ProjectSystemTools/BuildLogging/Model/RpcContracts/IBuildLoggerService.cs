@@ -3,8 +3,6 @@
 using System;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts
 {
