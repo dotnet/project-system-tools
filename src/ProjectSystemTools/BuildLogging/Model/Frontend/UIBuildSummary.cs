@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Immutable;
 using System.IO;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
@@ -14,7 +13,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Frontend
     /// </summary>
     public sealed class UIBuildSummary : IComparable<UIBuildSummary>
     {
-        private BuildSummary buildSummary;
+        private readonly BuildSummary buildSummary;
 
         public UIBuildSummary(BuildSummary other)
         {

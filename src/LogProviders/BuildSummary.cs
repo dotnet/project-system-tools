@@ -26,15 +26,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
 
         public BuildStatus Status { get; }
 
-        public string ProjectPath { get; }
-
         public string ProjectName { get; }
 
         public BuildSummary(int buildId, string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
             BuildId = buildId;
-            ProjectPath = projectPath;
-            ProjectName = Path.GetFileName(ProjectPath);
+            ProjectName = Path.GetFileName(projectPath);
             Dimensions = dimensions.ToImmutableArray();
             Targets = targets?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
             BuildType = buildType;
@@ -47,7 +44,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
             Dimensions = other.Dimensions;
             Targets = other.Targets;
             StartTime = other.StartTime;
-            ProjectPath = other.ProjectPath;
             ProjectName = other.ProjectName;
             Elapsed = elapsed;
             Status = status;

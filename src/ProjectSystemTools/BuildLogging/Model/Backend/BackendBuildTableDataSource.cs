@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -9,9 +10,9 @@ using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 {
-
-    [Export(typeof(IBackendBuildTableDataSource))]
-    internal sealed class BackendBuildTableDataSource : IBackendBuildTableDataSource
+    [Export(typeof(ILoggingController))]
+    [Export(typeof(ILoggingDataSource))]
+    internal sealed class BackendBuildTableDataSource : ILoggingController, ILoggingDataSource
     {
         private const string BuildDataSourceDisplayName = "Build Data Source";
         private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
@@ -34,7 +35,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
 
         public bool SupportsRoslynLogging => _roslynLogger.Supported;
 
-        private NotifyCallback NotifyUI { get; set; }
+        private Action NotifyUI { get; set; }
 
         public BackendBuildTableDataSource()
         {
@@ -42,7 +43,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
             _roslynLogger = new RoslynLogger(this);
         }
 
-        public void Start(NotifyCallback notifyCallback)
+        public void Start(Action notifyCallback)
         {
             NotifyUI = notifyCallback;
 
@@ -79,12 +80,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend
         /// <returns> returns filepath to log path (on server)</returns>
         public string GetLogForBuild(int buildID)
         {
-            return _entries.Find(x => x.BuildSummary.BuildId == buildID).LogPath;
+            return _entries.Find(x => x.BuildId == buildID).LogPath;
         }
 
-        public ImmutableList<BuildSummary> GetAllBuilds()
+        ImmutableList<BuildSummary> ILoggingDataSource.GetAllBuilds()
         {
-            return _entries.Select(build => build.BuildSummary).ToImmutableList<BuildSummary>();
+            return _entries.Select(build => build.BuildSummary).ToImmutableList();
         }
 
         public void NotifyChange()

@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
@@ -13,17 +15,19 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
     [Export(typeof(IBuildLoggerService))]
     internal sealed class BuildLoggerService : IBuildLoggerService
     {
-        private readonly IBackendBuildTableDataSource _dataSource;
+        private readonly ILoggingDataSource _dataSource;
+        private readonly ILoggingController _loggingController;
 
         [ImportingConstructor]
-        public BuildLoggerService(IBackendBuildTableDataSource dataSource)
+        public BuildLoggerService(ILoggingDataSource dataSource, ILoggingController loggingController)
         {
             _dataSource = dataSource;
+            _loggingController = loggingController;
         }
 
         bool IBuildLoggerService.IsLogging()
         {
-            return _dataSource.IsLogging;
+            return _loggingController.IsLogging;
         }
 
         bool IBuildLoggerService.SupportsRoslynLogging()
@@ -31,7 +35,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackendA
             return _dataSource.SupportsRoslynLogging;
         }
 
-        void IBuildLoggerService.Start(NotifyCallback notifyCallback)
+        void IBuildLoggerService.Start(Action notifyCallback)
         {
             _dataSource.Start(notifyCallback);
         }

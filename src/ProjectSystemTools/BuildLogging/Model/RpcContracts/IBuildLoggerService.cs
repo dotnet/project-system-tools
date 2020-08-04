@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Immutable;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.Backend;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts
@@ -26,8 +28,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// <summary>
         /// Tell build logging to start tracking logs
         /// </summary>
-        /// <returns>True is operation succeeded and false if not</returns>
-        void Start(NotifyCallback notifyCallback);
+        void Start(Action notifyCallback);
 
         /// <summary>
         /// Tell build logging to stop tracking logs
