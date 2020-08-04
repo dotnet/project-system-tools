@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Shell.TableManager;
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
     [Export(typeof(IFrontEndBuildTableDataSource))]
-    internal sealed class FrontendBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontEndBuildTableDataSource
+    internal sealed class FrontEndBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontEndBuildTableDataSource
     {
         private const string BuildDataSourceDisplayName = "Build Data Source";
         private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
@@ -48,7 +48,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         }
 
         [ImportingConstructor]
-        public FrontendBuildTableDataSource(IBuildLoggerService loggerService)
+        public FrontEndBuildTableDataSource(IBuildLoggerService loggerService)
         {
             _loggerService = loggerService;
             SupportRoslynLogging = _loggerService.SupportsRoslynLogging();

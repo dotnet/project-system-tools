@@ -352,7 +352,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         }
 
         private string[] GetBuildFilterComboItems() =>
-            (_dataSource as FrontendBuildTableDataSource)?.SupportRoslynLogging ?? false
+            (_dataSource as FrontEndBuildTableDataSource)?.SupportRoslynLogging ?? false
                 ? new[]
                 {
                     BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
