@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
@@ -24,37 +25,37 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             _loggingController = loggingController;
         }
 
-        bool IBuildLoggerService.IsLogging()
+        public Task<bool> IsLogging()
         {
-            return _loggingController.IsLogging;
+            return Task.FromResult(_loggingController.IsLogging);
         }
 
-        bool IBuildLoggerService.SupportsRoslynLogging()
+        public Task<bool> SupportsRoslynLogging()
         {
-            return _dataSource.SupportsRoslynLogging;
+            return Task.FromResult(_dataSource.SupportsRoslynLogging);
         }
 
-        void IBuildLoggerService.Start(Action notifyCallback)
+        public async Task Start(Action notifyCallback)
         {
             _dataSource.Start(notifyCallback);
         }
 
-        void IBuildLoggerService.Stop()
+        public async Task Stop()
         {
             _dataSource.Stop();
         }
 
-        void IBuildLoggerService.Clear()
+        public async Task Clear()
         {
             _dataSource.Clear();
         }
 
-        string IBuildLoggerService.GetLogForBuild(int buildID)
+        public async Task<string> GetLogForBuild(int buildID)
         {
             return _dataSource.GetLogForBuild(buildID);
         }
 
-        ImmutableList<BuildSummary> IBuildLoggerService.GetAllBuilds()
+        public async Task<ImmutableList<BuildSummary>> GetAllBuilds()
         {
             return _dataSource.GetAllBuilds();
         }
