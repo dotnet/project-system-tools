@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
@@ -17,40 +18,40 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// Returns whether or not the build logging window is currently tracking logs or not
         /// </summary>
         /// <returns>True if build logging window is tracking logs and false otherwise</returns>
-        bool IsLogging();
+        Task<bool> IsLogging();
 
         /// <summary>
         /// Returns whether or not build logging supports roslyn logging
         /// </summary>
         /// <returns>True if build logging supports roslyn logging, false if otherwise</returns>
-        bool SupportsRoslynLogging();
+        Task<bool> SupportsRoslynLogging();
 
         /// <summary>
         /// Tell build logging to start tracking logs
         /// </summary>
-        void Start(Action notifyCallback);
+        Task Start(Action notifyCallback);
 
         /// <summary>
         /// Tell build logging to stop tracking logs
         /// </summary>
-        void Stop();
+        Task Stop();
 
         /// <summary>
         /// Tell build logging to clear out all the accumulated logs contained on the server.
         /// </summary>
-        void Clear();
+        Task Clear();
 
         /// <summary>
         /// Gives the user a log of a requested build
         /// </summary>
         /// <param name="buildID">an ID used to retrieve a unique log for a build</param>
         /// <returns>The log tied to the requested BuildHandle</returns>
-        string GetLogForBuild(int buildID);
+        Task<string> GetLogForBuild(int buildID);
 
         /// <summary>
         /// Gives the user a requested build
         /// </summary>
         /// <returns>List of summary information of all builds on the server</returns>
-        ImmutableList<BuildSummary> GetAllBuilds();
+        Task<ImmutableList<BuildSummary>> GetAllBuilds();
     }
 }

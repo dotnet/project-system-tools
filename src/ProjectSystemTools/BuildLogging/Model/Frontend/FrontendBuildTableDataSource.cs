@@ -4,9 +4,12 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableManager;
+using Microsoft.VisualStudio.Threading;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
@@ -32,7 +35,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public string DisplayName => BuildDataSourceDisplayName;
 
-        public bool SupportRoslynLogging { get; }
+        public bool SupportRoslynLogging { get; private set; }
 
         public int CurrentVersionNumber { get; private set; }
 
@@ -51,10 +54,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public FrontendBuildTableDataSource(IBuildLoggerService loggerService)
         {
             _loggerService = loggerService;
-            SupportRoslynLogging = _loggerService.SupportsRoslynLogging();
+            
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                SupportRoslynLogging = await _loggerService.SupportsRoslynLogging();
+            });
         }
 
-        public bool IsLogging
+        public Task<bool> IsLogging
         {
             get
             {
@@ -138,7 +145,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public string RetrieveLogForBuild(int buildID)
         {
-            return _loggerService.GetLogForBuild(buildID);
+            string result;
+            result = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                string result = await _loggerService.GetLogForBuild(buildID);
+                return result;
+            });
+            return result;
         }
 
         private void UpdateEntries()
