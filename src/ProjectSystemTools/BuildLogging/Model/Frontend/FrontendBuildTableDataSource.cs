@@ -48,30 +48,35 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             });
         }
 
-        public Task<bool> IsLogging
+        public async Task<bool> IsLogging()
         {
-            get
-            {
-                return _loggerService.IsLogging();
-            }
+            return await _loggerService.IsLogging();
         }
 
         public void Start()
         {
-            _loggerService.Start(UpdateEntries);
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await _loggerService.Start(UpdateEntries);
+            });
         }
 
         public void Stop()
         {
-            _loggerService.Stop();
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await _loggerService.Stop();
+            });
         }
 
         public void Clear()
         {
-            _loggerService.Clear();
-            _entries = ImmutableList<UIBuildSummary>.Empty;
-            CurrentVersionNumber++;
-            NotifyChange();
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await _loggerService.Clear();
+                _entries = ImmutableList<UIBuildSummary>.Empty;
+                NotifyChange();
+            });
         }
 
         public IDisposable Subscribe(ITableDataSink sink)
@@ -134,13 +139,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return await _loggerService.GetLogForBuild(buildID);
         }
 
-        private async void UpdateEntries()
+        private void UpdateEntries()
         {
-            _entries = (await _loggerService.GetAllBuilds())
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                _entries = (await _loggerService.GetAllBuilds())
                 .Select(summary => new UIBuildSummary(summary))
                 .ToImmutableList();
 
-            NotifyChange();
+                NotifyChange();
+            });
         }
     }
 }
