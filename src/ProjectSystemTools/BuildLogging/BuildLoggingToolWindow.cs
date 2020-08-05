@@ -201,7 +201,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                         continue;
                     }
 
-                    string logPath = await _dataSource.GetLogForBuild(buildID);
+                    string logPath = await _dataSource.GetLogForBuildAsync(buildID);
                     var filename = Path.GetFileName(logPath);
 
                     if (filename == null)
@@ -258,7 +258,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             var guid = VSConstants.LOGVIEWID_Primary;
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                string logPath = await _dataSource.GetLogForBuild(buildID);
+                string logPath = await _dataSource.GetLogForBuildAsync(buildID);
                 _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
                 frame?.Show();
             });
@@ -275,7 +275,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                         continue;
                     }
 
-                    string logPath = await _dataSource.GetLogForBuild(buildID);
+                    string logPath = await _dataSource.GetLogForBuildAsync(buildID);
                     try
                     {
                         Process.Start(logPath);
@@ -319,7 +319,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                     visible = true;
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
-                        enabled = !await _dataSource.IsLogging();
+                        enabled = !await _dataSource.IsLoggingAsync();
                     });
                     break;
 
@@ -327,7 +327,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                     visible = true;
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
-                        enabled = await _dataSource.IsLogging();
+                        enabled = await _dataSource.IsLoggingAsync();
                     });
                     break;
 

@@ -48,7 +48,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             });
         }
 
-        public async Task<bool> IsLogging()
+        public async Task<bool> IsLoggingAsync()
         {
             return await _loggerService.IsLoggingAsync();
         }
@@ -134,7 +134,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return null;
         }
 
-        public async Task<string> GetLogForBuild(int buildID)
+        public async Task<string> GetLogForBuildAsync(int buildID)
         {
             return await _loggerService.GetLogForBuildAsync(buildID);
         }

@@ -11,7 +11,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         /// Returns whether or not the the logging service is logging
         /// true if logging, false if not logging
         /// </summary>
-        Task<bool> IsLogging();
+        Task<bool> IsLoggingAsync();
 
         /// <summary>
         /// Tells the attached logging service to start logging
@@ -35,6 +35,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         /// </summary>
         /// <param name="buildId">an Id that refers to a specific build on the logging service</param>
         /// <returns>The filepath to the requested build's log file</returns>
-        Task<string> GetLogForBuild(int buildId);
+        Task<string> GetLogForBuildAsync(int buildId);
     }
 }
