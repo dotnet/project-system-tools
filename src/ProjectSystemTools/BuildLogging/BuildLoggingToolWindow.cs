@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableControl;
@@ -27,7 +27,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         public const string BuildLogging = "BuildLogging";
         public const string BuildLoggingToolWindowGuidString = "391238ea-dad7-488c-94d1-e2b6b5172bf3";
 
-        private readonly IBuildTableDataSource _dataSource;
+        private readonly IFrontEndBuildTableDataSource _dataSource;
         private readonly IVsUIShellOpenDocument _openDocument;
 
         private BuildType _filterType = BuildType.All;
@@ -43,7 +43,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         public BuildLoggingToolWindow()
         {
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
-            _dataSource = componentModel.GetService<IBuildTableDataSource>();
+            _dataSource = componentModel.GetService<IFrontEndBuildTableDataSource>();
 
             _openDocument = (IVsUIShellOpenDocument)GetService(typeof(SVsUIShellOpenDocument));
 
@@ -194,11 +194,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
             foreach (var entry in TableControl.SelectedEntries)
             {
-                if (!entry.TryGetValue(TableKeyNames.LogPath, out string logPath))
+                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
                 {
                     continue;
                 }
 
+                string logPath = _dataSource.GetLogForBuild(buildID);
                 var filename = Path.GetFileName(logPath);
 
                 if (filename == null)
@@ -246,12 +247,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         public void OpenLog(ITableEntryHandle tableEntry)
         {
-            if (!tableEntry.TryGetValue(TableKeyNames.LogPath, out string logPath))
+            if (!tableEntry.TryGetValue(TableKeyNames.BuildID, out int buildID))
             {
                 return;
             }
 
             var guid = VSConstants.LOGVIEWID_Primary;
+            string logPath = _dataSource.GetLogForBuild(buildID);
             _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
             frame?.Show();
         }
@@ -260,11 +262,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         {
             foreach (var entry in TableControl.SelectedEntries)
             {
-                if (!entry.TryGetValue(TableKeyNames.LogPath, out string logPath))
+                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
                 {
                     continue;
                 }
 
+                string logPath = _dataSource.GetLogForBuild(buildID);
                 try
                 {
                     Process.Start(logPath);
@@ -301,7 +304,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             var enabled = false;
             var visible = false;
             var latched = false;
-
             switch (cmd.cmdID)
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
@@ -350,7 +352,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         }
 
         private string[] GetBuildFilterComboItems() =>
-            (_dataSource as BuildTableDataSource)?.SupportRoslynLogging ?? false
+            (_dataSource as FrontEndBuildTableDataSource)?.SupportRoslynLogging ?? false
                 ? new[]
                 {
                     BuildLoggingResources.FilterBuildAll, BuildLoggingResources.FilterBuildEvaluations,
@@ -380,10 +382,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
                     _dataSource.Start();
+                    
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
                     _dataSource.Stop();
+
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:

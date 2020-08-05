@@ -7,7 +7,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
     internal sealed class ProjectLogger : LoggerBase
     {
@@ -19,7 +19,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
         private readonly BinaryLogger _binaryLogger;
         private Build _build;
 
-        public ProjectLogger(BuildTableDataSource dataSource, bool isDesignTime) :
+        public ProjectLogger(BackEndBuildTableDataSource dataSource, bool isDesignTime) :
             base(dataSource)
         {
             _logPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.binlog");

@@ -7,13 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
     internal class RoslynLogger
     {
         private static readonly ImmutableHashSet<string> RoslynEventSet;
 
-        private readonly BuildTableDataSource _dataSource;
+        private readonly BackEndBuildTableDataSource _dataSource;
 
         // lazily set but once set, will never change again
         private Action<TraceSource> _setLoggerCall;
@@ -58,7 +58,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
                 "StorageDatabase_Exceptions");
         }
 
-        public RoslynLogger(BuildTableDataSource dataSource)
+        public RoslynLogger(BackEndBuildTableDataSource dataSource)
         {
             _dataSource = dataSource;
         }
@@ -167,7 +167,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
             public RoslynTraceListener(IImmutableSet<string> roslynEvents)
             {
-                LogPath = Path.Combine(Path.GetTempPath(), $"RoslynLog-{Guid.NewGuid().ToString()}.txt");
+                LogPath = Path.Combine(Path.GetTempPath(), $"RoslynLog-{Guid.NewGuid()}.txt");
 
                 _set = roslynEvents;
 

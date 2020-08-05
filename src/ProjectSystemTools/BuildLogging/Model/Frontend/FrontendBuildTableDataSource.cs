@@ -3,29 +3,27 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
-using Microsoft.Build.Evaluation;
-using Microsoft.Build.Framework;
+using System.Linq;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 using Microsoft.VisualStudio.Shell.TableManager;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
-    [Export(typeof(IBuildTableDataSource))]
-    internal sealed class BuildTableDataSource : ITableEntriesSnapshotFactory, IBuildTableDataSource
+    [Export(typeof(IFrontEndBuildTableDataSource))]
+    internal sealed class FrontEndBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontEndBuildTableDataSource
     {
         private const string BuildDataSourceDisplayName = "Build Data Source";
         private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
         private const string BuildTableDataSourceSourceTypeIdentifier = nameof(BuildTableDataSourceSourceTypeIdentifier);
 
         private readonly object _gate = new object();
-        private readonly EvaluationLogger _evaluationLogger;
-        private readonly RoslynLogger _roslynLogger;
 
-        private ITableManager _manager;
         private ITableDataSink _tableDataSink;
         private BuildTableEntriesSnapshot _lastSnapshot;
-        private ImmutableList<Build> _entries = ImmutableList<Build>.Empty;
+        private ImmutableList<UIBuildSummary> _entries = ImmutableList<UIBuildSummary>.Empty;
+
+        private readonly IBuildLoggerService _loggerService;
 
         public string SourceTypeIdentifier => BuildTableDataSourceSourceTypeIdentifier;
 
@@ -33,55 +31,42 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public string DisplayName => BuildDataSourceDisplayName;
 
-        public bool SupportRoslynLogging => _roslynLogger.Supported;
-
-        public bool IsLogging { get; private set; }
+        public bool SupportRoslynLogging { get; }
 
         public int CurrentVersionNumber { get; private set; }
 
-        public ITableManager Manager
+        [ImportingConstructor]
+        public FrontEndBuildTableDataSource(IBuildLoggerService loggerService)
         {
-            get => _manager;
-            set
-            {
-                _manager?.RemoveSource(this);
-                _manager = value;
-                _manager?.AddSource(this);
-            }
+            _loggerService = loggerService;
+            SupportRoslynLogging = _loggerService.SupportsRoslynLogging();
         }
 
-        public BuildTableDataSource()
+        public bool IsLogging
         {
-            _evaluationLogger = new EvaluationLogger(this);
-            _roslynLogger = new RoslynLogger(this);
+            get
+            {
+                return _loggerService.IsLogging();
+            }
         }
 
         public void Start()
         {
-            IsLogging = true;
-            ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
-            _roslynLogger.Start();
+            _loggerService.Start(UpdateEntries);
         }
 
         public void Stop()
         {
-            IsLogging = false;
-            ProjectCollection.GlobalProjectCollection.UnregisterAllLoggers();
-            _roslynLogger.Stop();
+            _loggerService.Stop();
         }
 
         public void Clear()
         {
-            foreach (var build in _entries)
-            {
-                build.Dispose();
-            }
-            _entries = ImmutableList<Build>.Empty;
+            _loggerService.Clear();
+            _entries = ImmutableList<UIBuildSummary>.Empty;
             CurrentVersionNumber++;
             NotifyChange();
         }
-
-        public ILogger CreateLogger(bool isDesignTime) => new ProjectLogger(this, isDesignTime);
 
         public IDisposable Subscribe(ITableDataSink sink)
         {
@@ -95,12 +80,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 
         public void Dispose()
         {
-            foreach (var build in _entries)
-            {
-                build.Dispose();
-            }
-            _entries = ImmutableList<Build>.Empty;
-            Manager = null;
+            _entries = ImmutableList<UIBuildSummary>.Empty;
         }
 
         public void NotifyChange()
@@ -143,9 +123,18 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             return null;
         }
 
-        public void AddEntry(Build build)
+        public string GetLogForBuild(int buildID)
         {
-            _entries = _entries.Add(build);
+            return _loggerService.GetLogForBuild(buildID);
+        }
+
+        private void UpdateEntries()
+        {
+            _entries = _loggerService
+                .GetAllBuilds()
+                .Select(summary => new UIBuildSummary(summary))
+                .ToImmutableList();
+
             NotifyChange();
         }
     }

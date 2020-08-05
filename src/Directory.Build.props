@@ -10,5 +10,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <VSSDKTargetPlatformRegRootSuffix Condition="'$(RootSuffix)' != ''">$(RootSuffix)</VSSDKTargetPlatformRegRootSuffix>
     <VSSDKTargetPlatformRegRootSuffix Condition="'$(VSSDKTargetPlatformRegRootSuffix)' == ''">Exp</VSSDKTargetPlatformRegRootSuffix>
+    <!-- Workaround: https://github.com/dotnet/sdk/issues/12739 -->
+    <ImportFrameworkWinFXTargets>true</ImportFrameworkWinFXTargets>
   </PropertyGroup>
 </Project>

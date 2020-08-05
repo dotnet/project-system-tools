@@ -2,7 +2,7 @@
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
-    internal enum BuildStatus
+    public enum BuildStatus
     {
         Running,
         Finished,
