@@ -62,13 +62,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         /// <summary>
         /// return log path on server for a given build
-        /// If buildID cannot be found, will return null
         /// </summary>
-        /// <param name="buildID">ID to return build for</param>
-        /// <returns> returns filepath to log path (on server)</returns>
-        public string GetLogForBuild(int buildID)
+        /// <param name="buildId">ID to return build for</param>
+        /// <returns> returns filepath to log path (on server)
+        /// returns null if no match is found.</returns>
+        public string GetLogForBuild(int buildId)
         {
-            return _entries.Find(x => x.BuildId == buildID).LogPath;
+            return _entries.Find(x => x.BuildId == buildId).LogPath;
         }
 
         ImmutableList<BuildSummary> ILoggingDataSource.GetAllBuilds()

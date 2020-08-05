@@ -19,7 +19,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
     /// </summary>
     internal sealed class Build : IDisposable
     {
-        public BuildSummary BuildSummary { get; set; }
+        public BuildSummary BuildSummary { get; private set; }
         public string ProjectPath { get; }
         public string LogPath { get; private set; }
         public int BuildId => BuildSummary.BuildId;
