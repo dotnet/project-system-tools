@@ -397,12 +397,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
                     _dataSource.Start();
-                    
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
                     _dataSource.Stop();
-
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:
