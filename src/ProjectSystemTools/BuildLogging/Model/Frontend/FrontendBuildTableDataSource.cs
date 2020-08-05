@@ -44,20 +44,20 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                SupportRoslynLogging = await _loggerService.SupportsRoslynLogging();
+                SupportRoslynLogging = await _loggerService.SupportsRoslynLoggingAsync();
             });
         }
 
         public async Task<bool> IsLogging()
         {
-            return await _loggerService.IsLogging();
+            return await _loggerService.IsLoggingAsync();
         }
 
         public void Start()
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                await _loggerService.Start(UpdateEntries);
+                await _loggerService.StartAsync(UpdateEntries);
             });
         }
 
@@ -65,7 +65,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                await _loggerService.Stop();
+                await _loggerService.StopAsync();
             });
         }
 
@@ -73,7 +73,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                await _loggerService.Clear();
+                await _loggerService.ClearAsync();
                 _entries = ImmutableList<UIBuildSummary>.Empty;
                 NotifyChange();
             });
@@ -136,14 +136,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public async Task<string> GetLogForBuild(int buildID)
         {
-            return await _loggerService.GetLogForBuild(buildID);
+            return await _loggerService.GetLogForBuildAsync(buildID);
         }
 
         private void UpdateEntries()
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                _entries = (await _loggerService.GetAllBuilds())
+                _entries = (await _loggerService.GetAllBuildsAsync())
                 .Select(summary => new UIBuildSummary(summary))
                 .ToImmutableList();
 
