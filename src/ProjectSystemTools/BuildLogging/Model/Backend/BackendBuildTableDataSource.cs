@@ -14,22 +14,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
     [Export(typeof(ILoggingDataSource))]
     internal sealed class BackEndBuildTableDataSource : ILoggingController, ILoggingDataSource
     {
-        private const string BuildDataSourceDisplayName = "Build Data Source";
-        private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
-        private const string BuildTableDataSourceSourceTypeIdentifier = nameof(BuildTableDataSourceSourceTypeIdentifier);
-
         private readonly EvaluationLogger _evaluationLogger;
         private readonly RoslynLogger _roslynLogger;
 
         private ImmutableList<Build> _entries = ImmutableList<Build>.Empty;
-
-        public string SourceTypeIdentifier => BuildTableDataSourceSourceTypeIdentifier;
-
-        public string Identifier => BuildTableDataSourceIdentifier;
-
-        public string DisplayName => BuildDataSourceDisplayName;
-
-        public bool SupportRoslynLogging => _roslynLogger.Supported;
 
         public bool IsLogging { get; private set; }
 
