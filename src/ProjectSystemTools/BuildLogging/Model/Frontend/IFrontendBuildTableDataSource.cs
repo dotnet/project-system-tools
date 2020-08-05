@@ -11,7 +11,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         /// Returns whether or not the the logging service is logging
         /// true if logging, false if not logging
         /// </summary>
-        Task<bool> IsLogging { get; }
+        Task<bool> IsLogging();
 
         /// <summary>
         /// Tells the attached logging service to start logging
