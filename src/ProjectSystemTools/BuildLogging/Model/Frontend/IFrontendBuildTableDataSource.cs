@@ -8,11 +8,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
     public interface IFrontEndBuildTableDataSource : ITableDataSource
     {
         /// <summary>
-        /// Provide access to the Table manager associated with this TableDataSource
-        /// </summary>
-        ITableManager Manager { get; set; }
-
-        /// <summary>
         /// Returns whether or not the the logging service is logging
         /// true if logging, false if not logging
         /// </summary>

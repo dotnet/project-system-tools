@@ -15,22 +15,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
     [Export(typeof(ILoggingDataSource))]
     internal sealed class BackEndBuildTableDataSource : ILoggingController, ILoggingDataSource
     {
-        private const string BuildDataSourceDisplayName = "Build Data Source";
-        private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
-        private const string BuildTableDataSourceSourceTypeIdentifier = nameof(BuildTableDataSourceSourceTypeIdentifier);
-
         private readonly EvaluationLogger _evaluationLogger;
         private readonly RoslynLogger _roslynLogger;
 
         private ImmutableList<Build> _entries = ImmutableList<Build>.Empty;
-
-        public string SourceTypeIdentifier => BuildTableDataSourceSourceTypeIdentifier;
-
-        public string Identifier => BuildTableDataSourceIdentifier;
-
-        public string DisplayName => BuildDataSourceDisplayName;
-
-        public bool SupportRoslynLogging => _roslynLogger.Supported;
 
         public bool IsLogging { get; private set; }
 
@@ -75,13 +63,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         /// <summary>
         /// return log path on server for a given build
-        /// If buildID cannot be found, will return null
         /// </summary>
-        /// <param name="buildID">ID to return build for</param>
-        /// <returns> returns filepath to log path (on server)</returns>
-        public string GetLogForBuild(int buildID)
+        /// <param name="buildId">ID to return build for</param>
+        /// <returns> returns filepath to log path (on server)
+        /// returns null if no match is found.</returns>
+        public string GetLogForBuild(int buildId)
         {
-            return _entries.Find(x => x.BuildId == buildID).LogPath;
+            return _entries.Find(x => x.BuildId == buildId).LogPath;
         }
 
         ImmutableList<BuildSummary> ILoggingDataSource.GetAllBuilds()

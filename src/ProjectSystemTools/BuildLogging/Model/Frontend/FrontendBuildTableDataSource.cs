@@ -21,7 +21,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private readonly object _gate = new object();
 
-        private ITableManager _manager;
         private ITableDataSink _tableDataSink;
         private BuildTableEntriesSnapshot _lastSnapshot;
         private ImmutableList<UIBuildSummary> _entries = ImmutableList<UIBuildSummary>.Empty;
@@ -37,17 +36,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public bool SupportRoslynLogging { get; private set; }
 
         public int CurrentVersionNumber { get; private set; }
-
-        public ITableManager Manager
-        {
-            get => _manager;
-            set
-            {
-                _manager?.RemoveSource(this);
-                _manager = value;
-                _manager?.AddSource(this);
-            }
-        }
 
         [ImportingConstructor]
         public FrontEndBuildTableDataSource(IBuildLoggerService loggerService)
@@ -99,7 +87,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public void Dispose()
         {
             _entries = ImmutableList<UIBuildSummary>.Empty;
-            Manager = null;
         }
 
         public void NotifyChange()
