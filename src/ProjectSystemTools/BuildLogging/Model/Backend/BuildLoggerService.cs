@@ -25,40 +25,40 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             _loggingController = loggingController;
         }
 
-        public Task<bool> IsLogging()
+        public Task<bool> IsLoggingAsync()
         {
             return Task.FromResult(_loggingController.IsLogging);
         }
 
-        public Task<bool> SupportsRoslynLogging()
+        public Task<bool> SupportsRoslynLoggingAsync()
         {
             return Task.FromResult(_dataSource.SupportsRoslynLogging);
         }
 
-        public Task Start(Action notifyCallback)
+        public Task StartAsync(Action notifyCallback)
         {
             _dataSource.Start(notifyCallback);
             return Task.CompletedTask;
         }
 
-        public Task Stop()
+        public Task StopAsync()
         {
             _dataSource.Stop();
             return Task.CompletedTask;
         }
 
-        public Task Clear()
+        public Task ClearAsync()
         {
             _dataSource.Clear();
             return Task.CompletedTask;
         }
 
-        public Task<string> GetLogForBuild(int buildID)
+        public Task<string> GetLogForBuildAsync(int buildID)
         {
             return Task.FromResult(_dataSource.GetLogForBuild(buildID));
         }
 
-        public Task<ImmutableList<BuildSummary>> GetAllBuilds()
+        public Task<ImmutableList<BuildSummary>> GetAllBuildsAsync()
         {
             return Task.FromResult(_dataSource.GetAllBuilds());
         }
