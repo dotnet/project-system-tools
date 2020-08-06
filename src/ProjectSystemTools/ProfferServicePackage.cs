@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.ServiceBroker;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using ProvideBrokeredServiceAttribute = Microsoft.VisualStudio.Shell.ServiceBroker.ProvideBrokeredServiceAttribute;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd;
+using Microsoft.VisualStudio.ComponentModelHost;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools
 {
@@ -17,13 +17,19 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
     [ProvideBrokeredService("LoggerService", "1.0", Audience = ServiceAudience.AllClientsIncludingGuests)]
     public class ProfferServicePackage : AsyncPackage
     {
+        private IBuildLoggerService _loggerService;
+
         protected override async System.Threading.Tasks.Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
 
+            IComponentModel componentModel = (IComponentModel)await GetServiceAsync(typeof(SComponentModel));
+            Assumes.Present(componentModel);
+            _loggerService = componentModel.GetService<IBuildLoggerService>();
+
             // Don't proffer the ServiceHub service here since it gets proffered automatically by the GlobalHubClient package in VS
             IBrokeredServiceContainer brokeredServiceContainer = await this.GetServiceAsync<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-            brokeredServiceContainer.Proffer(RpcDescriptors.LoggerServiceDescriptor, (mk, options, sb, ct) => new ValueTask<object>(new BuildLoggerService()));
+            brokeredServiceContainer.Proffer(RpcDescriptors.LoggerServiceDescriptor, (mk, options, sb, ct) => new ValueTask<object>(_loggerService));
         }
     }
 }

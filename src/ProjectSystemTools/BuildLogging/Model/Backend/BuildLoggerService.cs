@@ -12,6 +12,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
     /// <summary>
     /// Implements IBuildLoggerService that interacts with Codespaces
     /// </summary>
+    [Export (typeof(IBuildLoggerService))]
     internal sealed class BuildLoggerService : IBuildLoggerService
     {
         private readonly ILoggingDataSource _dataSource;
