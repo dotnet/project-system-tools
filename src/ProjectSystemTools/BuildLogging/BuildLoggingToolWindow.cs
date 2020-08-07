@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -191,38 +192,40 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 return;
             }
-
-            foreach (var entry in TableControl.SelectedEntries)
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
+                foreach (var entry in TableControl.SelectedEntries)
                 {
-                    continue;
-                }
+                    if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
+                    {
+                        continue;
+                    }
 
-                string logPath = _dataSource.GetLogForBuild(buildID);
-                var filename = Path.GetFileName(logPath);
+                    string logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                    var filename = Path.GetFileName(logPath);
 
-                if (filename == null)
-                {
-                    continue;
-                }
+                    if (filename == null)
+                    {
+                        continue;
+                    }
 
-                if (entry.TryGetValue(TableKeyNames.Status, out string status))
-                {
-                    // Status is defined by enum BuildStatus with members: Running, Finished or Failed
-                    filename = $"{filename}_{CapitalizeFailed(status)}";
-                }
+                    if (entry.TryGetValue(TableKeyNames.Status, out string status))
+                    {
+                        // Status is defined by enum BuildStatus with members: Running, Finished or Failed
+                        filename = $"{filename}_{CapitalizeFailed(status)}";
+                    }
 
-                try
-                {
-                    File.Copy(logPath, Path.Combine(folderBrowser.SelectedPath, filename));
+                    try
+                    {
+                        File.Copy(logPath, Path.Combine(folderBrowser.SelectedPath, filename));
+                    }
+                    catch (Exception e)
+                    {
+                        var title = $"Error saving {filename}";
+                        ShowExceptionMessageDialog(e, title);
+                    }
                 }
-                catch (Exception e)
-                {
-                    var title = $"Error saving {filename}";
-                    ShowExceptionMessageDialog(e, title);
-                }
-            }
+            });
 
             return;
 
@@ -253,31 +256,37 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             }
 
             var guid = VSConstants.LOGVIEWID_Primary;
-            string logPath = _dataSource.GetLogForBuild(buildID);
-            _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
-            frame?.Show();
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                string logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
+                frame?.Show();
+            });
         }
 
         private void OpenLogsExternal()
         {
-            foreach (var entry in TableControl.SelectedEntries)
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
+                foreach (var entry in TableControl.SelectedEntries)
                 {
-                    continue;
-                }
+                    if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
+                    {
+                        continue;
+                    }
 
-                string logPath = _dataSource.GetLogForBuild(buildID);
-                try
-                {
-                    Process.Start(logPath);
+                    string logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                    try
+                    {
+                        Process.Start(logPath);
+                    }
+                    catch (Exception e)
+                    {
+                        var title = $"Error opening {Path.GetFileName(logPath)}";
+                        ShowExceptionMessageDialog(e, title);
+                    }
                 }
-                catch (Exception e)
-                {
-                    var title = $"Error opening {Path.GetFileName(logPath)}";
-                    ShowExceptionMessageDialog(e, title);
-                }
-            }
+            });
         }
 
         private static void ShowExceptionMessageDialog(Exception e, string title)
@@ -308,12 +317,18 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
                     visible = true;
-                    enabled = !_dataSource.IsLogging;
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        enabled = !await _dataSource.IsLoggingAsync();
+                    });
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
                     visible = true;
-                    enabled = _dataSource.IsLogging;
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        enabled = await _dataSource.IsLoggingAsync();
+                    });
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:
@@ -382,12 +397,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
                     _dataSource.Start();
-                    
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
                     _dataSource.Stop();
-
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:

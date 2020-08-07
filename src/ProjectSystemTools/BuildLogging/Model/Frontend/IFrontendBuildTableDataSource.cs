@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
@@ -10,7 +11,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         /// Returns whether or not the the logging service is logging
         /// true if logging, false if not logging
         /// </summary>
-        bool IsLogging { get; }
+        Task<bool> IsLoggingAsync();
 
         /// <summary>
         /// Tells the attached logging service to start logging
@@ -34,6 +35,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         /// </summary>
         /// <param name="buildId">an Id that refers to a specific build on the logging service</param>
         /// <returns>The filepath to the requested build's log file</returns>
-        string GetLogForBuild(int buildId);
+        Task<string> GetLogForBuildAsync(int buildId);
     }
 }

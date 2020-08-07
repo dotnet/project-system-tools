@@ -4,8 +4,10 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
@@ -31,7 +33,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public string DisplayName => BuildDataSourceDisplayName;
 
-        public bool SupportRoslynLogging { get; }
+        public bool SupportRoslynLogging { get; private set; }
 
         public int CurrentVersionNumber { get; private set; }
 
@@ -39,33 +41,42 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public FrontEndBuildTableDataSource(IBuildLoggerService loggerService)
         {
             _loggerService = loggerService;
-            SupportRoslynLogging = _loggerService.SupportsRoslynLogging();
+            
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                SupportRoslynLogging = await _loggerService.SupportsRoslynLoggingAsync();
+            });
         }
 
-        public bool IsLogging
+        public async Task<bool> IsLoggingAsync()
         {
-            get
-            {
-                return _loggerService.IsLogging();
-            }
+            return await _loggerService.IsLoggingAsync();
         }
 
         public void Start()
         {
-            _loggerService.Start(UpdateEntries);
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await _loggerService.StartAsync(UpdateEntries);
+            });
         }
 
         public void Stop()
         {
-            _loggerService.Stop();
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await _loggerService.StopAsync();
+            });
         }
 
         public void Clear()
         {
-            _loggerService.Clear();
-            _entries = ImmutableList<UIBuildSummary>.Empty;
-            CurrentVersionNumber++;
-            NotifyChange();
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await _loggerService.ClearAsync();
+                _entries = ImmutableList<UIBuildSummary>.Empty;
+                NotifyChange();
+            });
         }
 
         public IDisposable Subscribe(ITableDataSink sink)
@@ -123,19 +134,21 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return null;
         }
 
-        public string GetLogForBuild(int buildID)
+        public async Task<string> GetLogForBuildAsync(int buildID)
         {
-            return _loggerService.GetLogForBuild(buildID);
+            return await _loggerService.GetLogForBuildAsync(buildID);
         }
 
         private void UpdateEntries()
         {
-            _entries = _loggerService
-                .GetAllBuilds()
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                _entries = (await _loggerService.GetAllBuildsAsync())
                 .Select(summary => new UIBuildSummary(summary))
                 .ToImmutableList();
 
-            NotifyChange();
+                NotifyChange();
+            });
         }
     }
 }

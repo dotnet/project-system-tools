@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
@@ -24,39 +25,42 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             _loggingController = loggingController;
         }
 
-        bool IBuildLoggerService.IsLogging()
+        public Task<bool> IsLoggingAsync()
         {
-            return _loggingController.IsLogging;
+            return Task.FromResult(_loggingController.IsLogging);
         }
 
-        bool IBuildLoggerService.SupportsRoslynLogging()
+        public Task<bool> SupportsRoslynLoggingAsync()
         {
-            return _dataSource.SupportsRoslynLogging;
+            return Task.FromResult(_dataSource.SupportsRoslynLogging);
         }
 
-        void IBuildLoggerService.Start(Action notifyCallback)
+        public Task StartAsync(Action notifyCallback)
         {
             _dataSource.Start(notifyCallback);
+            return Task.CompletedTask;
         }
 
-        void IBuildLoggerService.Stop()
+        public Task StopAsync()
         {
             _dataSource.Stop();
+            return Task.CompletedTask;
         }
 
-        void IBuildLoggerService.Clear()
+        public Task ClearAsync()
         {
             _dataSource.Clear();
+            return Task.CompletedTask;
         }
 
-        string IBuildLoggerService.GetLogForBuild(int buildID)
+        public Task<string> GetLogForBuildAsync(int buildID)
         {
-            return _dataSource.GetLogForBuild(buildID);
+            return Task.FromResult(_dataSource.GetLogForBuild(buildID));
         }
 
-        ImmutableList<BuildSummary> IBuildLoggerService.GetAllBuilds()
+        public Task<ImmutableList<BuildSummary>> GetAllBuildsAsync()
         {
-            return _dataSource.GetAllBuilds();
+            return Task.FromResult(_dataSource.GetAllBuilds());
         }
     }
 }
