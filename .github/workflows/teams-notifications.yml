@@ -13,6 +13,6 @@ jobs:
     steps:
       - name: Notify
         uses: davidwengier/PostAdaptiveCard@v1.0.0
-        if: github.repository == 'dotnet/project-system-tools'
+        if: github.repository == 'dotnet/project-system-tools' && github.actor != 'dmonroym'
         with:
           webhook-uri: ${{ secrets.TeamsWebhook }}
