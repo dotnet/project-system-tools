@@ -41,7 +41,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Utilities" Version="$(MicrosoftVisualStudioUtilitiesVersion)" />
     <PackageReference Include="System.Composition" Version="$(SystemCompositionVersion)" />
     <PackageReference Include="VSLangProj" Version="7.0.3301" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.7.2">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.7.3069">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
