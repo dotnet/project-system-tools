@@ -6,6 +6,7 @@
     <Menus>
       <Menu guid="UIGuid" id="BuildLoggingToolbarMenuId" priority="0x0000" type="ToolWindowToolbar">
         <Parent guid="UIGuid" id="BuildLoggingToolbarMenuId" />
+        <CommandFlag>AllowClientRole</CommandFlag>
         <CommandFlag>DontCache</CommandFlag>
         <Strings>
           <ButtonText>Build Logging</ButtonText>
@@ -13,12 +14,14 @@
       </Menu>
       <Menu guid="UIGuid" id="BuildLoggingContextMenuId" priority="0x0000" type="Context">
         <Parent guid="UIGuid" id="BuildLoggingContextMenuId" />
+        <CommandFlag>AllowClientRole</CommandFlag>
         <Strings>
           <ButtonText>Build Logging</ButtonText>
         </Strings>
       </Menu>
       <Menu guid="UIGuid" id="MessageListToolbarMenuId" priority="0x0000" type="ToolWindowToolbar">
         <Parent guid="UIGuid" id="MessageListToolbarMenuId" />
+        <CommandFlag>AllowClientRole</CommandFlag>
         <Strings>
           <ButtonText>Message List</ButtonText>
         </Strings>
@@ -37,12 +40,14 @@
     </Groups>
     <Buttons>
       <Button guid="CommandSetGuid" id="BuildLoggingCommandId" type="Button">
+        <CommandFlag>AllowClientRole</CommandFlag>
         <Strings>
           <ButtonText>Build Logging</ButtonText>
         </Strings>
       </Button>
       <Button guid="CommandSetGuid" id="StartLoggingCommandId" type="Button">
         <Icon guid="ImageCatalogGuid" id="Play" />
+        <CommandFlag>AllowClientRole</CommandFlag>
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>Start logging</ButtonText>
@@ -51,6 +56,7 @@
       </Button>
       <Button guid="CommandSetGuid" id="StopLoggingCommandId" type="Button">
         <Icon guid="ImageCatalogGuid" id="Stop" />
+        <CommandFlag>AllowClientRole</CommandFlag>
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>Stop logging</ButtonText>
@@ -59,6 +65,7 @@
       </Button>
       <Button guid="CommandSetGuid" id="ClearCommandId" type="Button">
         <Icon guid="ImageCatalogGuid" id="ClearWindowContent" />
+        <CommandFlag>AllowClientRole</CommandFlag>
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>Clear</ButtonText>
@@ -66,26 +73,31 @@
         </Strings>
       </Button>
       <Button guid="CommandSetGuid" id="SaveLogsCommandId" type="Button">
+        <CommandFlag>AllowClientRole</CommandFlag>
         <Strings>
           <ButtonText>Save Logs...</ButtonText>
         </Strings>
       </Button>
       <Button guid="CommandSetGuid" id="OpenLogsCommandId" type="Button">
+        <CommandFlag>AllowClientRole</CommandFlag>
         <Strings>
           <ButtonText>Open Logs...</ButtonText>
         </Strings>
       </Button>
       <Button guid="CommandSetGuid" id="OpenLogsExternalCommandId" type="Button">
+        <CommandFlag>AllowClientRole</CommandFlag>
         <Strings>
           <ButtonText>Open Logs External...</ButtonText>
         </Strings>
       </Button>
       <Button guid="CommandSetGuid" id="MessageListCommandId" type="Button">
+        <CommandFlag>AllowClientRole</CommandFlag>
         <Strings>
           <ButtonText>Build Log Message List</ButtonText>
         </Strings>
       </Button>
       <Button guid="CommandSetGuid" id="LogRoslynWorkspaceStructureCommandId" type="Button">
+        <CommandFlag>AllowClientRole</CommandFlag>
         <Strings>
           <ButtonText>Log Roslyn Workplace Structure...</ButtonText>
         </Strings>
@@ -93,6 +105,7 @@
     </Buttons>
     <Combos>
       <Combo guid="CommandSetGuid" id="BuildTypeComboCommandId" defaultWidth="150" type="DropDownCombo" idCommandList="BuildTypeComboGetListCommandId">
+        <CommandFlag>AllowClientRole</CommandFlag>
         <Strings>
           <ButtonText>Choose build types</ButtonText>
         </Strings>
