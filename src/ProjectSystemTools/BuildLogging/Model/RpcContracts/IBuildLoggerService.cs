@@ -27,7 +27,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// <summary>
         /// Tell build logging to start tracking logs
         /// </summary>
-        Task StartAsync(Action notifyCallback);
+        Task StartAsync();
 
         /// <summary>
         /// Tell build logging to stop tracking logs

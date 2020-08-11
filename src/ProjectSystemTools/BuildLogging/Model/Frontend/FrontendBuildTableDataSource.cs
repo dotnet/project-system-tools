@@ -101,7 +101,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 {
                     if (_loggerService != null)
                     {
-                        await _loggerService.StartAsync(UpdateEntries);
+                        await _loggerService.StartAsync();
                     }
                     else
                     {

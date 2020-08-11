@@ -35,9 +35,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             return Task.FromResult(_dataSource.SupportsRoslynLogging);
         }
 
-        public Task StartAsync(Action notifyCallback)
+        public Task StartAsync()
         {
-            _dataSource.Start(notifyCallback);
+            _dataSource.Start();
             return Task.CompletedTask;
         }
 

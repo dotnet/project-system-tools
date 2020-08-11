@@ -16,9 +16,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         /// and will use the given Action callback
         /// when data on the logging service is updated
         /// </summary>
-        /// <param name="notifyCallback">An Action callback that will be used
-        /// whenver new data is logged by the service</param>
-        void Start(Action notifyCallback);
+        void Start();
 
         /// <summary>
         /// Tells logging service to stop collecting builds and log files

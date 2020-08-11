@@ -320,6 +320,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         enabled = !await _dataSource.IsLoggingAsync();
+                        enabled = true; // TODO: Remove later!
                     });
                     break;
 
@@ -328,6 +329,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         enabled = await _dataSource.IsLoggingAsync();
+                        enabled = false; // TODO: Remove later!
                     });
                     break;
 

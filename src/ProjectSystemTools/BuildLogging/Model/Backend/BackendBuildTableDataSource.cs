@@ -31,10 +31,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             _roslynLogger = new RoslynLogger(this);
         }
 
-        public void Start(Action notifyCallback)
+        public void Start()
         {
-            NotifyUI = notifyCallback;
-
+            // TODO: Switch in Event based programming
             IsLogging = true;
             ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
             _roslynLogger.Start();
