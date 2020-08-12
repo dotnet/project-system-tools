@@ -16,7 +16,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         /// and will use the given Action callback
         /// when data on the logging service is updated
         /// </summary>
-        void Start();
+        void Start(EventHandler<DataChangedEventArgs> eventReference);
 
         /// <summary>
         /// Tells logging service to stop collecting builds and log files

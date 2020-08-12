@@ -37,7 +37,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public Task StartAsync()
         {
-            _dataSource.Start();
+            _dataSource.Start(DataChanged);
             return Task.CompletedTask;
         }
 
@@ -62,5 +62,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         {
             return Task.FromResult(_dataSource.GetAllBuilds());
         }
+
+        public event EventHandler<DataChangedEventArgs> DataChanged;
     }
 }

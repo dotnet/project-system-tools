@@ -192,7 +192,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 return;
             }
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 foreach (var entry in TableControl.SelectedEntries)
                 {
@@ -256,7 +256,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             }
 
             var guid = VSConstants.LOGVIEWID_Primary;
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 string logPath = await _dataSource.GetLogForBuildAsync(buildID);
                 _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
@@ -266,7 +266,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         private void OpenLogsExternal()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 foreach (var entry in TableControl.SelectedEntries)
                 {
@@ -317,19 +317,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
                     visible = true;
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
                         enabled = !await _dataSource.IsLoggingAsync();
-                        enabled = true; // TODO: Remove later!
                     });
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
                     visible = true;
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
                         enabled = await _dataSource.IsLoggingAsync();
-                        enabled = false; // TODO: Remove later!
                     });
                     break;
 
