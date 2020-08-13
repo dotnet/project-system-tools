@@ -149,6 +149,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                     (_loggerService as IDisposable)?.Dispose();
                 }
             });
+            UpdateEntries();
         }
 
         public void Clear()

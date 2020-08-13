@@ -11,7 +11,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// </summary>
         public static ServiceRpcDescriptor LoggerServiceDescriptor { get; } = new ServiceJsonRpcDescriptor(
             new ServiceMoniker("LoggerService", new Version(1, 0)),
-            ServiceJsonRpcDescriptor.Formatters.MessagePack,
-            ServiceJsonRpcDescriptor.MessageDelimiters.BigEndianInt32LengthHeader);
+            ServiceJsonRpcDescriptor.Formatters.UTF8,
+            ServiceJsonRpcDescriptor.MessageDelimiters.HttpLikeHeaders);
     }
 }
