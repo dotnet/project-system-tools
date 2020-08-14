@@ -69,7 +69,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         }
         static void c_DataChanged(object sender, DataChangedEventArgs e)
         {
-            temp.UpdateEntries();
+            bool receive = e.Test;
+            //temp.UpdateEntries();
         }
 
         public async Task<bool> IsLoggingAsync()
@@ -149,7 +150,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                     (_loggerService as IDisposable)?.Dispose();
                 }
             });
-            UpdateEntries();
         }
 
         public void Clear()

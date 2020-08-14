@@ -32,7 +32,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public void Start(EventHandler<DataChangedEventArgs> eventReference)
         {
-            // TODO: Switch in Event based programming
             IsLogging = true;
             ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
             _roslynLogger.Start();
@@ -76,7 +75,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public void NotifyChange()
         {
-            OnDataChanged(new DataChangedEventArgs());
+            OnDataChanged(new DataChangedEventArgs(false));
         }
         private void OnDataChanged(DataChangedEventArgs e)
         {
