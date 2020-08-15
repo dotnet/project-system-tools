@@ -27,7 +27,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
             Assumes.Present(componentModel);
             _loggerService = componentModel.GetService<IBuildLoggerService>();
 
-            // Don't proffer the ServiceHub service here since it gets proffered automatically by the GlobalHubClient package in VS
             IBrokeredServiceContainer brokeredServiceContainer = await this.GetServiceAsync<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
             brokeredServiceContainer.Proffer(RpcDescriptors.LoggerServiceDescriptor, (mk, options, sb, ct) => new ValueTask<object>(_loggerService));
         }

@@ -3,11 +3,14 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.IO;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.ServiceHub.Framework;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
+using Microsoft.VisualStudio.RpcContracts.FileSystem;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.ServiceBroker;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -150,6 +153,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                     (_loggerService as IDisposable)?.Dispose();
                 }
             });
+            UpdateEntries(); // TODO: Remove once events is implemented
         }
 
         public void Clear()
@@ -160,7 +164,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 Assumes.Present(serviceContainer);
                 IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
                 IBuildLoggerService _loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-
                 try
                 {
                     if (_loggerService != null)
@@ -238,16 +241,45 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public async Task<string> GetLogForBuildAsync(int buildID)
         {
+            string filePath;
+
             IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
             Assumes.Present(serviceContainer);
             IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
             IBuildLoggerService _loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-
             try
             {
                 if (_loggerService != null)
                 {
-                    return await _loggerService.GetLogForBuildAsync(buildID);
+                    filePath = await _loggerService.GetLogForBuildAsync(buildID);
+                }
+                else
+                {
+                    (_loggerService as IDisposable)?.Dispose();
+                    throw new InvalidOperationException("GetLogForBuildAsync");
+                }
+            }
+            finally
+            {
+                (_loggerService as IDisposable)?.Dispose();
+            }
+
+            IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_6.FileSystem);
+            try
+            {
+                if (fileSystemService != null)
+                {
+                    Uri fileUri = new Uri(filePath);
+                    Pipe pipe = new Pipe();
+                    await fileSystemService.ReadFileAsync(fileUri, pipe.Writer, cancellationToken: default);
+                    Stream readStream = pipe.Reader.AsStream();
+                    string clientFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(filePath));
+                    using (FileStream outStream = new FileStream(clientFilePath, FileMode.Create))
+                    {
+                        await readStream.CopyToAsync(outStream);
+                    }
+
+                    return clientFilePath;
                 }
                 else
                 {
@@ -256,7 +288,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             }
             finally
             {
-                (_loggerService as IDisposable)?.Dispose();
+                (fileSystemService as IDisposable)?.Dispose();
             }
         }
 

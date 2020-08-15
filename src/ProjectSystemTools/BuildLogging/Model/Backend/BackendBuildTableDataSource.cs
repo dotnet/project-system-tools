@@ -79,7 +79,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         }
         private void OnDataChanged(DataChangedEventArgs e)
         {
-            DataChangedReference?.Invoke(this, e);
+            if (DataChangedReference != null)
+            {
+                DataChangedReference.Invoke(this, e);
+            }
         }
 
 
