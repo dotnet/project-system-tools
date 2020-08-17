@@ -42,13 +42,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public int CurrentVersionNumber { get; private set; }
 
-        private static FrontEndBuildTableDataSource temp { get; set; }
+        private static FrontEndBuildTableDataSource selfReference { get; set; }
 
 
         public FrontEndBuildTableDataSource()
         {
             _serviceProvider = ProjectSystemToolsPackage.ServiceProvider;
-            temp = this;
+            selfReference = this;
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
@@ -58,8 +58,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
                 try
                 {
-                    Assumes.Present(loggerService);
-                    SupportRoslynLogging = await loggerService.SupportsRoslynLoggingAsync();
+                    if (loggerService != null)
+                    {
+                        SupportRoslynLogging = await loggerService.SupportsRoslynLoggingAsync();
+                    }
                 }
                 finally
                 {
@@ -67,10 +69,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 }
             });
         }
-        static void c_DataChanged(object sender, DataChangedEventArgs e)
+        static void c_DataChanged(object sender, EventArgs e)
         {
-            bool receive = e.Test;
-            temp.UpdateEntries();
+            selfReference.UpdateEntries();
         }
 
         public async Task<bool> IsLoggingAsync()
@@ -81,8 +82,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
             try
             {
-                Assumes.Present(loggerService);
-                return await loggerService.IsLoggingAsync();
+                if (loggerService != null)
+                {
+                    return await loggerService.IsLoggingAsync();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Logging service is null. Most likely the client is not connected to the server yet.");
+                }
             }
             finally
             {
@@ -106,7 +113,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                     {
                         loggerService.DataChanged += c_DataChanged;
                         await loggerService.StartAsync();
-                        NotifyChange();
+                        UpdateEntries();
                     }
                     else
                     {

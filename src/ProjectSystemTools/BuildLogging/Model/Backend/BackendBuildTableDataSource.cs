@@ -18,7 +18,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         private readonly RoslynLogger _roslynLogger;
 
         private ImmutableList<Build> _entries = ImmutableList<Build>.Empty;
-        private event EventHandler<DataChangedEventArgs> DataChangedReference;
+        private event EventHandler DataChangedReference;
 
         public bool IsLogging { get; private set; }
 
@@ -30,7 +30,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             _roslynLogger = new RoslynLogger(this);
         }
 
-        public void Start(EventHandler<DataChangedEventArgs> eventReference)
+        public void Start(EventHandler eventReference)
         {
             IsLogging = true;
             ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
@@ -75,16 +75,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public void NotifyChange()
         {
-            OnDataChanged(new DataChangedEventArgs(false));
-        }
-        private void OnDataChanged(DataChangedEventArgs e)
-        {
-            if (DataChangedReference != null)
-            {
-                DataChangedReference.Invoke(this, e);
-            }
+            OnDataChanged();
         }
 
+        private void OnDataChanged()
+        {
+            DataChangedReference?.Invoke(this, null);
+        }
 
         public void AddEntry(Build build)
         {

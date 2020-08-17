@@ -63,6 +63,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             return Task.FromResult(_dataSource.GetAllBuilds());
         }
 
-        public event EventHandler<DataChangedEventArgs> DataChanged;
+        public event EventHandler DataChanged;
     }
 }
