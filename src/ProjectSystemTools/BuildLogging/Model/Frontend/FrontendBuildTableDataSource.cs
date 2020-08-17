@@ -42,38 +42,38 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public int CurrentVersionNumber { get; private set; }
 
-        private static FrontEndBuildTableDataSource temp { get; set; }
+        private static FrontEndBuildTableDataSource Temp { get; set; }
 
 
         public FrontEndBuildTableDataSource()
         {
             _serviceProvider = ProjectSystemToolsPackage.ServiceProvider;
-            temp = this;
+            Temp = this;
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
                 Assumes.Present(serviceContainer);
                 IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-                IBuildLoggerService _loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+                IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
 
                 try
                 {
-                    if (_loggerService != null)
+                    if (loggerService != null)
                     {
-                        SupportRoslynLogging = await _loggerService.SupportsRoslynLoggingAsync();
+                        SupportRoslynLogging = await loggerService.SupportsRoslynLoggingAsync();
                     }
                 }
                 finally
                 {
-                    (_loggerService as IDisposable)?.Dispose();
+                    (loggerService as IDisposable)?.Dispose();
                 }
             });
         }
         static void c_DataChanged(object sender, DataChangedEventArgs e)
         {
             bool receive = e.Test;
-            //temp.UpdateEntries();
+            Temp.UpdateEntries();
         }
 
         public async Task<bool> IsLoggingAsync()
@@ -153,7 +153,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                     (_loggerService as IDisposable)?.Dispose();
                 }
             });
-            UpdateEntries(); // TODO: Remove once events is implemented
+            UpdateEntries();
         }
 
         public void Clear()
@@ -306,8 +306,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                     if (_loggerService != null)
                     {
                         _entries = (await _loggerService.GetAllBuildsAsync())
-                        .Select(summary => new UIBuildSummary(summary))
-                        .ToImmutableList();
+                            .Select(summary => new UIBuildSummary(summary))
+                            .ToImmutableList();
 
                         NotifyChange();
                     }
