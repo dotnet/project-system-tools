@@ -28,39 +28,46 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public Task<bool> IsLoggingAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult(_loggingController.IsLogging);
         }
 
         public Task<bool> SupportsRoslynLoggingAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult(_dataSource.SupportsRoslynLogging);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             _dataSource.Start(DataChanged);
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             _dataSource.Stop();
             return Task.CompletedTask;
         }
 
         public Task ClearAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             _dataSource.Clear();
             return Task.CompletedTask;
         }
 
         public Task<string> GetLogForBuildAsync(int buildID, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult(_dataSource.GetLogForBuild(buildID));
         }
 
         public Task<ImmutableList<BuildSummary>> GetAllBuildsAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return Task.FromResult(_dataSource.GetAllBuilds());
         }
 
