@@ -14,6 +14,7 @@ using Microsoft.VisualStudio.RpcContracts.FileSystem;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.ServiceBroker;
 using Microsoft.VisualStudio.Shell.TableManager;
+using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
@@ -44,29 +45,52 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private static FrontEndBuildTableDataSource selfReference { get; set; }
 
+        private async Task UseLoggerServiceAsync(Func<IBuildLoggerService, Task> func)
+        {
+            IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
+            Assumes.Present(serviceContainer);
+            IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
+            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+            try
+            {
+                await func(loggerService);
+            }
+            finally
+            {
+                (loggerService as IDisposable)?.Dispose();
+            }
+        }
+
+        private async Task<T> UseLoggerServiceAsync<T>(Func<IBuildLoggerService, Task<T>> func)
+        {
+            IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
+            Assumes.Present(serviceContainer);
+            IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
+            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+            try
+            {
+                return await func(loggerService);
+            }
+            finally
+            {
+                (loggerService as IDisposable)?.Dispose();
+            }
+        }
 
         public FrontEndBuildTableDataSource()
         {
             _serviceProvider = ProjectSystemToolsPackage.ServiceProvider;
             selfReference = this;
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-                Assumes.Present(serviceContainer);
-                IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-                IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-                try
+                return UseLoggerServiceAsync(async loggerService =>
                 {
                     if (loggerService != null)
                     {
                         SupportRoslynLogging = await loggerService.SupportsRoslynLoggingAsync();
                     }
-                }
-                finally
-                {
-                    (loggerService as IDisposable)?.Dispose();
-                }
+                });
             });
         }
         static void c_DataChanged(object sender, EventArgs e)
@@ -74,13 +98,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             selfReference.UpdateEntries();
         }
 
-        public async Task<bool> IsLoggingAsync()
+        public Task<bool> IsLoggingAsync()
         {
-            IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-            Assumes.Present(serviceContainer);
-            IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-            try
+            return UseLoggerServiceAsync(async loggerService =>
             {
                 if (loggerService != null)
                 {
@@ -90,84 +110,47 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 {
                     throw new InvalidOperationException("Logging service is null. Most likely the client is not connected to the server yet.");
                 }
-            }
-            finally
-            {
-                (loggerService as IDisposable)?.Dispose();
-            }
+            });
         }
 
         public void Start()
         {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-                Assumes.Present(serviceContainer);
-                IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-                IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-
-                try
+                return UseLoggerServiceAsync(async loggerService =>
                 {
                     Assumes.Present(loggerService);
-                    if (loggerService != null)
-                    {
-                        loggerService.DataChanged += c_DataChanged;
-                        await loggerService.StartAsync();
-                        UpdateEntries();
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("StartAsync");
-                    }
-                }
-                finally
-                {
-                    (loggerService as IDisposable)?.Dispose();
-                }
+                    loggerService.DataChanged += c_DataChanged;
+                    await loggerService.StartAsync();
+                    UpdateEntries();
+                });
             });
         }
 
         public void Stop()
         {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-                Assumes.Present(serviceContainer);
-                IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-                IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-
-                try
+                return UseLoggerServiceAsync(async loggerService =>
                 {
                     Assumes.Present(loggerService);
                     await loggerService.StopAsync();
-                }
-                finally
-                {
-                    (loggerService as IDisposable)?.Dispose();
-                }
+                });
             });
             UpdateEntries();
         }
 
         public void Clear()
         {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-                Assumes.Present(serviceContainer);
-                IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-                IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-                try
+                return UseLoggerServiceAsync(async loggerService =>
                 {
                     Assumes.Present(loggerService);
                     await loggerService.ClearAsync();
                     _entries = ImmutableList<UIBuildSummary>.Empty;
                     NotifyChange();
-                }
-                finally
-                {
-                    (loggerService as IDisposable)?.Dispose();
-                }
+                });
             });
         }
 
@@ -267,14 +250,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private void UpdateEntries()
         {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-                Assumes.Present(serviceContainer);
-                IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-                IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-
-                try
+                return UseLoggerServiceAsync(async loggerService =>
                 {
                     Assumes.Present(loggerService);
                     _entries = (await loggerService.GetAllBuildsAsync())
@@ -282,11 +260,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                             .ToImmutableList();
 
                     NotifyChange();
-                }
-                finally
-                {
-                    (loggerService as IDisposable)?.Dispose();
-                }
+                });
             });
         }
     }
