@@ -208,23 +208,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public async Task<string> GetLogForBuildAsync(int buildID)
         {
-            string filePath;
+            string filePath = await UseLoggerServiceAsync(async loggerService =>
+            {
+                Assumes.Present(loggerService);
+                return await loggerService.GetLogForBuildAsync(buildID);
+            });
 
             IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
             Assumes.Present(serviceContainer);
             IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-            try
-            {
-                Assumes.Present(loggerService);
-                filePath = await loggerService.GetLogForBuildAsync(buildID);
-            }
-            finally
-            {
-                (loggerService as IDisposable)?.Dispose();
-            }
-
-            IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_6.FileSystem);
+            IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_7.FileSystem);
             try
             {
                 Assumes.Present(fileSystemService);
