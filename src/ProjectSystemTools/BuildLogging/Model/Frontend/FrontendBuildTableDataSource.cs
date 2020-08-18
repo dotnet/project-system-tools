@@ -43,8 +43,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public int CurrentVersionNumber { get; private set; }
 
-        private static FrontEndBuildTableDataSource selfReference { get; set; }
-
         private async Task UseLoggerServiceAsync(Func<IBuildLoggerService, Task> func)
         {
             IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
@@ -80,7 +78,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public FrontEndBuildTableDataSource()
         {
             _serviceProvider = ProjectSystemToolsPackage.ServiceProvider;
-            selfReference = this;
 
             ThreadHelper.JoinableTaskFactory.Run(() =>
             {
@@ -93,9 +90,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 });
             });
         }
-        static void c_DataChanged(object sender, EventArgs e)
+        void c_DataChanged(object sender, EventArgs e)
         {
-            selfReference.UpdateEntries();
+            UpdateEntries();
         }
 
         public Task<bool> IsLoggingAsync()
