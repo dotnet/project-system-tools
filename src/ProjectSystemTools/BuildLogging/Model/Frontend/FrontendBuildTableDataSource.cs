@@ -6,6 +6,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.IO.Pipelines;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceHub.Framework;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
@@ -32,6 +33,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         private ImmutableList<UIBuildSummary> _entries = ImmutableList<UIBuildSummary>.Empty;
 
         private readonly IServiceProvider _serviceProvider;
+        private readonly CancellationTokenSource _cancellationTokenSource;
 
         public string SourceTypeIdentifier => BuildTableDataSourceSourceTypeIdentifier;
 
@@ -43,7 +45,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public int CurrentVersionNumber { get; private set; }
 
-        private async Task UseLoggerServiceAsync(Func<IBuildLoggerService, Task> func)
+        private async Task UseLoggerServiceAsync(Func<IBuildLoggerService, CancellationToken, Task> func)
         {
             IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
             Assumes.Present(serviceContainer);
@@ -51,7 +53,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
             try
             {
-                await func(loggerService);
+                await func(loggerService, _cancellationTokenSource.Token);
             }
             finally
             {
@@ -59,7 +61,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             }
         }
 
-        private async Task<T> UseLoggerServiceAsync<T>(Func<IBuildLoggerService, Task<T>> func)
+        private async Task<T> UseLoggerServiceAsync<T>(Func<IBuildLoggerService, CancellationToken, Task<T>> func)
         {
             IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
             Assumes.Present(serviceContainer);
@@ -67,7 +69,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
             try
             {
-                return await func(loggerService);
+                return await func(loggerService, _cancellationTokenSource.Token);
             }
             finally
             {
@@ -78,14 +80,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public FrontEndBuildTableDataSource()
         {
             _serviceProvider = ProjectSystemToolsPackage.ServiceProvider;
+            _cancellationTokenSource = new CancellationTokenSource();
 
             ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                return UseLoggerServiceAsync(async loggerService =>
+                return UseLoggerServiceAsync(async (loggerService, token) =>
                 {
                     if (loggerService != null)
                     {
-                        SupportRoslynLogging = await loggerService.SupportsRoslynLoggingAsync();
+                        SupportRoslynLogging = await loggerService.SupportsRoslynLoggingAsync(token);
                     }
                 });
             });
@@ -97,11 +100,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public Task<bool> IsLoggingAsync()
         {
-            return UseLoggerServiceAsync(async loggerService =>
+            return UseLoggerServiceAsync(async (loggerService, token) =>
             {
                 if (loggerService != null)
                 {
-                    return await loggerService.IsLoggingAsync();
+                    return await loggerService.IsLoggingAsync(token);
                 }
                 else
                 {
@@ -114,11 +117,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         {
             ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                return UseLoggerServiceAsync(async loggerService =>
+                return UseLoggerServiceAsync(async (loggerService, token) =>
                 {
                     Assumes.Present(loggerService);
                     loggerService.DataChanged += c_DataChanged;
-                    await loggerService.StartAsync();
+                    await loggerService.StartAsync(token);
                     UpdateEntries();
                 });
             });
@@ -128,10 +131,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         {
             ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                return UseLoggerServiceAsync(async loggerService =>
+                return UseLoggerServiceAsync(async (loggerService, token) =>
                 {
                     Assumes.Present(loggerService);
-                    await loggerService.StopAsync();
+                    await loggerService.StopAsync(token);
                 });
             });
             UpdateEntries();
@@ -141,10 +144,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         {
             ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                return UseLoggerServiceAsync(async loggerService =>
+                return UseLoggerServiceAsync(async (loggerService, token) =>
                 {
                     Assumes.Present(loggerService);
-                    await loggerService.ClearAsync();
+                    await loggerService.ClearAsync(token);
                     _entries = ImmutableList<UIBuildSummary>.Empty;
                     NotifyChange();
                 });
@@ -208,10 +211,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public async Task<string> GetLogForBuildAsync(int buildID)
         {
-            string filePath = await UseLoggerServiceAsync(async loggerService =>
+            string filePath = await UseLoggerServiceAsync(async (loggerService, token) =>
             {
                 Assumes.Present(loggerService);
-                return await loggerService.GetLogForBuildAsync(buildID);
+                return await loggerService.GetLogForBuildAsync(buildID, token);
             });
 
             IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
@@ -242,10 +245,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         {
             ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                return UseLoggerServiceAsync(async loggerService =>
+                return UseLoggerServiceAsync(async (loggerService, token) =>
                 {
                     Assumes.Present(loggerService);
-                    _entries = (await loggerService.GetAllBuildsAsync())
+                    _entries = (await loggerService.GetAllBuildsAsync(token))
                             .Select(summary => new UIBuildSummary(summary))
                             .ToImmutableList();
 

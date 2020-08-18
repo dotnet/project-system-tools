@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
@@ -25,40 +26,40 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             _loggingController = loggingController;
         }
 
-        public Task<bool> IsLoggingAsync()
+        public Task<bool> IsLoggingAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(_loggingController.IsLogging);
         }
 
-        public Task<bool> SupportsRoslynLoggingAsync()
+        public Task<bool> SupportsRoslynLoggingAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(_dataSource.SupportsRoslynLogging);
         }
 
-        public Task StartAsync()
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             _dataSource.Start(DataChanged);
             return Task.CompletedTask;
         }
 
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken)
         {
             _dataSource.Stop();
             return Task.CompletedTask;
         }
 
-        public Task ClearAsync()
+        public Task ClearAsync(CancellationToken cancellationToken)
         {
             _dataSource.Clear();
             return Task.CompletedTask;
         }
 
-        public Task<string> GetLogForBuildAsync(int buildID)
+        public Task<string> GetLogForBuildAsync(int buildID, CancellationToken cancellationToken)
         {
             return Task.FromResult(_dataSource.GetLogForBuild(buildID));
         }
 
-        public Task<ImmutableList<BuildSummary>> GetAllBuildsAsync()
+        public Task<ImmutableList<BuildSummary>> GetAllBuildsAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(_dataSource.GetAllBuilds());
         }
