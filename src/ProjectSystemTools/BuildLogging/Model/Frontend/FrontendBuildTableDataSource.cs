@@ -234,19 +234,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             {
                 Assumes.Present(fileSystemService);
                 Uri fileUri = new Uri(filePath);
-                Pipe pipe = new Pipe();
-                await fileSystemService.ReadFileAsync(fileUri, pipe.Writer, _cancellationTokenSource.Token);
-                Stream readStream = pipe.Reader.AsStream();
                 string clientFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(filePath));
-                using (FileStream outStream = new FileStream(clientFilePath, FileMode.Create))
+                Uri clientUri = new Uri(clientFilePath);
+                if (!fileUri.Equals(clientUri))
                 {
-                    await readStream.CopyToAsync(outStream);
+                    await fileSystemService.CopyAsync(fileUri, clientUri, true, null, _cancellationTokenSource.Token);
                 }
                 return clientFilePath;
-            }
-            catch (StreamJsonRpc.RemoteInvocationException e)
-            {
-                return null;
             }
             finally
             {
