@@ -34,6 +34,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private readonly IServiceProvider _serviceProvider;
         private readonly CancellationTokenSource _cancellationTokenSource;
+        private IBuildLoggerService _loggerServiceReference;
 
         public string SourceTypeIdentifier => BuildTableDataSourceSourceTypeIdentifier;
 
@@ -115,27 +116,29 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public void Start()
         {
-            ThreadHelper.JoinableTaskFactory.Run(() =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                return UseLoggerServiceAsync(async (loggerService, token) =>
-                {
-                    Assumes.Present(loggerService);
-                    loggerService.DataChanged += c_DataChanged;
-                    await loggerService.StartAsync(token);
-                    UpdateEntries();
-                });
+                IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
+                Assumes.Present(serviceContainer);
+                IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
+                (_loggerServiceReference as IDisposable)?.Dispose();
+                _loggerServiceReference = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+                Assumes.Present(_loggerServiceReference);
+                _loggerServiceReference.DataChanged += c_DataChanged;
+                await _loggerServiceReference.StartAsync(_cancellationTokenSource.Token);
             });
         }
 
+        /// <summary>
+        /// Start must be called before Stop
+        /// </summary>
         public void Stop()
         {
-            ThreadHelper.JoinableTaskFactory.Run(() =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                return UseLoggerServiceAsync(async (loggerService, token) =>
-                {
-                    Assumes.Present(loggerService);
-                    await loggerService.StopAsync(token);
-                });
+                Assumes.Present(_loggerServiceReference);
+                await _loggerServiceReference.StopAsync(_cancellationTokenSource.Token);
+                _loggerServiceReference.DataChanged -= c_DataChanged;
             });
             UpdateEntries();
         }
@@ -167,6 +170,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public void Dispose()
         {
             _entries = ImmutableList<UIBuildSummary>.Empty;
+            (_loggerServiceReference as IDisposable)?.Dispose();
         }
 
         public void NotifyChange()
@@ -220,7 +224,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
             Assumes.Present(serviceContainer);
             IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-            IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_7.FileSystem);
+            IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_6.FileSystem);
             try
             {
                 Assumes.Present(fileSystemService);

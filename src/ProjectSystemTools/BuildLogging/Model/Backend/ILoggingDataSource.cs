@@ -16,7 +16,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         /// and will use the given Action callback
         /// when data on the logging service is updated
         /// </summary>
-        void Start(EventHandler eventReference);
+        void Start();
 
         /// <summary>
         /// Tells logging service to stop collecting builds and log files
@@ -43,5 +43,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         /// <returns>An ImmutableList of builds,
         /// the list and the data inside it is immutable</returns>
         ImmutableList<BuildSummary> GetAllBuilds();
+
+        event EventHandler BuildsUpdated;
     }
 }

@@ -41,14 +41,21 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         public Task StartAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            _dataSource.Start(DataChanged);
+            _dataSource.BuildsUpdated += DataSource_BuildsUpdated;
+            _dataSource.Start();
             return Task.CompletedTask;
+        }
+
+        private void DataSource_BuildsUpdated(object sender, EventArgs e)
+        {
+            DataChanged?.Invoke(this, null);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             _dataSource.Stop();
+            _dataSource.BuildsUpdated -= DataSource_BuildsUpdated;
             return Task.CompletedTask;
         }
 
