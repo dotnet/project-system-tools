@@ -221,16 +221,21 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 return await loggerService.GetLogForBuildAsync(buildID, token);
             });
 
+            if (filePath == null)
+            {
+                return null;
+            }
+
             IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
             Assumes.Present(serviceContainer);
             IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-            IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_6.FileSystem);
+            IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_7.FileSystem);
             try
             {
                 Assumes.Present(fileSystemService);
                 Uri fileUri = new Uri(filePath);
                 Pipe pipe = new Pipe();
-                await fileSystemService.ReadFileAsync(fileUri, pipe.Writer, cancellationToken: default);
+                await fileSystemService.ReadFileAsync(fileUri, pipe.Writer, _cancellationTokenSource.Token);
                 Stream readStream = pipe.Reader.AsStream();
                 string clientFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(filePath));
                 using (FileStream outStream = new FileStream(clientFilePath, FileMode.Create))
@@ -238,6 +243,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                     await readStream.CopyToAsync(outStream);
                 }
                 return clientFilePath;
+            }
+            catch (StreamJsonRpc.RemoteInvocationException e)
+            {
+                return null;
             }
             finally
             {
