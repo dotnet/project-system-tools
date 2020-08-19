@@ -278,7 +278,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                     string logPath = await _dataSource.GetLogForBuildAsync(buildID);
                     try
                     {
-                        Process.Start(logPath);
+                        if (logPath != null)
+                        {
+                            Process.Start(logPath);
+                        }
                     }
                     catch (Exception e)
                     {
