@@ -1,6 +1,7 @@
 # PR trigger
 pr:
 - master
+- feature/*
 
 jobs:
 - job: Windows
