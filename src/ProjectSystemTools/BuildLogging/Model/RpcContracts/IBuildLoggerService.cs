@@ -53,6 +53,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// <returns>List of summary information of all builds on the server</returns>
         Task<ImmutableList<BuildSummary>> GetAllBuildsAsync(CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Event that will be invoked whenever build log data has been updated on the server
+        /// </summary>
         public event EventHandler DataChanged;
     }
 }

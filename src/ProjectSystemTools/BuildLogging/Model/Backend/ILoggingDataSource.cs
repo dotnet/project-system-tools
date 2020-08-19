@@ -44,6 +44,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         /// the list and the data inside it is immutable</returns>
         ImmutableList<BuildSummary> GetAllBuilds();
 
+        /// <summary>
+        /// Event raised whenever new data from loggers is received
+        /// </summary>
         event EventHandler BuildsUpdated;
     }
 }

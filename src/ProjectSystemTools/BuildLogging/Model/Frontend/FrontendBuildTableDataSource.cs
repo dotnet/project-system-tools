@@ -4,8 +4,8 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.IO;
-using System.IO.Pipelines;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceHub.Framework;
@@ -46,38 +46,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public int CurrentVersionNumber { get; private set; }
 
-        private async Task UseLoggerServiceAsync(Func<IBuildLoggerService, CancellationToken, Task> func)
-        {
-            IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-            Assumes.Present(serviceContainer);
-            IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-            try
-            {
-                await func(loggerService, _cancellationTokenSource.Token);
-            }
-            finally
-            {
-                (loggerService as IDisposable)?.Dispose();
-            }
-        }
-
-        private async Task<T> UseLoggerServiceAsync<T>(Func<IBuildLoggerService, CancellationToken, Task<T>> func)
-        {
-            IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-            Assumes.Present(serviceContainer);
-            IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
-            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
-            try
-            {
-                return await func(loggerService, _cancellationTokenSource.Token);
-            }
-            finally
-            {
-                (loggerService as IDisposable)?.Dispose();
-            }
-        }
-
         public FrontEndBuildTableDataSource()
         {
             _serviceProvider = ProjectSystemToolsPackage.ServiceProvider;
@@ -93,10 +61,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                     }
                 });
             });
-        }
-        void c_DataChanged(object sender, EventArgs e)
-        {
-            UpdateEntries();
         }
 
         public Task<bool> IsLoggingAsync()
@@ -118,13 +82,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-                Assumes.Present(serviceContainer);
-                IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
+                IServiceBroker sb = GetServiceBroker();
                 (_loggerServiceReference as IDisposable)?.Dispose();
                 _loggerServiceReference = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
                 Assumes.Present(_loggerServiceReference);
-                _loggerServiceReference.DataChanged += c_DataChanged;
+                _loggerServiceReference.DataChanged += C_DataChanged;
                 await _loggerServiceReference.StartAsync(_cancellationTokenSource.Token);
             });
         }
@@ -138,8 +100,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             {
                 Assumes.Present(_loggerServiceReference);
                 await _loggerServiceReference.StopAsync(_cancellationTokenSource.Token);
-                _loggerServiceReference.DataChanged -= c_DataChanged;
+                _loggerServiceReference.DataChanged -= C_DataChanged;
             });
+            UpdateEntries();
+        }
+        void C_DataChanged(object sender, EventArgs e)
+        {
             UpdateEntries();
         }
 
@@ -226,9 +192,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 return null;
             }
 
-            IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
-            Assumes.Present(serviceContainer);
-            IServiceBroker sb = serviceContainer.GetFullAccessServiceBroker();
+            IServiceBroker sb = GetServiceBroker();
             IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_7.FileSystem);
             try
             {
@@ -262,6 +226,41 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                     NotifyChange();
                 });
             });
+        }
+
+        private IServiceBroker GetServiceBroker()
+        {
+            IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
+            Assumes.Present(serviceContainer);
+            return serviceContainer.GetFullAccessServiceBroker();
+        }
+
+        private async Task UseLoggerServiceAsync(Func<IBuildLoggerService, CancellationToken, Task> func)
+        {
+            IServiceBroker sb = GetServiceBroker();
+            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+            try
+            {
+                await func(loggerService, _cancellationTokenSource.Token);
+            }
+            finally
+            {
+                (loggerService as IDisposable)?.Dispose();
+            }
+        }
+
+        private async Task<T> UseLoggerServiceAsync<T>(Func<IBuildLoggerService, CancellationToken, Task<T>> func)
+        {
+            IServiceBroker sb = GetServiceBroker();
+            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+            try
+            {
+                return await func(loggerService, _cancellationTokenSource.Token);
+            }
+            finally
+            {
+                (loggerService as IDisposable)?.Dispose();
+            }
         }
     }
 }

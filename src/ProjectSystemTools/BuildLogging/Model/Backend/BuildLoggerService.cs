@@ -79,6 +79,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             return Task.FromResult(_dataSource.GetAllBuilds());
         }
 
+        /// <summary>
+        /// Implemented event for IBuildLoggerService
+        /// This event will be invoked whenever ILoggingDataSource's BuildsUpdated event is invoked
+        /// </summary>
         public event EventHandler DataChanged;
     }
 }
