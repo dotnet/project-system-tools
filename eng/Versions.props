@@ -22,11 +22,11 @@
     <MicrosoftVisualStudioShellFrameworkVersion>16.6.30107.105</MicrosoftVisualStudioShellFrameworkVersion>
     <MicrosoftVisualStudioShellInterop140DesignTimeVersion>15.0.25726-Preview5</MicrosoftVisualStudioShellInterop140DesignTimeVersion>
     <MicrosoftVisualStudioShellInterop150DesignTimeVersion>15.0.26932</MicrosoftVisualStudioShellInterop150DesignTimeVersion>
-    <MicrosoftVisualStudioShellInterop153DesignTimeVersion>15.0.26930</MicrosoftVisualStudioShellInterop153DesignTimeVersion>
-    <MicrosoftVisualStudioShellInterop90Version>9.0.30731</MicrosoftVisualStudioShellInterop90Version>
+    <MicrosoftVisualStudioShellInterop153DesignTimeVersion>16.7.30328.74</MicrosoftVisualStudioShellInterop153DesignTimeVersion>
+    <MicrosoftVisualStudioShellInterop90Version>16.7.30328.74</MicrosoftVisualStudioShellInterop90Version>
     <MicrosoftVisualStudioTextManagerInterop100Version>10.0.30319</MicrosoftVisualStudioTextManagerInterop100Version>
     <MicrosoftVisualStudioUtilitiesVersion>16.6.30107.105</MicrosoftVisualStudioUtilitiesVersion>
-    <MicrosoftServiceHubFrameworkVersion>2.6.44</MicrosoftServiceHubFrameworkVersion>
+    <MicrosoftServiceHubFrameworkVersion>2.6.92</MicrosoftServiceHubFrameworkVersion>
     <MicrosoftVSSDKBuildToolsVersion>16.7.3069</MicrosoftVSSDKBuildToolsVersion>
     <!-- Libs -->
     <SystemCompositionVersion>1.1.0</SystemCompositionVersion>
