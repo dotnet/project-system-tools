@@ -26,7 +26,7 @@
     <MicrosoftVisualStudioShellInterop90Version>16.7.30328.74</MicrosoftVisualStudioShellInterop90Version>
     <MicrosoftVisualStudioTextManagerInterop100Version>10.0.30319</MicrosoftVisualStudioTextManagerInterop100Version>
     <MicrosoftVisualStudioUtilitiesVersion>16.6.30107.105</MicrosoftVisualStudioUtilitiesVersion>
-    <MicrosoftServiceHubFrameworkVersion>2.6.92</MicrosoftServiceHubFrameworkVersion>
+    <MicrosoftServiceHubFrameworkVersion>2.6.44</MicrosoftServiceHubFrameworkVersion>
     <StreamJsonRpc24Version>2.4.48</StreamJsonRpc24Version>
     <StreamJsonRpc25Version>2.5.44</StreamJsonRpc25Version>
     <MicrosoftVSSDKBuildToolsVersion>16.7.3069</MicrosoftVSSDKBuildToolsVersion>
