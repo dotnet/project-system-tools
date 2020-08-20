@@ -13,7 +13,7 @@
     <!-- Roslyn -->
     <MicrosoftVisualStudioLanguageServicesVersion>2.0.0</MicrosoftVisualStudioLanguageServicesVersion>
     <!-- VS SDK -->
-    <MicrosoftVisualStudioComponentModelHostVersion>16.0.198-g52de9c2988</MicrosoftVisualStudioComponentModelHostVersion>
+    <MicrosoftVisualStudioComponentModelHostVersion>16.0.342-g758a0a97e0</MicrosoftVisualStudioComponentModelHostVersion>
     <MicrosoftVisualStudioCoreUtilityVersion>16.6.255</MicrosoftVisualStudioCoreUtilityVersion>
     <MicrosoftVisualStudioImageCatalogVersion>16.6.30107.105</MicrosoftVisualStudioImageCatalogVersion>
     <MicrosoftVisualStudioEditorVersion>16.6.255</MicrosoftVisualStudioEditorVersion>
