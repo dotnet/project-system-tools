@@ -45,7 +45,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         {
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
             _dataSource = componentModel.GetService<IFrontEndBuildTableDataSource>();
-
+            ThreadHelper.ThrowIfNotOnUIThread();
             _openDocument = (IVsUIShellOpenDocument)GetService(typeof(SVsUIShellOpenDocument));
 
             ResetTableControl();
@@ -97,7 +97,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             // When we are activated, we push our command target as the current Result List so that
             // next and previous result will come to us.We stay the current result list (even if we
             // lose activate) until some other window pushes a result list.
-
+            ThreadHelper.ThrowIfNotOnUIThread();
             var trackSelectionEx = GetService(typeof(SVsTrackSelectionEx)) as IVsTrackSelectionEx;
             System.Diagnostics.Debug.Assert(trackSelectionEx != null,
                 $"Unable to get IVsTrackSelectionEx for {Caption} window");
@@ -144,12 +144,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                         break;
                 }
             }
-
+            ThreadHelper.ThrowIfNotOnUIThread();
             ProjectSystemToolsPackage.UpdateQueryStatus();
         }
 
-        private static void OnGroupingsChanged(object sender, EventArgs e) =>
+        private static void OnGroupingsChanged(object sender, EventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
             ProjectSystemToolsPackage.UpdateQueryStatus();
+        }
 
         protected override void SetTableControl(IWpfTableControl2 tableControl)
         {
@@ -259,6 +262,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 string logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
                 frame?.Show();
             });
