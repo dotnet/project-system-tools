@@ -27,6 +27,7 @@
     <MicrosoftVisualStudioTextManagerInterop100Version>10.0.30319</MicrosoftVisualStudioTextManagerInterop100Version>
     <MicrosoftVisualStudioUtilitiesVersion>16.6.30107.105</MicrosoftVisualStudioUtilitiesVersion>
     <MicrosoftServiceHubFrameworkVersion>2.6.92</MicrosoftServiceHubFrameworkVersion>
+    <StreamJsonRpcVersion>2.5.44</StreamJsonRpcVersion>
     <MicrosoftVSSDKBuildToolsVersion>16.7.3069</MicrosoftVSSDKBuildToolsVersion>
     <!-- Libs -->
     <SystemCompositionVersion>1.1.0</SystemCompositionVersion>
