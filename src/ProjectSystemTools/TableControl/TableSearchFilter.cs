@@ -30,7 +30,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
         public bool Match(ITableEntryHandle entry)
         {
             var cachedColumnValues = new string[_visibleColumns.Count + 1];
-            ThreadHelper.ThrowIfNotOnUIThread();
+
             return _searchTokens.Where(searchToken =>
             {
                 ThreadHelper.ThrowIfNotOnUIThread();

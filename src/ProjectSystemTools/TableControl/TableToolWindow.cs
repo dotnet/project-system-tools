@@ -157,8 +157,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         protected override bool PreProcessMessage(ref Message m)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+#pragma warning disable VSTHRD010 // PreProcessMessage is only called when on the UI thread
             return ContentWrapper.PreProcessMessage(ref m, this) || base.PreProcessMessage(ref m);
+#pragma warning restore VSTHRD010
         }
 
         protected override void Dispose(bool disposing)

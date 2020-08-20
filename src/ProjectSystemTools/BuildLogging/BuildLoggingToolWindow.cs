@@ -195,7 +195,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 return;
             }
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 foreach (var entry in TableControl.SelectedEntries)
                 {
@@ -259,7 +259,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             }
 
             var guid = VSConstants.LOGVIEWID_Primary;
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 string logPath = await _dataSource.GetLogForBuildAsync(buildID);
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -270,7 +270,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         private void OpenLogsExternal()
         {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 foreach (var entry in TableControl.SelectedEntries)
                 {

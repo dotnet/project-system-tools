@@ -42,7 +42,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
             // Show context menu blocks, so we need to yield out of this method
             // for e.Handled to be noticed by WPF
-            ThreadHelper.JoinableTaskFactory.Run(async delegate
+            ThreadHelper.JoinableTaskFactory.RunAsync(async delegate
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 ProjectSystemToolsPackage.VsUIShell.ShowContextMenu(0, ref guidContextMenu, _contextMenuId,
