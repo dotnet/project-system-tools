@@ -167,7 +167,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             {
                 TableControl.EntriesChanged -= OnEntriesChanged;
                 TableControl.PreEntriesChanged -= OnPreEntriesChanged;
-                TableControl.Manager?.RemoveSource(_dataSource);
+                if (_dataSource != null) 
+                {
+                    TableControl.Manager?.RemoveSource(_dataSource);
+                }
             }
 
             base.SetTableControl(control);
@@ -177,7 +180,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
                 TableControl.PreEntriesChanged += OnPreEntriesChanged;
                 TableControl.EntriesChanged += OnEntriesChanged;
                 TableControl.SortFunction = Compare;
-                TableControl.Manager?.AddSource(_dataSource);
+                if (_dataSource != null)
+                {
+                    TableControl.Manager?.AddSource(_dataSource);
+                }
             }
         }
 
