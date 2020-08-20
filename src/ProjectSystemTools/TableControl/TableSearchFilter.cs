@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableControl;
 
@@ -29,10 +30,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
         public bool Match(ITableEntryHandle entry)
         {
             var cachedColumnValues = new string[_visibleColumns.Count + 1];
-
-            return _searchTokens.Where(searchToken => !(searchToken is IVsSearchFilterToken))
-                .All(searchToken => AtLeastOneColumnOrDetailsContentMatches(entry, searchToken,
-                    cachedColumnValues));
+            ThreadHelper.ThrowIfNotOnUIThread();
+            return _searchTokens.Where(searchToken =>
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                return !(searchToken is IVsSearchFilterToken);
+            })
+                .All(searchToken =>
+                {
+                    return AtLeastOneColumnOrDetailsContentMatches(entry, searchToken,
+                                        cachedColumnValues);
+                });
         }
 
         private bool AtLeastOneColumnOrDetailsContentMatches(ITableEntryHandle entry, IVsSearchToken searchToken, string[] cachedColumnValues)
@@ -43,6 +51,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             }
 
             var detailsContent = cachedColumnValues[0];
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (detailsContent != null && Match(detailsContent, searchToken))
             {
                 return true;
@@ -85,8 +94,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             return detailsString ?? string.Empty;
         }
 
-        private static bool Match(string columnValue, IVsSearchToken searchToken) =>
-            columnValue != null && columnValue.IndexOf(searchToken.ParsedTokenText,
+        private static bool Match(string columnValue, IVsSearchToken searchToken)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            return columnValue != null && columnValue.IndexOf(searchToken.ParsedTokenText,
                 StringComparison.OrdinalIgnoreCase) >= 0;
+        }
     }
 }
