@@ -30,17 +30,20 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
         public bool Match(ITableEntryHandle entry)
         {
             var cachedColumnValues = new string[_visibleColumns.Count + 1];
-
-            return _searchTokens.Where(searchToken =>
+            return ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
-                return !(searchToken is IVsSearchFilterToken);
-            })
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                return _searchTokens.Where(searchToken =>
+                {
+                    ThreadHelper.ThrowIfNotOnUIThread();
+                    return !(searchToken is IVsSearchFilterToken);
+                })
                 .All(searchToken =>
                 {
                     return AtLeastOneColumnOrDetailsContentMatches(entry, searchToken,
                                         cachedColumnValues);
                 });
+            });
         }
 
         private bool AtLeastOneColumnOrDetailsContentMatches(ITableEntryHandle entry, IVsSearchToken searchToken, string[] cachedColumnValues)
