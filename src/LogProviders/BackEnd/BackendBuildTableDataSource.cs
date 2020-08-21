@@ -12,7 +12,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
     [Export(typeof(ILoggingController))]
     [Export(typeof(ILoggingDataSource))]
-    internal sealed class BackEndBuildTableDataSource : ILoggingController, ILoggingDataSource
+    public sealed class BackEndBuildTableDataSource : ILoggingController, ILoggingDataSource
     {
         private readonly EvaluationLogger _evaluationLogger;
         private readonly RoslynLogger _roslynLogger;

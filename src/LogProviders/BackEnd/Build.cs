@@ -17,7 +17,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
     /// where BuildSummary type (a subset of this type)
     /// can be sent to the client side
     /// </summary>
-    internal sealed class Build : IDisposable
+    public sealed class Build : IDisposable
     {
         public BuildSummary BuildSummary { get; private set; }
         public string ProjectPath { get; }
