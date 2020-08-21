@@ -58,6 +58,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BinaryLogEditorResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="BuildLogging\BuildLoggingResources.resx">
+      <GenerateSource>true</GenerateSource>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:_GenerateResxSource</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Include="LogModel\Resources.resx">
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -100,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LogModel\LogModel.csproj" />
+    <ProjectReference Include="..\LogProviders\LogProviders.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="BinaryLogEditor\BinaryLogEditorResources.Designer.cs">

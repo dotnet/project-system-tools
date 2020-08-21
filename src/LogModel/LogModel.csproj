@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="BuildLoggingResources.resx">
-      <GenerateSource>true</GenerateSource>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

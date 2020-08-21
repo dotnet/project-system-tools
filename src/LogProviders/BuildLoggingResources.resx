@@ -117,33 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BuildLogWindowTitle" xml:space="preserve">
-    <value>Build Logging</value>
-  </data>
-  <data name="FilterBuildAll" xml:space="preserve">
-    <value>All</value>
-  </data>
-  <data name="FilterBuildBuilds" xml:space="preserve">
-    <value>Builds</value>
-  </data>
-  <data name="FilterBuildDesignTimeBuilds" xml:space="preserve">
-    <value>Design-time Builds</value>
-  </data>
-  <data name="FilterBuildEvaluations" xml:space="preserve">
-    <value>Evaluation</value>
-  </data>
-  <data name="FilterBuildRoslyn" xml:space="preserve">
-    <value>Roslyn</value>
-  </data>
-  <data name="LogFolderDescription" xml:space="preserve">
-    <value>Save logs to:</value>
-  </data>
-  <data name="OpenCommand" xml:space="preserve">
-    <value>Open</value>
-  </data>
-  <data name="SearchWatermark" xml:space="preserve">
-    <value>Search Build Logs</value>
-  </data>
   <data name="ProjectSolutionWide" xml:space="preserve">
     <value>Solution Wide</value>
   </data>

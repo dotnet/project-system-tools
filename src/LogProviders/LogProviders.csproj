@@ -34,4 +34,12 @@
   <ItemGroup>
     <ProjectReference Include="..\LogModel\LogModel.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="BuildLoggingResources.resx">
+      <GenerateSource>true</GenerateSource>
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:_GenerateResxSource</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>
