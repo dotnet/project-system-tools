@@ -3,7 +3,7 @@ using Microsoft.ServiceHub.Framework;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts
 {
-    internal static class RpcDescriptors
+    public static class RpcDescriptors
     {
         /// <summary>
         /// Gets the <see cref="ServiceRpcDescriptor"/> for the build logging service.

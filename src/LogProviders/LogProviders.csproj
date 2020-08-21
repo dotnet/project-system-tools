@@ -30,4 +30,8 @@
     <PackageReference Include="StreamJsonRpc" Version="$(StreamJsonRpcVersion)" />
     <PackageReference Include="System.Composition" Version="$(SystemCompositionVersion)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LogModel\LogModel.csproj" />
+  </ItemGroup>
 </Project>

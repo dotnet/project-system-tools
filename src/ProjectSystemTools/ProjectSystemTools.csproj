@@ -58,8 +58,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BinaryLogEditorResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="BuildLogging\BuildLoggingResources.resx" GenerateSource="true">
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="LogModel\Resources.resx">
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="RoslynLogging\RoslynLoggingResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -72,14 +73,6 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <ProjectReference Include="..\LogModel\LogModel.csproj">
-      <Name>LogModel</Name>
-      <Private>true</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\LogProviders\LogProviders.csproj">
-      <Name>LogProviders</Name>
-      <Private>true</Private>
-    </ProjectReference>
     <VSCTCompile Include="ProjectSystemToolsPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
@@ -106,6 +99,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LogModel\LogModel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Update="BinaryLogEditor\BinaryLogEditorResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -119,6 +115,11 @@
     </Compile>
     <Compile Update="BinaryLogEditor\LogViewControl.xaml.cs">
       <DependentUpon>LogViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="LogModel\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Update="RoslynLogging\RoslynLoggingResources.Designer.cs">
       <DesignTime>True</DesignTime>

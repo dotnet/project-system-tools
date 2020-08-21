@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.Build.Framework;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 
 namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 {

@@ -8,7 +8,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 {
     internal sealed class BuildViewModel : NodeViewModel
     {
-        private readonly LogModel.Build _build;
+        private readonly ProjectSystem.LogModel.Build _build;
         private string _text;
         private SelectedObjectWrapper _properties;
         private IEnumerable<object> _children;
@@ -33,7 +33,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                     },
                     {"Environment", _build.Environment}}));
 
-        public BuildViewModel(LogModel.Build build)
+        public BuildViewModel(ProjectSystem.LogModel.Build build)
         {
             _build = build;
         }

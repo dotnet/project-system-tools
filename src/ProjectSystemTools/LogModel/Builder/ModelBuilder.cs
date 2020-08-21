@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Framework.Profiler;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 
 namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 {
