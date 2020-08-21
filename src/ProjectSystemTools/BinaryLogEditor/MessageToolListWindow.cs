@@ -130,6 +130,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             AreWarningsShown = areWarningsShown;
             AreMessagesShown = areMessagesShown;
 
+            ThreadHelper.ThrowIfNotOnUIThread();
             _monitorSelection = GetService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
         }
 
@@ -139,7 +140,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             {
                 return;
             }
-
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (_eventsCookie != VSConstants.VSCOOKIE_NIL)
             {
                 _monitorSelection?.UnadviseSelectionEvents(_eventsCookie);
@@ -156,6 +157,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         protected override void Initialize()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             _monitorSelection?.AdviseSelectionEvents(this, out _eventsCookie);
         }
 
@@ -165,7 +167,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             {
                 TableControl.EntriesChanged -= OnEntriesChanged;
                 TableControl.PreEntriesChanged -= OnPreEntriesChanged;
-                TableControl.Manager?.RemoveSource(_dataSource);
+                if (_dataSource != null) 
+                {
+                    TableControl.Manager?.RemoveSource(_dataSource);
+                }
             }
 
             base.SetTableControl(control);
@@ -175,7 +180,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
                 TableControl.PreEntriesChanged += OnPreEntriesChanged;
                 TableControl.EntriesChanged += OnEntriesChanged;
                 TableControl.SortFunction = Compare;
-                TableControl.Manager?.AddSource(_dataSource);
+                if (_dataSource != null)
+                {
+                    TableControl.Manager?.AddSource(_dataSource);
+                }
             }
         }
 
@@ -236,6 +244,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             _warningsLabel = newWarningsLabel;
             _messagesLabel = newMessagesLabel;
 
+            ThreadHelper.ThrowIfNotOnUIThread();
             ProjectSystemToolsPackage.UpdateQueryStatus();
         }
 
@@ -265,6 +274,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
             ProjectSystemToolsPackage.PackageTaskFactory.RunAsync(async delegate
             {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 await UpdateErrorCountAsync(currentEntriesChangedEventCount, pinnedSnapshots, e);
             });
 
@@ -607,7 +617,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             {
                 TableControl?.Manager?.RemoveSource(_dataSource);
             }
-
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (newSelectionContainer.CountObjects(SelectionContainer.SELECTED, out var count) != VSConstants.S_OK ||
                 count != 1)
             {

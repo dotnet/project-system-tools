@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
@@ -51,6 +52,20 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
             ProjectName = other.ProjectName;
             Elapsed = elapsed;
             Status = status;
+        }
+        [JsonConstructor]
+        public BuildSummary(int buildId, BuildType buildType,
+            IEnumerable<string> dimensions, IEnumerable<string> targets,
+            DateTime startTime, TimeSpan elapsed, BuildStatus status, string projectName)
+        {
+            BuildId = buildId;
+            BuildType = buildType;
+            Dimensions = dimensions.ToImmutableArray();
+            Targets = targets?.ToImmutableArray() ?? ImmutableArray<string>.Empty;
+            StartTime = startTime;
+            Elapsed = elapsed;
+            Status = status;
+            ProjectName = projectName;
         }
     }
 }

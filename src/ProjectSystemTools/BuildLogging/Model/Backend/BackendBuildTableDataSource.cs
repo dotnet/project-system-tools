@@ -19,11 +19,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         private ImmutableList<Build> _entries = ImmutableList<Build>.Empty;
 
+        public event EventHandler BuildsUpdated;
+
         public bool IsLogging { get; private set; }
 
         public bool SupportsRoslynLogging => _roslynLogger.Supported;
-
-        private Action NotifyUI { get; set; }
 
         public BackEndBuildTableDataSource()
         {
@@ -31,10 +31,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             _roslynLogger = new RoslynLogger(this);
         }
 
-        public void Start(Action notifyCallback)
+        public void Start()
         {
-            NotifyUI = notifyCallback;
-
             IsLogging = true;
             ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
             _roslynLogger.Start();
@@ -42,8 +40,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public void Stop()
         {
-            NotifyUI = null;
-
             IsLogging = false;
             ProjectCollection.GlobalProjectCollection.UnregisterAllLoggers();
             _roslynLogger.Stop();
@@ -78,7 +74,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public void NotifyChange()
         {
-            NotifyUI?.Invoke();
+            OnDataChanged();
+        }
+
+        private void OnDataChanged()
+        {
+            BuildsUpdated?.Invoke(this, null);
         }
 
         public void AddEntry(Build build)

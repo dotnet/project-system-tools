@@ -43,11 +43,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             Content = _contentWrapper;
         }
 
-        private static void OnFiltersChanged(object sender, FiltersChangedEventArgs e) =>
+        private static void OnFiltersChanged(object sender, FiltersChangedEventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
             ProjectSystemToolsPackage.UpdateQueryStatus();
+        }
 
-        private static void OnGroupingsChanged(object sender, EventArgs e) =>
+        private static void OnGroupingsChanged(object sender, EventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
             ProjectSystemToolsPackage.UpdateQueryStatus();
+        }
 
         protected virtual void SetTableControl(IWpfTableControl2 tableControl)
         {
@@ -119,7 +125,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
         int IOleCommandTarget.QueryStatus(ref Guid commandGroupGuid, uint commandCount, OLECMD[] commands, IntPtr commandText)
         {
             var result = InnerQueryStatus(ref commandGroupGuid, commandCount, commands, commandText);
-
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (result == VSConstants.S_OK)
             {
                 return result;
@@ -136,7 +142,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             {
                 return result;
             }
-
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (commandGroupGuid == VSConstants.VSStd2K)
             {
                 if (commandId == (uint)VSConstants.VSStd2KCmdID.SHOWCONTEXTMENU)
@@ -149,8 +155,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             return ((IOleCommandTarget)TableControl).Exec(ref commandGroupGuid, commandId, commandExecOption, pvaIn, pvaOut);
         }
 
-        protected override bool PreProcessMessage(ref Message m) =>
-            ContentWrapper.PreProcessMessage(ref m, this) || base.PreProcessMessage(ref m);
+        protected override bool PreProcessMessage(ref Message m)
+        {
+#pragma warning disable VSTHRD010 // PreProcessMessage is only called when on the UI thread
+            return ContentWrapper.PreProcessMessage(ref m, this) || base.PreProcessMessage(ref m);
+#pragma warning restore VSTHRD010
+        }
 
         protected override void Dispose(bool disposing)
         {

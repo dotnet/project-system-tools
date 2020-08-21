@@ -111,6 +111,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         private void SelectionChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (!(GetService(typeof(STrackSelection)) is ITrackSelection track))
             {
                 return;
@@ -142,6 +143,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         private void GridSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (!(GetService(typeof(STrackSelection)) is ITrackSelection track))
             {
                 return;

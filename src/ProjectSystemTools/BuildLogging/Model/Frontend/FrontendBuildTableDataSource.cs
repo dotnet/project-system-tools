@@ -3,17 +3,23 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.ServiceHub.Framework;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
+using Microsoft.VisualStudio.RpcContracts.FileSystem;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.ServiceBroker;
 using Microsoft.VisualStudio.Shell.TableManager;
+using Task = System.Threading.Tasks.Task;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 {
     [Export(typeof(IFrontEndBuildTableDataSource))]
-    internal sealed class FrontEndBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontEndBuildTableDataSource
+    internal sealed class FrontEndBuildTableDataSource : ITableEntriesSnapshotFactory, IFrontEndBuildTableDataSource, IDisposable
     {
         private const string BuildDataSourceDisplayName = "Build Data Source";
         private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
@@ -25,7 +31,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         private BuildTableEntriesSnapshot _lastSnapshot;
         private ImmutableList<UIBuildSummary> _entries = ImmutableList<UIBuildSummary>.Empty;
 
-        private readonly IBuildLoggerService _loggerService;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly CancellationTokenSource _cancellationTokenSource;
+        private IBuildLoggerService _loggerServiceReference;
 
         public string SourceTypeIdentifier => BuildTableDataSourceSourceTypeIdentifier;
 
@@ -37,45 +45,80 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public int CurrentVersionNumber { get; private set; }
 
-        [ImportingConstructor]
-        public FrontEndBuildTableDataSource(IBuildLoggerService loggerService)
+        public FrontEndBuildTableDataSource()
         {
-            _loggerService = loggerService;
-            
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            _serviceProvider = ProjectSystemToolsPackage.ServiceProvider;
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                SupportRoslynLogging = await _loggerService.SupportsRoslynLoggingAsync();
+                return UseLoggerServiceAsync(async (loggerService, token) =>
+                {
+                    if (loggerService != null)
+                    {
+                        SupportRoslynLogging = await loggerService.SupportsRoslynLoggingAsync(token);
+                    }
+                });
             });
         }
 
-        public async Task<bool> IsLoggingAsync()
+        public Task<bool> IsLoggingAsync()
         {
-            return await _loggerService.IsLoggingAsync();
+            return UseLoggerServiceAsync(async (loggerService, token) =>
+            {
+                if (loggerService != null)
+                {
+                    return await loggerService.IsLoggingAsync(token);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Logging service is null. Most likely the client is not connected to the server yet.");
+                }
+            });
         }
 
         public void Start()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                await _loggerService.StartAsync(UpdateEntries);
+                IServiceBroker sb = GetServiceBroker();
+                (_loggerServiceReference as IDisposable)?.Dispose();
+                _loggerServiceReference = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+                Assumes.Present(_loggerServiceReference);
+                _loggerServiceReference.DataChanged += C_DataChanged;
+                await _loggerServiceReference.StartAsync(_cancellationTokenSource.Token);
             });
         }
 
+        /// <summary>
+        /// Start must be called before Stop
+        /// </summary>
         public void Stop()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                await _loggerService.StopAsync();
+                Assumes.Present(_loggerServiceReference);
+                await _loggerServiceReference.StopAsync(_cancellationTokenSource.Token);
+                _loggerServiceReference.DataChanged -= C_DataChanged;
             });
+            UpdateEntries();
+        }
+        void C_DataChanged(object sender, EventArgs e)
+        {
+            UpdateEntries();
         }
 
         public void Clear()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                await _loggerService.ClearAsync();
-                _entries = ImmutableList<UIBuildSummary>.Empty;
-                NotifyChange();
+                return UseLoggerServiceAsync(async (loggerService, token) =>
+                {
+                    Assumes.Present(loggerService);
+                    await loggerService.ClearAsync(token);
+                    _entries = ImmutableList<UIBuildSummary>.Empty;
+                    NotifyChange();
+                });
             });
         }
 
@@ -92,6 +135,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public void Dispose()
         {
             _entries = ImmutableList<UIBuildSummary>.Empty;
+            (_loggerServiceReference as IDisposable)?.Dispose();
         }
 
         public void NotifyChange()
@@ -136,19 +180,86 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public async Task<string> GetLogForBuildAsync(int buildID)
         {
-            return await _loggerService.GetLogForBuildAsync(buildID);
+            string filePath = await UseLoggerServiceAsync(async (loggerService, token) =>
+            {
+                Assumes.Present(loggerService);
+                return await loggerService.GetLogForBuildAsync(buildID, token);
+            });
+
+            if (filePath == null)
+            {
+                return null;
+            }
+
+            IServiceBroker sb = GetServiceBroker();
+            IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_7.FileSystem);
+            try
+            {
+                Assumes.Present(fileSystemService);
+                Uri fileUri = new Uri(filePath);
+                string clientFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(filePath));
+                Uri clientUri = new Uri(clientFilePath);
+                if (!fileUri.Equals(clientUri))
+                {
+                    await fileSystemService.CopyAsync(fileUri, clientUri, true, null, _cancellationTokenSource.Token);
+                }
+                return clientFilePath;
+            }
+            finally
+            {
+                (fileSystemService as IDisposable)?.Dispose();
+            }
         }
 
         private void UpdateEntries()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
-                _entries = (await _loggerService.GetAllBuildsAsync())
-                .Select(summary => new UIBuildSummary(summary))
-                .ToImmutableList();
+                return UseLoggerServiceAsync(async (loggerService, token) =>
+                {
+                    Assumes.Present(loggerService);
+                    _entries = (await loggerService.GetAllBuildsAsync(token))
+                            .Select(summary => new UIBuildSummary(summary))
+                            .ToImmutableList();
 
-                NotifyChange();
+                    NotifyChange();
+                });
             });
+        }
+
+        private IServiceBroker GetServiceBroker()
+        {
+            IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
+            Assumes.Present(serviceContainer);
+            return serviceContainer.GetFullAccessServiceBroker();
+        }
+
+        private async Task UseLoggerServiceAsync(Func<IBuildLoggerService, CancellationToken, Task> func)
+        {
+            IServiceBroker sb = GetServiceBroker();
+            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+            try
+            {
+                await func(loggerService, _cancellationTokenSource.Token);
+            }
+            finally
+            {
+                (loggerService as IDisposable)?.Dispose();
+            }
+        }
+
+        private async Task<T> UseLoggerServiceAsync<T>(Func<IBuildLoggerService, CancellationToken, Task<T>> func)
+        {
+            IServiceBroker sb = GetServiceBroker();
+            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+            try
+            {
+                return await func(loggerService, _cancellationTokenSource.Token);
+            }
+            finally
+            {
+                (loggerService as IDisposable)?.Dispose();
+            }
         }
     }
 }

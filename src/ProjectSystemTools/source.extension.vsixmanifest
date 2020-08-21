@@ -7,6 +7,7 @@
     <Icon>Icon.png</Icon>
     <PreviewImage>Icon.png</PreviewImage>
     <Tags>project, csproj, vbproj</Tags>
+    <AllowClientRole>true</AllowClientRole>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[15.0.27004.2002,)" />
