@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.ServiceBroker;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using ProvideBrokeredServiceAttribute = Microsoft.VisualStudio.Shell.ServiceBroker.ProvideBrokeredServiceAttribute;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd;
+using Microsoft.VisualStudio.ComponentModelHost;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools
 {
@@ -21,8 +21,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
         {
             await base.InitializeAsync(cancellationToken, progress);
 
-            BackEndBuildTableDataSource source = new BackEndBuildTableDataSource();
-            IBuildLoggerService loggerService = new BuildLoggerService(source, source);
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            IComponentModel componentModel = (IComponentModel)await GetServiceAsync(typeof(SComponentModel));
+            Assumes.Present(componentModel);
+            IBuildLoggerService loggerService = componentModel.GetService<IBuildLoggerService>();
 
             IBrokeredServiceContainer brokeredServiceContainer = await this.GetServiceAsync<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
             brokeredServiceContainer.Proffer(RpcDescriptors.LoggerServiceDescriptor, (mk, options, sb, ct) => new ValueTask<object>(loggerService));
