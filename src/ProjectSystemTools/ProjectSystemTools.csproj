@@ -100,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LogModel\LogModel.csproj" />
-    <ProjectReference Include="..\LogProviders\LogProviders.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="BinaryLogEditor\BinaryLogEditorResources.Designer.cs">
