@@ -99,7 +99,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LogModel\LogModel.csproj" />
+    <ProjectReference Include="..\LogModel\Microsoft.VisualStudio.ProjectSystemTools.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="BinaryLogEditor\BinaryLogEditorResources.Designer.cs">
