@@ -14,6 +14,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.VisualStudio.TextManager.Interop;
+using Microsoft.VisualStudio.Shell.ServiceBroker;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
+using System.Threading.Tasks;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools
 {
@@ -101,6 +104,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
             RegisterEditorFactory(new BinaryLogEditorFactory());
 
             Instance = this;
+
+            IBuildLoggerService loggerService = componentModel.GetService<IBuildLoggerService>();
+
+            IBrokeredServiceContainer brokeredServiceContainer = await this.GetServiceAsync<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
+            brokeredServiceContainer.Proffer(RpcDescriptors.LoggerServiceDescriptor, (mk, options, sb, ct) => new ValueTask<object>(loggerService));
         }
 
         protected override void Dispose(bool disposing)
