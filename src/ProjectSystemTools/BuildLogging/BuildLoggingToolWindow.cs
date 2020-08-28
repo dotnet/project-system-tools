@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model;
@@ -43,8 +42,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         public BuildLoggingToolWindow()
         {
-            var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
-            _dataSource = componentModel.GetService<IFrontEndBuildTableDataSource>();
+            _dataSource = new FrontEndBuildTableDataSource();
             ThreadHelper.ThrowIfNotOnUIThread();
             _openDocument = (IVsUIShellOpenDocument)GetService(typeof(SVsUIShellOpenDocument));
 
