@@ -5,6 +5,8 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts
 {
     /// <summary>
