@@ -46,9 +46,6 @@
     <PackageReference Include="VSLangProj" Version="7.0.3301" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.ProjectSystem.LogModel">
-      <HintPath>..\..\..\project-system\artifacts\Debug\bin\Dlls\Microsoft.VisualStudio.ProjectSystem.LogModel.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Design" />
@@ -107,6 +104,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LogModel\Microsoft.VisualStudio.ProjectSystemTools.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="BinaryLogEditor\BinaryLogEditorResources.Designer.cs">
