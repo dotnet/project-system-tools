@@ -53,7 +53,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             Assumes.Present(threadedWaitDialog);
             var threadedWaitCallback = new ThreadedWaitCallback();
 
-            int projectsProcessed = 0;
+            var projectsProcessed = 0;
             threadedWaitDialog.StartWaitDialogWithCallback(RoslynLoggingResources.ProjectSystemTools, RoslynLoggingResources.LoggingRoslynWorkspaceStructure, null, null, null, true, 0, true, solution.ProjectIds.Count, 0, threadedWaitCallback);
 
             try
@@ -269,7 +269,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
         {
             while (true)
             {
-                int index = s.IndexOf(oldValue, StringComparison.OrdinalIgnoreCase);
+                var index = s.IndexOf(oldValue, StringComparison.OrdinalIgnoreCase);
                 if (index == -1)
                 {
                     return s;

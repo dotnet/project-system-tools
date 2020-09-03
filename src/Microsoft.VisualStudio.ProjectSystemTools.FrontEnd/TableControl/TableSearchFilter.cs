@@ -82,7 +82,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
         }
 
         private static string GetColumnValueAsString(ITableEntryHandle entry, ITableColumnDefinition column) =>
-            entry.TryCreateStringContent(column, truncatedText: false, singleColumnView: false, content: out string columnValue) && (columnValue != null)
+            entry.TryCreateStringContent(column, truncatedText: false, singleColumnView: false, content: out var columnValue) && (columnValue != null)
                 ? columnValue : string.Empty;
 
         private static string GetDetailsContentAsString(ITableEntryHandle entry)

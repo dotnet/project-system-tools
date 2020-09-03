@@ -202,7 +202,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                         continue;
                     }
 
-                    string logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                    var logPath = await _dataSource.GetLogForBuildAsync(buildID);
                     var filename = Path.GetFileName(logPath);
 
                     if (filename == null)
@@ -259,7 +259,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             var guid = VSConstants.LOGVIEWID_Primary;
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                string logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                var logPath = await _dataSource.GetLogForBuildAsync(buildID);
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
                 frame?.Show();
@@ -277,7 +277,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                         continue;
                     }
 
-                    string logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                    var logPath = await _dataSource.GetLogForBuildAsync(buildID);
                     try
                     {
                         if (logPath != null)

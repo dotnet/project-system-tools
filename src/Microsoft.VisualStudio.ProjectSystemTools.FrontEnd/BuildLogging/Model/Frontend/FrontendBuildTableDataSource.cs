@@ -81,7 +81,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                IServiceBroker sb = GetServiceBroker();
+                var sb = GetServiceBroker();
                 (_loggerServiceReference as IDisposable)?.Dispose();
                 _loggerServiceReference = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
                 Assumes.Present(_loggerServiceReference);
@@ -180,7 +180,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public async Task<string> GetLogForBuildAsync(int buildID)
         {
-            string filePath = await UseLoggerServiceAsync(async (loggerService, token) =>
+            var filePath = await UseLoggerServiceAsync(async (loggerService, token) =>
             {
                 Assumes.Present(loggerService);
                 return await loggerService.GetLogForBuildAsync(buildID, token);
@@ -191,14 +191,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 return null;
             }
 
-            IServiceBroker sb = GetServiceBroker();
-            IFileSystemProvider fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_7.FileSystem);
+            var sb = GetServiceBroker();
+            var fileSystemService = await sb.GetProxyAsync<IFileSystemProvider>(VisualStudioServices.VS2019_7.FileSystem);
             try
             {
                 Assumes.Present(fileSystemService);
-                Uri fileUri = new Uri(filePath);
-                string clientFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(filePath));
-                Uri clientUri = new Uri(clientFilePath);
+                var fileUri = new Uri(filePath);
+                var clientFilePath = Path.Combine(Path.GetTempPath(), Path.GetFileName(filePath));
+                var clientUri = new Uri(clientFilePath);
                 if (!fileUri.Equals(clientUri))
                 {
                     await fileSystemService.CopyAsync(fileUri, clientUri, true, null, _cancellationTokenSource.Token);
@@ -229,15 +229,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private IServiceBroker GetServiceBroker()
         {
-            IBrokeredServiceContainer serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
+            var serviceContainer = _serviceProvider.GetService<SVsBrokeredServiceContainer, IBrokeredServiceContainer>();
             Assumes.Present(serviceContainer);
             return serviceContainer.GetFullAccessServiceBroker();
         }
 
         private async Task UseLoggerServiceAsync(Func<IBuildLoggerService, CancellationToken, Task> func)
         {
-            IServiceBroker sb = GetServiceBroker();
-            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+            var sb = GetServiceBroker();
+            var loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
             try
             {
                 await func(loggerService, _cancellationTokenSource.Token);
@@ -250,8 +250,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private async Task<T> UseLoggerServiceAsync<T>(Func<IBuildLoggerService, CancellationToken, Task<T>> func)
         {
-            IServiceBroker sb = GetServiceBroker();
-            IBuildLoggerService loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
+            var sb = GetServiceBroker();
+            var loggerService = await sb.GetProxyAsync<IBuildLoggerService>(RpcDescriptors.LoggerServiceDescriptor);
             try
             {
                 return await func(loggerService, _cancellationTokenSource.Token);

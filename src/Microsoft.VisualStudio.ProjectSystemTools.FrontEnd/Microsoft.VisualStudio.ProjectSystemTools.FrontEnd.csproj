@@ -67,6 +67,7 @@
     <EmbeddedResource Include="LogModel\Resources.resx">
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>Microsoft.VisualStudio.ProjectSystemTools.FrontEnd</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="TableControl\TableControlResources.resx" GenerateSource="true" />
     <EmbeddedResource Include="VSPackage.resx">
@@ -122,6 +123,11 @@
     </Compile>
     <Compile Update="BinaryLogEditor\LogViewControl.xaml.cs">
       <DependentUpon>LogViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="LogModel\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Update="VSPackage.Designer.cs">
       <DesignTime>True</DesignTime>

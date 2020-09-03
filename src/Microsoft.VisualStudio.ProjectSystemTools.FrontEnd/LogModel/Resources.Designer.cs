@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel {
+namespace Microsoft.VisualStudio.ProjectSystemTools.FrontEnd {
     using System;
     
     

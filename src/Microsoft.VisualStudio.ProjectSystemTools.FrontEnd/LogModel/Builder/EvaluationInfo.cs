@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
-using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 
 namespace Microsoft.VisualStudio.ProjectSystemTools.FrontEnd.Builder
 {

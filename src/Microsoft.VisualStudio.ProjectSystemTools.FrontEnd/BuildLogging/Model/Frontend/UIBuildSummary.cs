@@ -53,7 +53,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
                 return 1;
             }
 
-            int startComparison = (int)(buildSummary.StartTime?.CompareTo(other.buildSummary.StartTime));
+            var startComparison = (int)(buildSummary.StartTime?.CompareTo(other.buildSummary.StartTime));
             return startComparison != 0 ? startComparison : string.Compare(buildSummary.ProjectName, other.buildSummary.ProjectName, StringComparison.Ordinal);
         }
     }
