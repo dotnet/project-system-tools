@@ -106,7 +106,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.VisualStudio.ProjectSystemTools.Shared\Microsoft.VisualStudio.ProjectSystemTools.Shared.csproj" />
+    <ProjectReference Include="..\Microsoft.VisualStudio.ProjectSystemTools.FrontEndShared\Microsoft.VisualStudio.ProjectSystemTools.FrontEndShared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="BinaryLogEditor\BinaryLogEditorResources.Designer.cs">
