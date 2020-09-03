@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>Microsoft.VisualStudio.ProjectSystemTools.Shared</RootNamespace>
+    <RootNamespace>Microsoft.VisualStudio.ProjectSystemTools.FrontEndShared</RootNamespace>
     <AssemblyName>Microsoft.VisualStudio.ProjectSystemTools.Shared</AssemblyName>
     <IsProductComponent>false</IsProductComponent>
     <LangVersion>latest</LangVersion>

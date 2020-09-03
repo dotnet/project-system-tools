@@ -123,11 +123,6 @@
     <Compile Update="BinaryLogEditor\LogViewControl.xaml.cs">
       <DependentUpon>LogViewControl.xaml</DependentUpon>
     </Compile>
-    <Compile Update="LogModel\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Update="VSPackage.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
