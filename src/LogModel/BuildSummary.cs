@@ -6,8 +6,6 @@ using System.Collections.Immutable;
 using System.IO;
 using Newtonsoft.Json;
 
-#nullable enable
-
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model
 {
     /// <summary>
