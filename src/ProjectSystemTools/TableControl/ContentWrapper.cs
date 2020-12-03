@@ -60,7 +60,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             });
         }
 
-        // Default to the bottom-left corner of the control for the position of contect menu invoked from keyboard
+        // Default to the bottom-left corner of the control for the position of context menu invoked from keyboard
         private Point GetKeyboardContextMenuAnchorPoint() => PointToScreen(new Point(0, RenderSize.Height));
 
         // Get the current mouse position and convert it to screen coordinates as the shell expects a screen position
