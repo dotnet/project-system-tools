@@ -9,25 +9,29 @@
     <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
     <!-- MSBuild -->
-    <MicrosoftBuildVersion>15.6.85</MicrosoftBuildVersion>
+    <MicrosoftBuildVersion>16.8.0</MicrosoftBuildVersion>
     <!-- Roslyn -->
     <MicrosoftVisualStudioLanguageServicesVersion>2.0.0</MicrosoftVisualStudioLanguageServicesVersion>
     <!-- VS SDK -->
-    <MicrosoftVisualStudioComponentModelHostVersion>15.4.27004</MicrosoftVisualStudioComponentModelHostVersion>
-    <MicrosoftVisualStudioCoreUtilityVersion>15.4.27004</MicrosoftVisualStudioCoreUtilityVersion>
-    <MicrosoftVisualStudioImageCatalogVersion>15.4.27004</MicrosoftVisualStudioImageCatalogVersion>
-    <MicrosoftVisualStudioEditorVersion>15.4.27004</MicrosoftVisualStudioEditorVersion>
+    <MicrosoftVisualStudioComponentModelHostVersion>16.8.239</MicrosoftVisualStudioComponentModelHostVersion>
+    <MicrosoftVisualStudioCoreUtilityVersion>16.8.239</MicrosoftVisualStudioCoreUtilityVersion>
+    <MicrosoftVisualStudioEditorVersion>16.8.239</MicrosoftVisualStudioEditorVersion>
+    <MicrosoftVisualStudioImageCatalogVersion>16.8.30709.132</MicrosoftVisualStudioImageCatalogVersion>
+    <MicrosoftVisualStudioImagingInterop140DesignTimeVersion>16.8.30705.32</MicrosoftVisualStudioImagingInterop140DesignTimeVersion>
     <MicrosoftVisualStudioProjectSystemSDKVersion>15.3.224</MicrosoftVisualStudioProjectSystemSDKVersion>
-    <MicrosoftVisualStudioShell150Version>15.4.27004</MicrosoftVisualStudioShell150Version>
-    <MicrosoftVisualStudioShellFrameworkVersion>15.4.27004</MicrosoftVisualStudioShellFrameworkVersion>
-    <MicrosoftVisualStudioShellInterop140DesignTimeVersion>15.0.25726-Preview5</MicrosoftVisualStudioShellInterop140DesignTimeVersion>
-    <MicrosoftVisualStudioShellInterop150DesignTimeVersion>15.0.26932</MicrosoftVisualStudioShellInterop150DesignTimeVersion>
-    <MicrosoftVisualStudioShellInterop153DesignTimeVersion>15.0.26929</MicrosoftVisualStudioShellInterop153DesignTimeVersion>
-    <MicrosoftVisualStudioShellInterop90Version>9.0.30729</MicrosoftVisualStudioShellInterop90Version>
-    <MicrosoftVisualStudioTextManagerInterop100Version>10.0.30319</MicrosoftVisualStudioTextManagerInterop100Version>
-    <MicrosoftVisualStudioUtilitiesVersion>15.4.27004</MicrosoftVisualStudioUtilitiesVersion>
+    <MicrosoftVisualStudioShell150Version>16.8.30406.155-pre</MicrosoftVisualStudioShell150Version>
+    <MicrosoftVisualStudioShellFrameworkVersion>16.8.30406.155-pre</MicrosoftVisualStudioShellFrameworkVersion>
+    <MicrosoftVisualStudioShellInterop140DesignTimeVersion>16.8.30406.65</MicrosoftVisualStudioShellInterop140DesignTimeVersion>
+    <MicrosoftVisualStudioShellInterop150DesignTimeVersion>16.8.30406.65</MicrosoftVisualStudioShellInterop150DesignTimeVersion>
+    <MicrosoftVisualStudioShellInterop153DesignTimeVersion>16.8.30406.65</MicrosoftVisualStudioShellInterop153DesignTimeVersion>
+    <MicrosoftVisualStudioShellInterop90Version>16.8.30406.65</MicrosoftVisualStudioShellInterop90Version>
+    <MicrosoftVisualStudioTextManagerInterop100Version>16.8.30705.32</MicrosoftVisualStudioTextManagerInterop100Version>
+    <MicrosoftVisualStudioThreadingVersion>16.8.55</MicrosoftVisualStudioThreadingVersion>
+    <MicrosoftVisualStudioUtilitiesVersion>16.8.30406.65-pre</MicrosoftVisualStudioUtilitiesVersion>
+    <VSLangProjVersion>7.0.3301</VSLangProjVersion>
     <!-- Libs -->
     <SystemCompositionVersion>1.1.0</SystemCompositionVersion>
+    <SystemCollectionsImmutableVersion>5.0.0</SystemCollectionsImmutableVersion>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreSources>
