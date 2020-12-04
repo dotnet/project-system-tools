@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
@@ -38,9 +39,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
             // Show context menu blocks, so we need to yield out of this method
             // for e.Handled to be noticed by WPF
-            Dispatcher.BeginInvoke(new Action(() =>
-                ProjectSystemToolsPackage.VsUIShell.ShowContextMenu(0, ref guidContextMenu, _contextMenuId,
-                    locationPoints, pCmdTrgtActive: null)));
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                ProjectSystemToolsPackage.VsUIShell.ShowContextMenu(
+                    0, ref guidContextMenu, _contextMenuId,
+                    locationPoints, pCmdTrgtActive: null);
+            });
         }
 
         // Default to the bottom-left corner of the control for the position of context menu invoked from keyboard
