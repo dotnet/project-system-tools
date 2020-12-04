@@ -6,6 +6,7 @@ using System.Threading;
 using Microsoft.VisualStudio.Shell;
 using Task = System.Threading.Tasks.Task;
 using System.ComponentModel.Design;
+using System.Threading.Tasks;
 using Microsoft.Internal.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor;
@@ -144,5 +145,35 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
             RoslynLogging.RoslynWorkspaceStructureLogger.ShowSaveDialogAndLog(ServiceProvider);
         }
 
+        public override IVsAsyncToolWindowFactory GetAsyncToolWindowFactory(Guid toolWindowType)
+        {
+            if (toolWindowType == typeof(MessageListToolWindow).GUID ||
+                toolWindowType == typeof(BuildLoggingToolWindow).GUID)
+            {
+                return this;
+            }
+
+            return base.GetAsyncToolWindowFactory(toolWindowType);
+        }
+
+        protected override string GetToolWindowTitle(Type toolWindowType, int id)
+        {
+            if (toolWindowType == typeof(MessageListToolWindow))
+            {
+                return BinaryLogEditorResources.MessageListWindowTitle;
+            }
+
+            if (toolWindowType == typeof(BuildLoggingToolWindow))
+            {
+                return BuildLoggingResources.BuildLogWindowTitle;
+            }
+
+            return base.GetToolWindowTitle(toolWindowType, id);
+        }
+
+        protected override Task<object> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
+        {
+            return Task.FromResult<object>(null);
+        }
     }
 }
