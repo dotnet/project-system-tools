@@ -87,14 +87,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
             PackageTaskCollection = ThreadHelper.JoinableTaskContext.CreateCollection();
             PackageTaskFactory = ThreadHelper.JoinableTaskContext.CreateFactory(PackageTaskCollection);
 
-            VsUIShell = GetService(typeof(IVsUIShell)) as IVsUIShell;
-            VsFindManager = GetService(typeof(SVsFindManager)) as IVsFindManager;
+            VsUIShell = await GetServiceAsync(typeof(IVsUIShell)) as IVsUIShell;
+            VsFindManager = await GetServiceAsync(typeof(SVsFindManager)) as IVsFindManager;
 
-            var componentModel = GetService(typeof(SComponentModel)) as IComponentModel;
+            var componentModel = await GetServiceAsync(typeof(SComponentModel)) as IComponentModel;
             TableControlProvider = componentModel?.GetService<IWpfTableControlProvider>();
             TableManagerProvider = componentModel?.GetService<ITableManagerProvider>();
 
-            var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            var mcs = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             mcs?.AddCommand(new MenuCommand(ShowBuildLoggingToolWindow, new CommandID(CommandSetGuid, BuildLoggingCommandId)));
             mcs?.AddCommand(new MenuCommand(ShowMessageListToolWindow, new CommandID(CommandSetGuid, MessageListCommandId)));
             mcs?.AddCommand(new MenuCommand(LogRoslynWorkspaceStructure, new CommandID(CommandSetGuid, LogRoslynWorkspaceStructureCommandId)));
