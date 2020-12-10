@@ -15,7 +15,7 @@ pr:
 jobs:
 - job: Windows
   pool:
-    vmImage: 'vs2017-win2016'
+    vmImage: 'windows-2019'
   variables:
     _os: Windows
   strategy:
