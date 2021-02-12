@@ -18,8 +18,8 @@
         <note />
       </trans-unit>
       <trans-unit id="LogRoslynWorkspaceStructureCommandId|ButtonText">
-        <source>Log Roslyn Workplace Structure...</source>
-        <target state="new">Log Roslyn Workplace Structure...</target>
+        <source>Log Roslyn Workspace Structure...</source>
+        <target state="new">Log Roslyn Workspace Structure...</target>
         <note />
       </trans-unit>
       <trans-unit id="OpenLogsExternalCommandId|ButtonText">

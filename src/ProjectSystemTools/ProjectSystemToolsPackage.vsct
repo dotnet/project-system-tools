@@ -87,7 +87,7 @@
       </Button>
       <Button guid="CommandSetGuid" id="LogRoslynWorkspaceStructureCommandId" type="Button">
         <Strings>
-          <ButtonText>Log Roslyn Workplace Structure...</ButtonText>
+          <ButtonText>Log Roslyn Workspace Structure...</ButtonText>
         </Strings>
       </Button>
     </Buttons>
