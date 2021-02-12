@@ -180,7 +180,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
                         {
                             diagnosticsElement.Add(
                                 new XElement("diagnostic",
+                                    new XAttribute("id", diagnostic.Id),
                                     new XAttribute("severity", diagnostic.Severity.ToString()),
+                                    new XAttribute("path", SanitizePath(diagnostic.Location.GetLineSpan().Path ?? "(none)")),
                                     diagnostic.GetMessage()));
                         }
                     }
