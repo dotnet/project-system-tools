@@ -142,8 +142,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
                         workspaceReferencesElement.Add(referenceElement);
                     }
 
-                    projectElement.Add(new XElement("workspaceDocuments", CreateElementsForDocumentCollection(project.Documents, "document")));
-                    projectElement.Add(new XElement("workspaceAdditionalDocuments", CreateElementsForDocumentCollection(project.AdditionalDocuments, "additionalDocuments")));
+                    projectElement.Add(new XElement("workspaceDocuments", CreateElementsForDocumentCollection(project.Documents, "document", cancellationToken)));
+                    projectElement.Add(new XElement("workspaceAdditionalDocuments", CreateElementsForDocumentCollection(project.AdditionalDocuments, "additionalDocuments", cancellationToken)));
 
                     // Read AnalyzerConfigDocuments via reflection, as our target version may not be on a Roslyn
                     // new enough to support it.
@@ -152,7 +152,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
                     if (analyzerConfigDocumentsProperty != null)
                     {
                         var analyzerConfigDocuments = (IEnumerable<TextDocument>)analyzerConfigDocumentsProperty.GetValue(project);
-                        projectElement.Add(new XElement("workspaceAnalyzerConfigDocuments", CreateElementsForDocumentCollection(analyzerConfigDocuments, "analyzerConfigDocument")));
+                        projectElement.Add(new XElement("workspaceAnalyzerConfigDocuments", CreateElementsForDocumentCollection(analyzerConfigDocuments, "analyzerConfigDocument", cancellationToken)));
                     }
 
                     // Dump references from the compilation; this should match the workspace but can help rule out
@@ -216,26 +216,43 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             }
         }
 
-        private static bool? TryGetHasSuccessfullyLoaded(Project project, CancellationToken cancellationToken)
+        private static T TryCallNonPublicMethod<T>(this object o, string methodName, params object[] parameters) where T : class
         {
-            // This method has not been made a public API, but is useful for analyzing some issues. Since it's non-public we'll
-            // be careful to deal with it missing if/when it's updated.
-            var method = project.GetType().GetMethod("HasSuccessfullyLoadedAsync", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var method = o.GetType().GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
             if (method == null)
             {
                 return null;
             }
 
-            var task = method.Invoke(project, new object[] { cancellationToken }) as Task<bool>;
+            return method.Invoke(o, parameters) as T;
+        }
 
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits -- this is fine since it's a Roslyn API
+        private static T TryGetNonPublicProperty<T>(this object o, string propertyName) where T : class
+        {
+            var method = o.GetType().GetProperty(propertyName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            if (method == null)
+            {
+                return null;
+            }
+
+            return method.GetValue(o) as T;
+        }
+
+        private static bool? TryGetHasSuccessfullyLoaded(Project project, CancellationToken cancellationToken)
+        {
+            // This method has not been made a public API, but is useful for analyzing some issues
+            var task = project.TryCallNonPublicMethod<Task<bool>>("HasSuccessfullyLoadedAsync", cancellationToken);
+
+            if (task == null)
+            {
+                return null;
+            }
 
             task.Wait(cancellationToken);
 
             return task.Result;
-
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
         private static VSLangProj.VSProject TryFindLangProjProject(EnvDTE.DTE dte, Project project)
@@ -340,11 +357,29 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
                 typesElement);
         }
 
-        public static IEnumerable<XElement> CreateElementsForDocumentCollection(IEnumerable<TextDocument> documents, string elementName)
+        public static IEnumerable<XElement> CreateElementsForDocumentCollection(IEnumerable<TextDocument> documents, string elementName, CancellationToken cancellationToken)
         {
             foreach (var document in documents)
             {
-                yield return new XElement(elementName, new XAttribute("file", SanitizePath(document.FilePath ?? "(none)")));
+                var documentElement = new XElement(elementName, new XAttribute("path", SanitizePath(document.FilePath ?? "(none)")));
+
+                var documentState = document.TryGetNonPublicProperty<object>("State");
+                if (documentState != null)
+                {
+                    var loadDiagnosticTask = documentState.TryCallNonPublicMethod<Task<Diagnostic>>("GetLoadDiagnosticAsync", cancellationToken);
+
+                    if (loadDiagnosticTask != null)
+                    {
+                        loadDiagnosticTask.Wait(cancellationToken);
+                        
+                        if (loadDiagnosticTask.Result != null)
+                        {
+                            documentElement.Add(new XElement("loadDiagnostic", loadDiagnosticTask.Result.GetMessage()));
+                        }
+                    }
+                }
+
+                yield return documentElement;
             }
         }
 
