@@ -2,7 +2,6 @@
 trigger:
   branches:
     include:
-    - master
     - main
     - feature/*
 
@@ -10,7 +9,6 @@ trigger:
 pr:
   branches:
     include:
-    - master
     - main
     - feature/*
 
