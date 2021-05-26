@@ -231,8 +231,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
         private static void CheckProjectEventContext(BuildEventArgs args)
         {
             if (args.BuildEventContext.TargetId != -1 ||
-                args.BuildEventContext.TaskId != -1 ||
-                args.BuildEventContext.EvaluationId != -1)
+                args.BuildEventContext.TaskId != -1)
             {
                 throw new LoggerException(Resources.BadState);
             }
@@ -750,8 +749,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 
         private void ProcessEvaluationMessage(BuildEventArgs args)
         {
-            if (args.BuildEventContext.ProjectContextId != BuildEventContext.InvalidProjectContextId ||
-                args.BuildEventContext.TargetId != BuildEventContext.InvalidTargetId ||
+            if (args.BuildEventContext.TargetId != BuildEventContext.InvalidTargetId ||
                 args.BuildEventContext.TaskId != BuildEventContext.InvalidTaskId)
             {
                 throw new LoggerException(Resources.UnexpectedMessage);
