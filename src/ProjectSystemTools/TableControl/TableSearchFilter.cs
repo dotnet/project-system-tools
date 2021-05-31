@@ -33,9 +33,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
             var cachedColumnValues = new string[_visibleColumns.Count + 1];
 
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
             return _searchTokens.Where(searchToken => !(searchToken is IVsSearchFilterToken))
                 .All(searchToken => AtLeastOneColumnOrDetailsContentMatches(entry, searchToken,
                     cachedColumnValues));
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
         }
 
         private bool AtLeastOneColumnOrDetailsContentMatches(ITableEntryHandle entry, IVsSearchToken searchToken, string[] cachedColumnValues)
