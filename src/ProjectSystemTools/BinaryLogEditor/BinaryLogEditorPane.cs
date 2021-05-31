@@ -19,11 +19,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
     internal sealed class BinaryLogEditorPane : WindowPane, IOleCommandTarget
     {
         private readonly SelectionContainer _selectionContainer;
-        private readonly ObservableCollection<BaseViewModel> _buildTreeViewItems = new ObservableCollection<BaseViewModel>();
-        private readonly ObservableCollection<BaseViewModel> _evaluationTreeViewItems = new ObservableCollection<BaseViewModel>();
-        private readonly ObservableCollection<TargetListViewModel> _targetListViewItems = new ObservableCollection<TargetListViewModel>();
-        private readonly ObservableCollection<TaskListViewModel> _taskListViewItems = new ObservableCollection<TaskListViewModel>();
-        private readonly ObservableCollection<EvaluationListViewModel> _evaluationListViewItems = new ObservableCollection<EvaluationListViewModel>();
+        private readonly ObservableCollection<BaseViewModel> _buildTreeViewItems = new();
+        private readonly ObservableCollection<BaseViewModel> _evaluationTreeViewItems = new();
+        private readonly ObservableCollection<TargetListViewModel> _targetListViewItems = new();
+        private readonly ObservableCollection<TaskListViewModel> _taskListViewItems = new();
+        private readonly ObservableCollection<EvaluationListViewModel> _evaluationListViewItems = new();
         private readonly BinaryLogDocumentData _documentData;
 
         public BinaryLogEditorPane(BinaryLogDocumentData documentData)
@@ -178,7 +178,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
                 shell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fForceCreate, ref propertyBrowser, out var frame);
                 frame?.ShowNoActivate();
             }
-
         }
     }
 }

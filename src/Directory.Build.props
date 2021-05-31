@@ -13,4 +13,5 @@
     <!-- Workaround: https://github.com/dotnet/sdk/issues/12739 -->
     <ImportFrameworkWinFXTargets>true</ImportFrameworkWinFXTargets>
   </PropertyGroup>
+
 </Project>

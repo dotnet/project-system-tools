@@ -65,6 +65,8 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\LogModel\LogModel.csproj">
       <Name>LogModel</Name>
       <Private>true</Private>
@@ -73,6 +75,8 @@
       <Name>LogProviders</Name>
       <Private>true</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <VSCTCompile Include="ProjectSystemToolsPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>

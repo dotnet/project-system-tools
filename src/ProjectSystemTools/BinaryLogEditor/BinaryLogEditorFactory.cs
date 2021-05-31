@@ -11,9 +11,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
     [Guid(ProjectSystemToolsPackage.BinaryLogEditorFactoryGuidString)]
     public sealed class BinaryLogEditorFactory : IVsEditorFactory
     {
-        private static readonly Guid LogicalViewIdAnyGuid = new Guid(LogicalViewID.Any);
-        private static readonly Guid LogicalViewIdPrimaryGuid = new Guid(LogicalViewID.Primary);
-        private static readonly Guid LogicalViewIdDesignerGuid = new Guid(LogicalViewID.Designer);
+        private static readonly Guid LogicalViewIdAnyGuid = new(LogicalViewID.Any);
+        private static readonly Guid LogicalViewIdPrimaryGuid = new(LogicalViewID.Primary);
+        private static readonly Guid LogicalViewIdDesignerGuid = new(LogicalViewID.Designer);
 
         private OLE.Interop.IServiceProvider _site;
         private ServiceProvider _serviceProvider;
