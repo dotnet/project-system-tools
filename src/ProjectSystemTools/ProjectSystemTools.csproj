@@ -3,6 +3,9 @@
     <RootNamespace>Microsoft.VisualStudio.ProjectSystem.Tools</RootNamespace>
     <AssemblyName>Microsoft.VisualStudio.ProjectSystem.Tools</AssemblyName>
 
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <IsProductComponent>false</IsProductComponent>
     <PublishOutputToSymStore>false</PublishOutputToSymStore>
@@ -42,12 +45,6 @@
     <PackageReference Include="VSLangProj" Version="7.0.3301" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <None Include="xlf\*" />
@@ -87,45 +84,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="BinaryLogEditor\BuildTreeViewControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BinaryLogEditor\LogViewControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BinaryLogEditor\EvaluationTreeViewControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="BinaryLogEditor\BinaryLogEditorResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>BinaryLogEditorResources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="BinaryLogEditor\BuildTreeViewControl.xaml.cs">
-      <DependentUpon>BuildTreeViewControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="BinaryLogEditor\EvaluationTreeViewControl.xaml.cs">
-      <DependentUpon>EvaluationTreeViewControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="BinaryLogEditor\LogViewControl.xaml.cs">
-      <DependentUpon>LogViewControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="RoslynLogging\RoslynLoggingResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RoslynLoggingResources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="VSPackage.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>VSPackage.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>
