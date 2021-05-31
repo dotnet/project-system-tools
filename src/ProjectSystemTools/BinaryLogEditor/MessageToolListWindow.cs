@@ -82,6 +82,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         public MessageListToolWindow()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             UpdateLabels(0, 0, 0, 0, 0, 0);
 
             var defaultColumns = new List<ColumnState>
@@ -135,6 +137,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         protected override void Dispose(bool disposing)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (IsDisposed)
             {
                 return;
@@ -156,6 +160,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         protected override void Initialize()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             _monitorSelection?.AdviseSelectionEvents(this, out _eventsCookie);
         }
 
@@ -213,6 +219,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         private void UpdateLabels(int totalErrors, int visibleErrors, int totalWarnings, int visibleWarnings, int totalMessages, int visibleMessages)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var newErrorsLabel = string.Format(CultureInfo.InvariantCulture,
                                                   totalErrors == visibleErrors ? BinaryLogEditorResources.SameLabel : BinaryLogEditorResources.DifferentLabel,
                                                   totalErrors == 1 ? BinaryLogEditorResources.ErrorLabel : BinaryLogEditorResources.ErrorsLabel, visibleErrors, totalErrors);
@@ -241,6 +249,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         private void OnEntriesChanged(object sender, EntriesChangedEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (ProjectSystemToolsPackage.IsDisposed)
             {
                 return;
@@ -598,6 +608,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
         public int OnSelectionChanged(IVsHierarchy oldHierarchy, uint oldItemid, IVsMultiItemSelect oldItemSelect, ISelectionContainer oldSelectionContainer,
             IVsHierarchy pHierNew, uint newItemid, IVsMultiItemSelect newItemSelect, ISelectionContainer newSelectionContainer)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (newSelectionContainer == null)
             {
                 return VSConstants.S_OK;
