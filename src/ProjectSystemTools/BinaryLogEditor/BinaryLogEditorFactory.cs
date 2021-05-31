@@ -64,6 +64,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         int IVsEditorFactory.Close()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (_serviceProvider != null)
             {
                 _serviceProvider.Dispose();

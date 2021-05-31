@@ -90,9 +90,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         public int SetDocDataReadOnly(int isReadOnly) => VSConstants.S_OK;
 
-        int IPersist.GetClassID(out Guid classId) => GetGuidEditorType(out classId);
+        int IPersist.GetClassID(out Guid classId)
+        {
+            Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            return GetGuidEditorType(out classId);
+        }
 
-        public int IsDirty(out int isDirty) => IsDocDataDirty(out isDirty);
+        public int IsDirty(out int isDirty)
+        {
+            Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            return IsDocDataDirty(out isDirty);
+        }
 
         public int InitNew(uint formatIndex) => VSConstants.S_OK;
 
@@ -118,6 +126,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             return VSConstants.S_OK;
         }
 
-        int IPersistFileFormat.GetClassID(out Guid classId) => GetGuidEditorType(out classId);
+        int IPersistFileFormat.GetClassID(out Guid classId)
+        {
+            Shell.ThreadHelper.ThrowIfNotOnUIThread();
+            return GetGuidEditorType(out classId);
+        }
     }
 }
