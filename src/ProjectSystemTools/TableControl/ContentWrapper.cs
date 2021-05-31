@@ -50,9 +50,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
             // Show context menu blocks, so we need to yield out of this method
             // for e.Handled to be noticed by WPF
-            Dispatcher.BeginInvoke(new Action(() =>
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
                 ProjectSystemToolsPackage.VsUIShell.ShowContextMenu(0, ref guidContextMenu, _contextMenuId,
-                    locationPoints, pCmdTrgtActive: null)));
+                    locationPoints, pCmdTrgtActive: null);
+            });
         }
 
         // Default to the bottom-left corner of the control for the position of contect menu invoked from keyboard
