@@ -151,6 +151,5 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
             RoslynLogging.RoslynWorkspaceStructureLogger.ShowSaveDialogAndLog(ServiceProvider);
         }
-
     }
 }
