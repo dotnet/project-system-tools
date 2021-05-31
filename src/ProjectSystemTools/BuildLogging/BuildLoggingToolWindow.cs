@@ -43,6 +43,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         public BuildLoggingToolWindow()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
             _dataSource = componentModel.GetService<IFrontEndBuildTableDataSource>();
 
@@ -92,6 +94,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         protected override void Initialize()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             base.Initialize();
 
             // When we are activated, we push our command target as the current Result List so that
@@ -117,6 +121,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         private void OnFiltersChanged(object sender, FiltersChangedEventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (e.Key == TableColumnNames.BuildType && e.NewFilter is ColumnHashSetFilter filter)
             {
                 switch (filter.ExcludedCount)
@@ -148,8 +154,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             ProjectSystemToolsPackage.UpdateQueryStatus();
         }
 
-        private static void OnGroupingsChanged(object sender, EventArgs e) =>
+        private static void OnGroupingsChanged(object sender, EventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             ProjectSystemToolsPackage.UpdateQueryStatus();
+        }
 
         protected override void SetTableControl(IWpfTableControl2 tableControl)
         {
@@ -242,6 +252,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         private void OpenLogs()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             foreach (var entry in TableControl.SelectedEntries)
             {
                 OpenLog(entry);
@@ -250,6 +262,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         public void OpenLog(ITableEntryHandle tableEntry)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (!tableEntry.TryGetValue(TableKeyNames.BuildID, out int buildID))
             {
                 return;
@@ -258,6 +272,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             var guid = VSConstants.LOGVIEWID_Primary;
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
                 string logPath = await _dataSource.GetLogForBuildAsync(buildID);
                 _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
                 frame?.Show();
@@ -386,6 +402,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
         protected override int InnerExec(ref Guid commandGroupGuid, uint commandId, uint commandExecOption, IntPtr pvaIn, IntPtr pvaOut)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (commandGroupGuid != ProjectSystemToolsPackage.CommandSetGuid)
             {
                 return (int)Constants.OLECMDERR_E_NOTSUPPORTED;

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
@@ -19,14 +20,25 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             _contextMenuId = contextMenuId;
         }
 
-        protected override void OnPreviewMouseRightButtonUp(MouseButtonEventArgs e) => OpenContextMenu();
+        protected override void OnPreviewMouseRightButtonUp(MouseButtonEventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
 
-        internal static bool PreProcessMessage(ref Message m, IOleCommandTarget cmdTarget) =>
-            m.Msg == 0x007B &&
-            ErrorHandler.Succeeded(cmdTarget.Exec(VSConstants.VSStd2K, (uint)VSConstants.VSStd2KCmdID.SHOWCONTEXTMENU, 0, IntPtr.Zero, IntPtr.Zero));
+            OpenContextMenu();
+        }
+
+        internal static bool PreProcessMessage(ref Message m, IOleCommandTarget cmdTarget)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            return m.Msg == 0x007B &&
+                   ErrorHandler.Succeeded(cmdTarget.Exec(VSConstants.VSStd2K, (uint)VSConstants.VSStd2KCmdID.SHOWCONTEXTMENU, 0, IntPtr.Zero, IntPtr.Zero));
+        }
 
         internal void OpenContextMenu()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (_contextMenuId == -1)
             {
                 return;

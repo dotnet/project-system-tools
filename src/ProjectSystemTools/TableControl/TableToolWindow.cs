@@ -43,11 +43,19 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             Content = _contentWrapper;
         }
 
-        private static void OnFiltersChanged(object sender, FiltersChangedEventArgs e) =>
-            ProjectSystemToolsPackage.UpdateQueryStatus();
+        private static void OnFiltersChanged(object sender, FiltersChangedEventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
 
-        private static void OnGroupingsChanged(object sender, EventArgs e) =>
             ProjectSystemToolsPackage.UpdateQueryStatus();
+        }
+
+        private static void OnGroupingsChanged(object sender, EventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            ProjectSystemToolsPackage.UpdateQueryStatus();
+        }
 
         protected virtual void SetTableControl(IWpfTableControl2 tableControl)
         {
@@ -118,6 +126,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         int IOleCommandTarget.QueryStatus(ref Guid commandGroupGuid, uint commandCount, OLECMD[] commands, IntPtr commandText)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var result = InnerQueryStatus(ref commandGroupGuid, commandCount, commands, commandText);
 
             if (result == VSConstants.S_OK)
@@ -130,6 +140,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         int IOleCommandTarget.Exec(ref Guid commandGroupGuid, uint commandId, uint commandExecOption, IntPtr pvaIn, IntPtr pvaOut)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var result = InnerExec(ref commandGroupGuid, commandId, commandExecOption, pvaIn, pvaOut);
 
             if (result == VSConstants.S_OK)
@@ -149,8 +161,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             return ((IOleCommandTarget)TableControl).Exec(ref commandGroupGuid, commandId, commandExecOption, pvaIn, pvaOut);
         }
 
-        protected override bool PreProcessMessage(ref Message m) =>
-            ContentWrapper.PreProcessMessage(ref m, this) || base.PreProcessMessage(ref m);
+        protected override bool PreProcessMessage(ref Message m)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            return ContentWrapper.PreProcessMessage(ref m, this) || base.PreProcessMessage(ref m);
+        }
 
         protected override void Dispose(bool disposing)
         {

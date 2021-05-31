@@ -115,6 +115,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
         public static void UpdateQueryStatus()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             // Force the shell to refresh the QueryStatus for all the command since some of them may have been flagged as
             // not supported (because the host had focus but the view did not) and switching focus from the zoom control
             // back to the view will not automatically force the shell to requery for the command status.
@@ -123,12 +125,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
         private void ShowBuildLoggingToolWindow(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var windowFrame = (IVsWindowFrame)BuildLoggingToolWindow.Frame;
             ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
         private void ShowMessageListToolWindow(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var window = FindToolWindow(typeof(MessageListToolWindow), 0, true);
             if (window?.Frame == null)
             {
@@ -141,6 +147,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
         private void LogRoslynWorkspaceStructure(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             RoslynLogging.RoslynWorkspaceStructureLogger.ShowSaveDialogAndLog(ServiceProvider);
         }
 

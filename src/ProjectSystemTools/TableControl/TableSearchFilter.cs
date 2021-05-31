@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableControl;
 
@@ -28,6 +29,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         public bool Match(ITableEntryHandle entry)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var cachedColumnValues = new string[_visibleColumns.Count + 1];
 
             return _searchTokens.Where(searchToken => !(searchToken is IVsSearchFilterToken))
@@ -37,6 +40,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         private bool AtLeastOneColumnOrDetailsContentMatches(ITableEntryHandle entry, IVsSearchToken searchToken, string[] cachedColumnValues)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (cachedColumnValues[0] == null)
             {
                 cachedColumnValues[0] = GetDetailsContentAsString(entry);
@@ -85,8 +90,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             return detailsString ?? string.Empty;
         }
 
-        private static bool Match(string columnValue, IVsSearchToken searchToken) =>
-            columnValue != null && columnValue.IndexOf(searchToken.ParsedTokenText,
-                StringComparison.OrdinalIgnoreCase) >= 0;
+        private static bool Match(string columnValue, IVsSearchToken searchToken)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            return
+                columnValue != null &&
+                columnValue.IndexOf(searchToken.ParsedTokenText, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
     }
 }
