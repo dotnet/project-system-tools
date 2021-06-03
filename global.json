@@ -1,11 +1,11 @@
 {
   "tools": {
     "vs": {
-      "version": "16.0"
+      "version": "16.8"
     },
-    "xcopy-msbuild": "16.5.0-alpha"
+    "xcopy-msbuild": "16.8.0-preview2.1"
   },
   "msbuild-sdks": {
-    "Microsoft.DotNet.Arcade.Sdk": "6.0.0-beta.21278.1"
+    "Microsoft.DotNet.Arcade.Sdk": "6.0.0-beta.21281.1"
   }
 }
