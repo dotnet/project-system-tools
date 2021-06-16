@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="B6213233-1C34-4F76-9DD5-F6D520C32AA3" Version="|%CurrentProject%;GetVsixVersion|" Language="en-US" Publisher="Microsoft" />
+    <Identity Id="cb5b6a78-6fa1-4830-a272-760862eb77af" Version="|%CurrentProject%;GetVsixVersion|" Language="en-US" Publisher="Microsoft" />
     <DisplayName>Project System Tools 2022</DisplayName>
     <Description>Tools for working with the C#, Visual Basic, and F# project systems.</Description>
     <Icon>Icon.png</Icon>
