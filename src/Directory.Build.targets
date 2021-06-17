@@ -1,4 +1,10 @@
 <!-- Copyright (c)  Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
 <Project>
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+
+  <!-- TODO remove this once we update Arcade to a newer version -->
+  <ItemGroup>
+    <PackageReference Update="Microsoft.VSSDK.BuildTools" Version="17.0.1056-Dev17PIAs-g9dffd635" />
+  </ItemGroup>
+
 </Project>

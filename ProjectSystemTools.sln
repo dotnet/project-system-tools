@@ -1,13 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26913.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31306.274
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectSystemTools", "src\ProjectSystemTools\ProjectSystemTools.csproj", "{4ADB9F32-E622-4EAA-8DF8-C6D9298FE0EB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogProviders", "src\LogProviders\LogProviders.csproj", "{14674C3A-71F4-4804-81D9-78B95DED8A93}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogModel", "src\LogModel\LogModel.csproj", "{13C36B51-3D0A-497F-B13F-0E7F1947E024}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{42ECF9E1-DF1F-4FBD-A50C-988D44C960B1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		build.cmd = build.cmd
+		src\Directory.Build.props = src\Directory.Build.props
+		src\Directory.Build.targets = src\Directory.Build.targets
+		global.json = global.json
+		LICENSE.md = LICENSE.md
+		NuGet.config = NuGet.config
+		README.md = README.md
+		SECURITY.md = SECURITY.md
+		test.cmd = test.cmd
+		eng\Versions.props = eng\Versions.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
