@@ -5,11 +5,11 @@ _Project System Tools_ is a diagnostic extension for the C#, Visual Basic, and F
 It can be downloaded from the Visual Studio Extension Marketplace:
 
 - [Project System Tools for Visual Studio 2022](https://marketplace.visualstudio.com/items?itemName=VisualStudioProductTeam.ProjectSystemTools2022)
-  ![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/VisualStudioProductTeam.ProjectSystemTools2022.svg)
-  ![Visual Studio Marketplace Downloads](https://vsmarketplacebadge.apphb.com/downloads-short/VisualStudioProductTeam.ProjectSystemTools2022.svg)
+  [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/VisualStudioProductTeam.ProjectSystemTools2022.svg)](https://marketplace.visualstudio.com/items?itemName=VisualStudioProductTeam.ProjectSystemTools2022)
+  [![Visual Studio Marketplace Downloads](https://vsmarketplacebadge.apphb.com/downloads-short/VisualStudioProductTeam.ProjectSystemTools2022.svg)](https://marketplace.visualstudio.com/items?itemName=VisualStudioProductTeam.ProjectSystemTools2022)
 - [Project System Tools for Visual Studio 2017 and 2019](https://marketplace.visualstudio.com/items?itemName=VisualStudioProductTeam.ProjectSystemTools)
-  ![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/VisualStudioProductTeam.ProjectSystemTools.svg)
-  ![Visual Studio Marketplace Downloads](https://vsmarketplacebadge.apphb.com/downloads-short/VisualStudioProductTeam.ProjectSystemTools.svg)
+  [![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version/VisualStudioProductTeam.ProjectSystemTools.svg)](https://marketplace.visualstudio.com/items?itemName=VisualStudioProductTeam.ProjectSystemTools)
+  [![Visual Studio Marketplace Downloads](https://vsmarketplacebadge.apphb.com/downloads-short/VisualStudioProductTeam.ProjectSystemTools.svg)](https://marketplace.visualstudio.com/items?itemName=VisualStudioProductTeam.ProjectSystemTools)
 
 ## Features
 
