@@ -20,7 +20,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
     internal sealed class Build : IDisposable
     {
         public BuildSummary BuildSummary { get; private set; }
-        public string ProjectPath { get; }
+        public string ProjectPath { get; private set; }
         public string LogPath { get; private set; }
         public int BuildId => BuildSummary.BuildId;
         public BuildType BuildType => BuildSummary.BuildType;
@@ -34,6 +34,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         public Build(string projectPath, IEnumerable<string> dimensions, IEnumerable<string> targets, BuildType buildType, DateTime startTime)
         {
             int nextId = Interlocked.Increment(ref SharedBuildId);
+            ProjectPath = projectPath;
             BuildSummary = new BuildSummary(nextId, projectPath, dimensions, targets, buildType, startTime);
         }
 
