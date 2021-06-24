@@ -15,18 +15,18 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 {
     public sealed class ModelBuilder
     {
-        private static readonly Regex UsingTaskRegex = new Regex("Using \"(?<task>.+)\" task from (assembly|the task factory) \"(?<assembly>.+)\"\\.", RegexOptions.Compiled);
+        private static readonly Regex UsingTaskRegex = new("Using \"(?<task>.+)\" task from (assembly|the task factory) \"(?<assembly>.+)\"\\.", RegexOptions.Compiled);
 
         private bool _done;
-        private readonly BuildInfo _buildInfo = new BuildInfo();
-        private readonly ConcurrentBag<Exception> _exceptions = new ConcurrentBag<Exception>();
+        private readonly BuildInfo _buildInfo = new();
+        private readonly ConcurrentBag<Exception> _exceptions = new();
         private Dictionary<int, EvaluationInfo> _evaluationInfos;
-        private readonly ConcurrentDictionary<int, ProjectInfo> _projectInfos = new ConcurrentDictionary<int, ProjectInfo>();
+        private readonly ConcurrentDictionary<int, ProjectInfo> _projectInfos = new();
         private readonly ConcurrentDictionary<string, string> _assemblies =
-            new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        private readonly ConcurrentDictionary<string, string> _strings = new ConcurrentDictionary<string, string>();
+            new(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, string> _strings = new();
 
-        private readonly object _syncLock = new object();
+        private readonly object _syncLock = new();
 
         public ModelBuilder(IEventSource eventSource)
         {
@@ -238,7 +238,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
         }
 
         private ItemInfo CreateItemInfo(ITaskItem item) =>
-            new ItemInfo(
+            new(
                 Intern(item.ItemSpec),
                 item
                     .CloneCustomMetadata()
@@ -250,12 +250,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
         {
             CheckProjectEventContext(args);
 
-            if (args.ParentProjectBuildEventContext.TargetId != -1 ||
-                args.ParentProjectBuildEventContext.TaskId != -1)
-            {
-                throw new LoggerException(Resources.BadState);
-            }
-
             if (_projectInfos.ContainsKey(args.BuildEventContext.ProjectContextId))
             {
                 throw new LoggerException(Resources.DoubleCreationOfProject);
@@ -265,6 +259,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
                 args.BuildEventContext.ProjectContextId,
                 args.BuildEventContext.NodeId,
                 args.ParentProjectBuildEventContext.ProjectContextId,
+                args.ParentProjectBuildEventContext.TargetId,
+                args.ParentProjectBuildEventContext.TaskId,
                 args.Timestamp,
                 string.IsNullOrEmpty(args.TargetNames)
                     ? ImmutableHashSet<string>.Empty
@@ -502,112 +498,82 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
                 return new ItemGroupInfo(name, items);
             }
 
-            string currentGroupName = null;
+            if (lines[0] != prefix)
+            {
+                throw new LoggerException(Resources.UnexpectedMessage);
+            }
+
+            var index = 1;
             var currentItems = ImmutableList<ItemInfo>.Empty;
-            string currentItemName = null;
-            var currentMetadata = new List<KeyValuePair<string, string>>();
-            string currentMetadataKey = null;
-            string currentMetadataValue = null;
+            var line = lines[index++];
 
-            foreach (var line in lines)
+            if (GetNumberOfLeadingSpaces(line) != 4 || !line.EndsWith("=", StringComparison.Ordinal))
             {
-                var numberOfLeadingSpaces = GetNumberOfLeadingSpaces(line);
-                switch (numberOfLeadingSpaces)
+                throw new LoggerException(Resources.ExpectedItemGroupName);
+            }
+
+            var currentGroupName = Intern(line.Substring(4, line.Length - 5));
+
+            while (index < lines.Length)
+            {
+                line = lines[index++];
+
+                if (GetNumberOfLeadingSpaces(line) != 8)
                 {
-                    case 4:
-                        if (!line.EndsWith("=", StringComparison.Ordinal))
-                        {
-                            throw new LoggerException(Resources.ExpectedItemGroupName);
-                        }
-
-                        if (currentGroupName != null)
-                        {
-                            throw new LoggerException(Resources.UnexpectedMessage);
-                        }
-
-                        currentGroupName = Intern(line.Substring(4, line.Length - 5));
-                        break;
-
-                    case 8:
-                        if (currentGroupName == null)
-                        {
-                            throw new LoggerException(Resources.CannotFindItem);
-                        }
-
-                        if (currentMetadataKey != null)
-                        {
-                            currentMetadata.Add(new KeyValuePair<string, string>(currentMetadataKey, currentMetadataValue));
-                        }
-
-                        if (currentItemName != null)
-                        {
-                            currentItems = currentItems.Add(new ItemInfo(currentItemName, currentMetadata));
-                        }
-
-                        currentItemName = Intern(line.Substring(8));
-                        currentMetadata.Clear();
-                        currentMetadataKey = null;
-                        currentMetadataValue = null;
-                        break;
-
-                    case 16:
-                        var currentLine = line.Substring(16);
-
-                        if (currentItemName == null)
-                        {
-                            throw new LoggerException(Resources.CannotFindItem);
-                        }
-
-                        if (!currentLine.Contains("="))
-                        {
-                            if (currentMetadataKey == null)
-                            {
-                                throw new LoggerException(Resources.BadMetadataContinuation);
-                            }
-
-                            currentMetadataValue = Intern((currentMetadataValue ?? "") + line);
-                        }
-                        else
-                        {
-                            if (currentMetadataKey != null)
-                            {
-                                currentMetadata.Add(new KeyValuePair<string, string>(currentMetadataKey, currentMetadataValue));
-                            }
-                            var nameValue = ParseNameValue(currentLine);
-                            currentMetadataKey = Intern(nameValue.Key);
-                            currentMetadataValue = Intern(nameValue.Value);
-                        }
-                        break;
-
-                    default:
-                        if (numberOfLeadingSpaces == 0 && line == prefix)
-                        {
-                            continue;
-                        }
-
-                        if (currentMetadataKey != null)
-                        {
-                            currentMetadataValue = Intern((currentMetadataValue ?? "") + line);
-                        }
-                        else if (currentItemName != null)
-                        {
-                            currentItemName = Intern(currentItemName + line);
-                        }
-                        else
-                        {
-                            throw new LoggerException(Resources.BadMetadataContinuation);
-                        }
-                        break;
+                    throw new LoggerException(Resources.ExpectedItemName);
                 }
-            }
 
-            if (currentMetadataKey != null)
-            {
-                currentMetadata.Add(new KeyValuePair<string, string>(currentMetadataKey, currentMetadataValue));
-            }
+                var currentItemName = Intern(line.Substring(8));
 
-            if (currentItemName != null)
-            {
+                while (index < lines.Length)
+                {
+                    line = lines[index];
+
+                    if (GetNumberOfLeadingSpaces(line) == 8 || (GetNumberOfLeadingSpaces(line) == 16 && line.Contains("=")))
+                    {
+                        break;
+                    }
+
+                    currentItemName += lines[index++];
+                }
+
+                var currentMetadata = new List<KeyValuePair<string, string>>();
+
+                while (index < lines.Length)
+                {
+                    line = lines[index];
+
+                    if (GetNumberOfLeadingSpaces(line) != 16)
+                    {
+                        break;
+                    }
+
+                    if (!line.Contains("="))
+                    {
+                        throw new LoggerException(Resources.ExpectedMetadata);
+                    }
+
+                    index++;
+
+                    var nameValue = ParseNameValue(line.Substring(16));
+                    var metadataKey = Intern(nameValue.Key);
+                    var metadataValue = nameValue.Value;
+
+                    while (index < lines.Length)
+                    {
+                        line = lines[index];
+                        if (GetNumberOfLeadingSpaces(line) == 8 || (GetNumberOfLeadingSpaces(line) == 16 && line.Contains("=")))
+                        {
+                            break;
+                        }
+
+                        metadataValue += line;
+                        index++;
+                    }
+
+                    currentMetadata.Add(new KeyValuePair<string, string>(metadataKey, Intern(metadataValue)));
+                }
+
                 currentItems = currentItems.Add(new ItemInfo(currentItemName, currentMetadata));
             }
 
@@ -981,23 +947,23 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
                 : values.ToImmutableList();
 
         private static Item ConstructItem(ItemInfo itemInfo) =>
-            new Item(
+            new(
                 itemInfo.Name,
                 itemInfo.Metadata.ToImmutableDictionary());
 
         private static ItemGroup ConstructItemGroup(ItemGroupInfo itemGroupInfo) =>
-            new ItemGroup(
+            new(
                 itemGroupInfo.Name,
                 EmptyIfNull(itemGroupInfo.Items?.Select(ConstructItem).OrderBy(OrderItems).ToImmutableList()));
 
         private static ItemAction ConstructItemAction(ItemActionInfo itemActionInfo) =>
-            new ItemAction(
+            new(
                 itemActionInfo.IsAddition,
                 ConstructItemGroup(itemActionInfo.ItemGroup),
                 itemActionInfo.Time);
 
         private static PropertySet ConstructPropertySet(PropertySetInfo propertySetInfo) =>
-            new PropertySet(
+            new(
                 propertySetInfo.Name,
                 propertySetInfo.Value,
                 propertySetInfo.Time);
@@ -1019,7 +985,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
                 : new Message(messageInfo.Timestamp, messageInfo.Text);
 
         private static Task ConstructTask(TaskInfo taskInfo) =>
-            new Task(
+            new(
                 taskInfo.NodeId,
                 taskInfo.Name,
                 taskInfo.FromAssembly,
@@ -1037,7 +1003,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
             );
 
         private static Target ConstructTarget(TargetInfo targetInfo) =>
-            new Target(
+            new(
                 targetInfo.NodeId,
                 targetInfo.Name,
                 targetInfo.IsRequestedTarget,
@@ -1055,7 +1021,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
             );
 
         private static EvaluatedLocation ConstructEvaluatedLocation(EvaluatedLocationInfo evaluatedLocationInfo) =>
-            new EvaluatedLocation(
+            new(
                 evaluatedLocationInfo.ElementName,
                 evaluatedLocationInfo.ElementDescription,
                 evaluatedLocationInfo.Kind,
@@ -1066,7 +1032,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
             );
 
         private static EvaluatedPass ConstructEvaluatedPass(EvaluatedPassInfo evaluatedPassInfo) =>
-            new EvaluatedPass(
+            new(
                 evaluatedPassInfo.Pass,
                 evaluatedPassInfo.Description,
                 evaluatedPassInfo.Locations.Select(ConstructEvaluatedLocation).ToImmutableArray(),
@@ -1074,13 +1040,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
             );
         
         private static EvaluatedProfile ConstructEvaluatedProfile(EvaluatedProfileInfo evaluatedProfileInfo) =>
-            new EvaluatedProfile(
+            new(
                 evaluatedProfileInfo.Passes.Select(ConstructEvaluatedPass).OrderBy(p => p.Pass).ToImmutableArray(),
                 new Time(evaluatedProfileInfo.EvaluationTimeInfo.ExclusiveTime, evaluatedProfileInfo.EvaluationTimeInfo.InclusiveTime)
             );
 
         private static EvaluatedProject ConstructEvaluatedProject(EvaluatedProjectInfo evaluatedProjectInfo) =>
-            new EvaluatedProject(
+            new(
                 evaluatedProjectInfo.Name,
                 evaluatedProjectInfo.EvaluationProfile == null ? null : ConstructEvaluatedProfile(evaluatedProjectInfo.EvaluationProfile),
                 evaluatedProjectInfo.StartTime,
@@ -1089,13 +1055,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
             );
 
         private static Evaluation ConstructEvaluation(EvaluationInfo evaluationInfo) =>
-            new Evaluation(
+            new(
                 EmptyIfNull(evaluationInfo.Messages?.Select(ConstructMessage).OrderBy(OrderMessages).ToImmutableList()),
                 EmptyIfNull(evaluationInfo.EvaluatedProjects?.Select(ConstructEvaluatedProject).OrderBy(OrderNodes).ToImmutableList())
             );
 
         private static Project ConstructProject(ProjectInfo projectInfo) =>
-            new Project(
+            new(
                 projectInfo.NodeId,
                 projectInfo.Name,
                 projectInfo.ProjectFile,
@@ -1110,7 +1076,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
                 projectInfo.Result);
 
         private Build ConstructBuild() =>
-            new Build(_projectInfos.Values.Any(p => p.ParentProject == BuildEventContext.InvalidProjectContextId) 
+            new(_projectInfos.Values.Any(p => p.ParentProject == BuildEventContext.InvalidProjectContextId) 
                     ? ConstructProject(_projectInfos.Values.Single(p => p.ParentProject == BuildEventContext.InvalidProjectContextId))
                     : null,
                 _buildInfo.Environment,
@@ -1127,42 +1093,49 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
                 var parentDirectoryName = Path.GetDirectoryName(parentProjectInfo.ProjectFile) ?? "";
                 TaskInfo parentTask = null;
 
-                var tasks = parentProjectInfo.ExecutedTargets
-                    .Where(target => target.TaskInfos != null)
-                    .SelectMany(target => target.TaskInfos.Values).ToArray();
-
-                if (Path.GetExtension(projectInfo.ProjectFile) == ".tmp_proj" ||
-                    Path.GetFileNameWithoutExtension(projectInfo.ProjectFile).EndsWith("_wpftmp"))
+                if (projectInfo.ParentTask == -1 || projectInfo.ParentTarget == -1)
                 {
-                    parentTask = tasks.SingleOrDefault(task => task.Name == "GenerateTemporaryTargetAssembly");
-                }
+                    var tasks = parentProjectInfo.ExecutedTargets
+                        .Where(target => target.TaskInfos != null)
+                        .SelectMany(target => target.TaskInfos.Values).ToArray();
 
-                if (parentTask != null)
-                {
-                    parentTask.AddChildProject(projectInfo);
-                    return;
-                }
-
-                var msBuildTasks = tasks.Where(task => task.Name == "MSBuild" || task.Name == "MsBuild");
-
-                foreach (var taskInfo in msBuildTasks)
-                {
-                    var targets = taskInfo.GetTaskParameter("Targets");
-
-                    if (taskInfo
-                        .GetTaskParameter("Projects")
-                        .Select(project =>
-                            Path.IsPathRooted(project)
-                                ? project
-                                : Path.GetFullPath(
-                                    Path.Combine(parentDirectoryName, project)))
-                        .Any(project =>
-                            project == projectInfo.ProjectFile &&
-                            projectInfo.TargetsToBuild.SetEquals(targets)))
+                    if (Path.GetExtension(projectInfo.ProjectFile) == ".tmp_proj" ||
+                        Path.GetFileNameWithoutExtension(projectInfo.ProjectFile).EndsWith("_wpftmp"))
                     {
-                        parentTask = taskInfo;
-                        break;
+                        parentTask = tasks.SingleOrDefault(task => task.Name == "GenerateTemporaryTargetAssembly");
                     }
+
+                    if (parentTask != null)
+                    {
+                        parentTask.AddChildProject(projectInfo);
+                        return;
+                    }
+
+                    var msBuildTasks = tasks.Where(task => task.Name == "MSBuild" || task.Name == "MsBuild");
+
+                    foreach (var taskInfo in msBuildTasks)
+                    {
+                        var targets = taskInfo.GetTaskParameter("Targets");
+
+                        if (taskInfo
+                            .GetTaskParameter("Projects")
+                            .Select(project =>
+                                Path.IsPathRooted(project)
+                                    ? project
+                                    : Path.GetFullPath(
+                                        Path.Combine(parentDirectoryName, project)))
+                            .Any(project =>
+                                project == projectInfo.ProjectFile &&
+                                projectInfo.TargetsToBuild.SetEquals(targets)))
+                        {
+                            parentTask = taskInfo;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    parentTask = parentProjectInfo.ExecutedTargets.SingleOrDefault(target => target.Id == projectInfo.ParentTarget)?.TaskInfos.SingleOrDefault(task => task.Key == projectInfo.ParentTask).Value;
                 }
 
                 if (parentTask == null)

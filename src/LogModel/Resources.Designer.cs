@@ -19,7 +19,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -165,6 +165,24 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel {
         internal static string ExpectedItemGroupName {
             get {
                 return ResourceManager.GetString("ExpectedItemGroupName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected item name..
+        /// </summary>
+        internal static string ExpectedItemName {
+            get {
+                return ResourceManager.GetString("ExpectedItemName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected metadata..
+        /// </summary>
+        internal static string ExpectedMetadata {
+            get {
+                return ResourceManager.GetString("ExpectedMetadata", resourceCulture);
             }
         }
         

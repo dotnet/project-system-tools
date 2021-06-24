@@ -62,6 +62,16 @@
         <target state="new">Expected item group name.</target>
         <note />
       </trans-unit>
+      <trans-unit id="ExpectedItemName">
+        <source>Expected item name.</source>
+        <target state="new">Expected item name.</target>
+        <note />
+      </trans-unit>
+      <trans-unit id="ExpectedMetadata">
+        <source>Expected metadata.</source>
+        <target state="new">Expected metadata.</target>
+        <note />
+      </trans-unit>
       <trans-unit id="OverwritingMetadata">
         <source>Overwriting metadata.</source>
         <target state="new">Overwriting metadata.</target>

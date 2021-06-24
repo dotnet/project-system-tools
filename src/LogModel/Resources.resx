@@ -153,6 +153,12 @@
   <data name="ExpectedItemGroupName" xml:space="preserve">
     <value>Expected item group name.</value>
   </data>
+  <data name="ExpectedItemName" xml:space="preserve">
+    <value>Expected item name.</value>
+  </data>
+  <data name="ExpectedMetadata" xml:space="preserve">
+    <value>Expected metadata.</value>
+  </data>
   <data name="OverwritingMetadata" xml:space="preserve">
     <value>Overwriting metadata.</value>
   </data>
