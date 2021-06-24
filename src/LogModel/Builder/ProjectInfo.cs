@@ -16,6 +16,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
         public int NodeId { get; }
         public string Name { get; }
         public int ParentProject { get; }
+        public int ParentTarget { get; }
+        public int ParentTask { get; }
         public DateTime StartTime { get; }
         public DateTime EndTime { get; private set; }
         public string ProjectFile { get; }
@@ -27,11 +29,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
         public ImmutableHashSet<string> TargetsToBuild { get; }
         public string ToolsVersion { get; }
 
-        public ProjectInfo(int id, int nodeId, int parentProject, DateTime startTime, ImmutableHashSet<string> targetsToBuild, string toolsVersion, string name, string projectFile, ImmutableDictionary<string, string> globalProperties, ImmutableDictionary<string, string> properties, ImmutableList<ItemGroupInfo> itemGroups)
+        public ProjectInfo(int id, int nodeId, int parentProject, int parentTarget, int parentTask, DateTime startTime, ImmutableHashSet<string> targetsToBuild, string toolsVersion, string name, string projectFile, ImmutableDictionary<string, string> globalProperties, ImmutableDictionary<string, string> properties, ImmutableList<ItemGroupInfo> itemGroups)
         {
             Id = id;
             NodeId = nodeId;
             ParentProject = parentProject;
+            ParentTarget = parentTarget;
+            ParentTask = parentTask;
             StartTime = startTime;
             TargetsToBuild = targetsToBuild;
             ToolsVersion = toolsVersion;
