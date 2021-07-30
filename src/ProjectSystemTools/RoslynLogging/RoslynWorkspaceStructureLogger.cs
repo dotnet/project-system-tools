@@ -61,6 +61,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             {
                 var document = new XDocument();
                 var workspaceElement = new XElement("workspace");
+                workspaceElement.SetAttributeValue("kind", workspace.Kind);
                 document.Add(workspaceElement);
 
                 foreach (var project in solution.GetProjectDependencyGraph().GetTopologicallySortedProjects(threadedWaitCallback.CancellationToken).Select(solution.GetProject))
@@ -216,9 +217,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             }
         }
 
+        private static System.Reflection.MethodInfo TryGetMethodInfo(this object o, string methodName)
+        {
+            return o.GetType().GetMethod(methodName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        }
+
         private static T TryCallNonPublicMethod<T>(this object o, string methodName, params object[] parameters) where T : class
         {
-            var method = o.GetType().GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var method = o.TryGetMethodInfo(methodName);
 
             if (method == null)
             {
@@ -228,9 +234,52 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             return method.Invoke(o, parameters) as T;
         }
 
+        private static T TryCallNonPublicGenericMethod<T>(this object o, string methodName, Type typeParameter, params object[] parameters) where T : class
+        {
+            var method = o.TryGetMethodInfo(methodName);
+
+            if (method == null)
+            {
+                return null;
+            }
+
+            method = method.MakeGenericMethod(typeParameter);
+            if (method == null)
+            {
+                return null;
+            }
+
+            return method.Invoke(o, parameters) as T;
+        }
+
+        private static T TryGetNonPublicPropertyFromService<T>(this object o, string serviceTypeName, string propertyName) where T : class
+        {
+            var services = o.TryGetNonPublicProperty<object>("Services");
+            if (services == null)
+            {
+                return null;
+            }
+
+            // With apologies to future developers about the enormity of this assumption
+            var serviceType = o.GetType().Assembly.GetType(serviceTypeName);
+            if (serviceType == null)
+            {
+                return null;
+            }
+
+            var service = services.TryCallNonPublicGenericMethod<object>("GetService", serviceType);
+            if (service == null)
+            {
+                return null;
+            }
+
+            return service.TryGetNonPublicProperty<T>(propertyName);
+        }
+
         private static T TryGetNonPublicProperty<T>(this object o, string propertyName) where T : class
         {
-            var method = o.GetType().GetProperty(propertyName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            // Yes this method says NonPublic, but it could be a public property on a non-public type
+            var method = o.GetType().GetProperty(propertyName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
             if (method == null)
             {
@@ -363,6 +412,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             {
                 var documentElement = new XElement(elementName, new XAttribute("path", SanitizePath(document.FilePath ?? "(none)")));
 
+                var clientName = document.TryGetNonPublicPropertyFromService<string>("Microsoft.CodeAnalysis.Host.DocumentPropertiesService", "DiagnosticsLspClientName");
+                if (clientName != null)
+                {
+                    documentElement.SetAttributeValue("clientName", clientName);
+                }
+
                 var documentState = document.TryGetNonPublicProperty<object>("State");
                 if (documentState != null)
                 {
@@ -371,7 +426,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
                     if (loadDiagnosticTask != null)
                     {
                         loadDiagnosticTask.Wait(cancellationToken);
-                        
+
                         if (loadDiagnosticTask.Result != null)
                         {
                             documentElement.Add(new XElement("loadDiagnostic", loadDiagnosticTask.Result.GetMessage()));
