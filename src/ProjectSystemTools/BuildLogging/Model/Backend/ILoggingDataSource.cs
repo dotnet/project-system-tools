@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright (c) Microsoft. All Rights Reserved. Licensed under the MIT license. See the LICENSE.md file in the project root for more information.
+
+using System;
 using System.Collections.Immutable;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
@@ -17,7 +19,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         /// when data on the logging service is updated
         /// </summary>
         /// <param name="notifyCallback">An Action callback that will be used
-        /// whenver new data is logged by the service</param>
+        /// whenever new data is logged by the service</param>
         void Start(Action notifyCallback);
 
         /// <summary>
