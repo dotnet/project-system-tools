@@ -15,8 +15,8 @@ pr:
 jobs:
 - job: Windows
   pool:
-    name: NetCorePublic-Pool
-    queue: BuildPool.Windows.10.Amd64.VS2019.Open
+    name: NetCore1ESPool-Public
+    demands: ImageOverride -equals Build.Windows.10.Amd64.VS2019.Open
   variables:
     _os: Windows
   strategy:
