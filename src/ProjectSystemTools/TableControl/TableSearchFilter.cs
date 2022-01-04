@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableControl;
 
@@ -12,6 +11,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 {
     internal class TableSearchFilter : IEntryFilter
     {
+        // NOTE methods on this type are invoked on a worker thread
+
         private readonly IEnumerable<IVsSearchToken> _searchTokens;
         private readonly IReadOnlyList<ITableColumnDefinition> _visibleColumns;
 
@@ -29,8 +30,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         public bool Match(ITableEntryHandle entry)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
             var cachedColumnValues = new string[_visibleColumns.Count + 1];
 
 #pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
@@ -42,8 +41,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         private bool AtLeastOneColumnOrDetailsContentMatches(ITableEntryHandle entry, IVsSearchToken searchToken, string[] cachedColumnValues)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
             if (cachedColumnValues[0] == null)
             {
                 cachedColumnValues[0] = GetDetailsContentAsString(entry);
@@ -94,11 +91,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         private static bool Match(string columnValue, IVsSearchToken searchToken)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
             return
                 columnValue != null &&
                 columnValue.IndexOf(searchToken.ParsedTokenText, StringComparison.OrdinalIgnoreCase) >= 0;
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
         }
     }
 }
