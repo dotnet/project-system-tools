@@ -31,7 +31,7 @@ From here you may:
 
 - _Save Logs_ which prompts for a folder to save the `.binlog` file into
 - _Open Logs_ which opens the log file inside Visual Studio
-- _Open Logs External_ which opens the `.binlog` file outside of Visual Studio
+- _Open Logs External_ which opens the `.binlog` file outside of Visual Studio (we recommend https://msbuildlog.com)
 
 The `Open Logs` option displays build results in a tree view:
 
