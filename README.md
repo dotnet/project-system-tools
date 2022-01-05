@@ -41,6 +41,12 @@ By opening the `Build Message List` pane (via the `View > Other Windows` menu, a
 
 <img src="img/build-message-list.png" width="470">
 
+## Getting higher-fidelity logs from VS
+
+The build events this extension subscribes contain the most useful information for diagnosing problems, but do omit some data for performance reasons.
+
+In cases where more information is needed in binlogs, setting the `MSBuildDebugEngine` environment variable to `1` for the `devenv.exe` process will cause it to produce logs in the `MSBuild_Logs` directory under the process's working directory. The output directory can be configured via the `MSBUILDDEBUGPATH` environment variable. For more information, see [this documentation section](https://github.com/dotnet/msbuild/blob/main/documentation/wiki/Building-Testing-and-Debugging-on-Full-Framework-MSBuild.md#logs).
+
 ## Contributing
 
 We welcome contributions and suggestions!
