@@ -41,7 +41,7 @@ By opening the `Build Message List` pane (via the `View > Other Windows` menu, a
 
 <img src="img/build-message-list.png" width="470">
 
-## Getting higher-fidelity logs from VS
+## Getting higher-fidelity logs from VS (VS2022 onwards)
 
 The build events this extension subscribes contain the most useful information for diagnosing problems, but do omit some data for performance reasons.
 
