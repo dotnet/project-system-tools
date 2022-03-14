@@ -31,6 +31,7 @@ jobs:
   steps:
     - script: $(Build.SourcesDirectory)\eng\common\cibuild.cmd -configuration $(_configuration) -prepareMachine
       displayName: Build and Test
+    - template: eng\common\templates\steps\generate-sbom.yml
     - task: PublishBuildArtifacts@1
       displayName: Publish Logs
       inputs:
