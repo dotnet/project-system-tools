@@ -52,8 +52,8 @@ steps:
   displayName: Run CIBuild.cmd
   inputs:
     filename: eng\common\CIBuild.cmd
-    # arguments: -configuration $(BuildConfiguration) /p:OfficialBuildId=$(BUILD.BUILDNUMBER) /p:DotNetSignType=$(SignType) /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat) /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
-    arguments: -configuration $(BuildConfiguration) /p:OfficialBuildId=$(BUILD.BUILDNUMBER) /p:DotNetSignType=$(SignType)
+    arguments: -configuration $(BuildConfiguration) /p:OfficialBuildId=$(BUILD.BUILDNUMBER) /p:DotNetSignType=$(SignType) /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat) /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
+    # arguments: -configuration $(BuildConfiguration) /p:OfficialBuildId=$(BUILD.BUILDNUMBER) /p:DotNetSignType=$(SignType)
     failOnStandardError: true
 - template: common\templates\steps\generate-sbom.yml
 - task: CopyFiles@2
