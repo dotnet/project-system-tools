@@ -79,7 +79,10 @@ steps:
       **/Microsoft.VisualStudio.ProjectSystem.Tools.pdb
       **/Microsoft.VisualStudio.ProjectSystem.Tools.resources.dll
     SymbolsFolder: $(Build.ArtifactStagingDirectory)
-    SkipIndexing: true
+    # NOTE: This produces a warning about indexing (if enabled) but will still publish the symbols. See: https://github.com/microsoft/azure-pipelines-tasks/issues/15605
+    IndexSources: false
+    PublishSymbols: true
+    SymbolServerType: TeamServices
   continueOnError: True
 - task: MicroBuildCleanup@1
   displayName: Perform Cleanup
