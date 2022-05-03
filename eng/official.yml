@@ -28,9 +28,6 @@ pool:
   demands: Cmd
   timeoutInMinutes: 90
 
-variables:
-- group: DotNet-Symbol-Publish
-
 # jobs:
 # - job: Phase_1
 #   displayName: Phase 1
