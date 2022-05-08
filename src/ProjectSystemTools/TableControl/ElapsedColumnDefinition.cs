@@ -28,9 +28,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         public override bool TryCreateColumnContent(ITableEntryHandle entry, bool singleColumnView, out FrameworkElement content)
         {
-            if (entry.TryGetValue(TableKeyNames.Status, out var statusValue) && statusValue != null && statusValue is BuildStatus status
-                && status != BuildStatus.Running
-                && entry.TryGetValue(TableKeyNames.Elapsed, out var value) && value != null && value is TimeSpan timeSpan)
+            if (entry.TryGetValue(TableKeyNames.Status, out var status) && status is BuildStatus and not BuildStatus.Running
+                && entry.TryGetValue(TableKeyNames.Elapsed, out var value) && value is TimeSpan timeSpan)
             {
                 content = new TextBlock
                 {
