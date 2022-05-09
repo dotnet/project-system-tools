@@ -28,14 +28,26 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         public override bool TryCreateColumnContent(ITableEntryHandle entry, bool singleColumnView, out FrameworkElement content)
         {
-            if (entry.TryGetValue(TableKeyNames.Status, out var status) && status is BuildStatus and not BuildStatus.Running
-                && entry.TryGetValue(TableKeyNames.Elapsed, out var value) && value is TimeSpan timeSpan)
+            if (TryCreateStringContent(entry, false, singleColumnView, out string text))
             {
                 content = new TextBlock
                 {
-                    Text = timeSpan.TotalSeconds.ToString("N3"),
+                    Text = text,
                     TextAlignment = TextAlignment.Right
                 };
+                return true;
+            }
+
+            content = null;
+            return false;
+        }
+
+        public override bool TryCreateStringContent(ITableEntryHandle entry, bool truncatedText, bool singleColumnView, out string content)
+        {
+            if (entry.TryGetValue(TableKeyNames.Status, out var status) && status is BuildStatus and not BuildStatus.Running &&
+                entry.TryGetValue(TableKeyNames.Elapsed, out var value) && value is TimeSpan timeSpan)
+            {
+                content = timeSpan.TotalSeconds.ToString("N3");
                 return true;
             }
 
