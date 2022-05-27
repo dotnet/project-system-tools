@@ -1,0 +1,59 @@
+# Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE.md file in the project root for more information.
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: main
+pool:
+  name: VSEngSS-MicroBuild2019-1ES
+  demands: Cmd
+  timeoutInMinutes: 90
+
+steps:
+- checkout: self
+  clean: true
+- task: MicroBuildSigningPlugin@4
+  displayName: Install Signing Plugin
+  inputs:
+    signType: real
+- task: MicroBuildSwixPlugin@4
+  displayName: Install Swix Plugin
+- task: BatchScript@1
+  displayName: Run CIBuild.cmd
+  inputs:
+    filename: eng\common\CIBuild.cmd
+    arguments: -configuration $(BuildConfiguration) /p:OfficialBuildId=$(BUILD.BUILDNUMBER) /p:DotNetSignType=$(SignType) /p:DotNetSymbolServerTokenMsdl=$(microsoft-symbol-server-pat) /p:DotNetSymbolServerTokenSymWeb=$(symweb-symbol-server-pat)
+    failOnStandardError: true
+- template: common\templates\steps\generate-sbom.yml
+- task: CopyFiles@2
+  displayName: 'Copy Files from: $(Build.SourcesDirectory) to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    SourceFolder: $(Build.SourcesDirectory)
+    Contents: |
+      artifacts\bin\**
+      artifacts\log\**
+      artifacts\VSSetup\**
+    TargetFolder: $(Build.ArtifactStagingDirectory)
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: $(Build.BuildNumber)'
+  inputs:
+    ArtifactName: $(Build.BuildNumber)
+    TargetPath: $(DropRoot)\Roslyn\$(Build.DefinitionName)
+- task: PublishSymbols@2
+  displayName: Create Symbol Index
+  inputs:
+    SymbolsPath: $(Build.ArtifactStagingDirectory)
+    SearchPattern: |
+      **/Microsoft.VisualStudio.ProjectSystem.Tools.dll
+      **/Microsoft.VisualStudio.ProjectSystem.Tools.pdb
+      **/Microsoft.VisualStudio.ProjectSystem.Tools.resources.dll
+    SymbolsFolder: $(Build.ArtifactStagingDirectory)
+    # NOTE: This produces a warning about indexing (if enabled) but will still publish the symbols. See: https://github.com/microsoft/azure-pipelines-tasks/issues/15605
+    IndexSources: false
+    PublishSymbols: true
+    SymbolServerType: TeamServices
+  continueOnError: True
+- task: MicroBuildCleanup@1
+  displayName: Perform Cleanup
+  condition: succeededOrFailed()
