@@ -17,17 +17,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
     [Export(typeof(IVsBuildLoggerProvider))]
     internal sealed class BuildLoggerProvider : IBuildLoggerProviderAsync, IVsBuildLoggerProvider
     {
-        private readonly ILoggingController _loggingController;
-
-        [ImportingConstructor]
-        public BuildLoggerProvider(ILoggingController loggingController)
-        {
-            _loggingController = loggingController;
-        }
-
-        public LoggerVerbosity Verbosity => LoggerVerbosity.Diagnostic;
-
-        public BuildLoggerEvents Events =>
+        /// <summary>
+        /// The set of build logging events we want to be produced during build.
+        /// This value is reported via <see cref="IVsBuildLoggerProvider.Events"/>,
+        /// but only when <see cref="ILoggingController.IsLogging"/> is <see langword="true"/>.
+        /// </summary>
+        private const BuildLoggerEvents EventsWhenLogging =
             BuildLoggerEvents.BuildStartedEvent |
             BuildLoggerEvents.BuildFinishedEvent |
             BuildLoggerEvents.ErrorEvent |
@@ -45,6 +40,18 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.Providers
             BuildLoggerEvents.ProjectEvaluationStartedEvent |
             BuildLoggerEvents.ProjectEvaluationFinishedEvent |
             BuildLoggerEvents.CustomEvent;
+
+        private readonly ILoggingController _loggingController;
+
+        [ImportingConstructor]
+        public BuildLoggerProvider(ILoggingController loggingController)
+        {
+            _loggingController = loggingController;
+        }
+
+        public LoggerVerbosity Verbosity => _loggingController.IsLogging ? LoggerVerbosity.Diagnostic : LoggerVerbosity.Quiet;
+
+        public BuildLoggerEvents Events => _loggingController.IsLogging ? EventsWhenLogging : BuildLoggerEvents.None;
 
         public ILogger GetLogger(string projectPath, IEnumerable<string> targets, IDictionary<string, string> properties, bool isDesignTimeBuild) => 
             _loggingController.IsLogging ? _loggingController.CreateLogger(isDesignTimeBuild) : null;
