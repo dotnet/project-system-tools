@@ -24,7 +24,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             buildSummary = other;
         }
 
-        public bool TryGetValue(string keyName, out object content)
+        public bool TryGetValue(string keyName, out object? content)
         {
             content = keyName switch
             {
@@ -41,6 +41,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             };
             return content != null;
         }
+
         public int CompareTo(UIBuildSummary other)
         {
             if (ReferenceEquals(this, other))

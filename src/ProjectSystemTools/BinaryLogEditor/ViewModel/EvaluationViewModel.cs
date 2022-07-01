@@ -10,9 +10,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     internal sealed class EvaluationViewModel : BaseViewModel
     {
         private readonly Evaluation _evaluation;
-        private string _text;
-        private SelectedObjectWrapper _properties;
-        private IEnumerable<object> _children;
+        private string? _text;
+        private SelectedObjectWrapper? _properties;
+        private IEnumerable<object>? _children;
 
         public override IEnumerable<object> Children => _children ?? (_children = GetChildren());
 

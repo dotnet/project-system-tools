@@ -4,6 +4,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 {
     internal interface IViewModelWithProperties
     {
-        SelectedObjectWrapper Properties { get; }
+        SelectedObjectWrapper? Properties { get; }
     }
 }

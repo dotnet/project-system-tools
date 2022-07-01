@@ -15,10 +15,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
         private static readonly Guid LogicalViewIdPrimaryGuid = new(LogicalViewID.Primary);
         private static readonly Guid LogicalViewIdDesignerGuid = new(LogicalViewID.Designer);
 
-        private OLE.Interop.IServiceProvider _site;
-        private ServiceProvider _serviceProvider;
+        private OLE.Interop.IServiceProvider? _site;
+        private ServiceProvider? _serviceProvider;
 
-        int IVsEditorFactory.CreateEditorInstance(uint vsCreateEditorFlags, string fileName, string physicalView, IVsHierarchy hierarchy, uint itemid, IntPtr existingDocData, out IntPtr docView, out IntPtr docData, out string caption, out Guid commandGuid, out int flags)
+        int IVsEditorFactory.CreateEditorInstance(uint vsCreateEditorFlags, string fileName, string physicalView, IVsHierarchy hierarchy, uint itemid, IntPtr existingDocData, out IntPtr docView, out IntPtr docData, out string? caption, out Guid commandGuid, out int flags)
         {
             docView = IntPtr.Zero;
             docData = IntPtr.Zero;
@@ -75,7 +75,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             return VSConstants.S_OK;
         }
 
-        int IVsEditorFactory.MapLogicalView(ref Guid logicalView, out string physicalView)
+        int IVsEditorFactory.MapLogicalView(ref Guid logicalView, out string? physicalView)
         {
             physicalView = null;
 

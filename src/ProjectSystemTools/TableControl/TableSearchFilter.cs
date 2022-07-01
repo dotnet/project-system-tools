@@ -79,7 +79,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         private static string GetDetailsContentAsString(ITableEntryHandle entry)
         {
-            string detailsString = null;
+            string? detailsString = null;
 
             if (entry.CanShowDetails && entry is IWpfTableEntry wpfEntry)
             {

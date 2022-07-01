@@ -12,7 +12,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 
         public virtual IEnumerable<object> Children => Enumerable.Empty<object>();
 
-        public virtual SelectedObjectWrapper Properties => null;
+        public virtual SelectedObjectWrapper? Properties => null;
 
         protected static string FormatTime(Time time) =>
             $"In: {time.InclusiveTime:mm':'ss'.'ffff} | Ex: {time.ExclusiveTime:mm':'ss'.'ffff}";

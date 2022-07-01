@@ -11,11 +11,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
     // a single evaluationId
     internal sealed class EvaluationInfo : BaseInfo
     {
-        private List<EvaluatedProjectInfo> _evaluatingProjects;
+        private List<EvaluatedProjectInfo>? _evaluatingProjects;
 
-        private List<EvaluatedProjectInfo> _evaluatedProjects;
+        private List<EvaluatedProjectInfo>? _evaluatedProjects;
 
-        public IReadOnlyList<EvaluatedProjectInfo> EvaluatedProjects => _evaluatedProjects;
+        public IReadOnlyList<EvaluatedProjectInfo>? EvaluatedProjects => _evaluatedProjects;
 
         public void StartEvaluatingProject(EvaluatedProjectInfo evaluatedProject)
         {
@@ -29,6 +29,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 
         public EvaluatedProjectInfo EndEvaluatingProject(string name)
         {
+            Assumes.NotNull(_evaluatingProjects);
+
             var evaluatedProject = _evaluatingProjects.FirstOrDefault(p => p.Name == name);
             if (evaluatedProject == null)
             {

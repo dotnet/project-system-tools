@@ -9,8 +9,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     internal sealed class EvaluatedPassViewModel : BaseViewModel
     {
         private readonly EvaluatedPass _evaluatedPass;
-        private string _text;
-        private List<object> _children;
+        private string? _text;
+        private List<object>? _children;
 
         public override string Text => _text ?? (_text = $"{_evaluatedPass.Description} [{FormatTime(_evaluatedPass.Time)}]");
 

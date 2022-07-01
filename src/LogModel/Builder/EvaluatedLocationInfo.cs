@@ -16,7 +16,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
         public ImmutableArray<EvaluatedLocationInfo> Children { get; }
         public TimeInfo Time { get; }
 
-        public EvaluatedLocationInfo(string elementName, string elementDescription, EvaluationLocationKind kind, string file, int? line, IEnumerable<EvaluatedLocationInfo> children, TimeInfo time)
+        public EvaluatedLocationInfo(string elementName, string elementDescription, EvaluationLocationKind kind, string file, int? line, IEnumerable<EvaluatedLocationInfo>? children, TimeInfo time)
         {
             ElementName = elementName;
             ElementDescription = elementDescription;

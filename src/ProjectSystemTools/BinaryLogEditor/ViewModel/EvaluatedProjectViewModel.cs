@@ -10,11 +10,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 {
     internal sealed class EvaluatedProjectViewModel : NodeViewModel
     {
-        private readonly Evaluation _evaluation;
+        private readonly Evaluation? _evaluation;
         private readonly EvaluatedProject _evaluatedProject;
-        private string _text;
-        private List<object> _children;
-        private SelectedObjectWrapper _properties;
+        private string? _text;
+        private List<object>? _children;
+        private SelectedObjectWrapper? _properties;
 
         public override string Text => _text ?? (_text = Path.GetFileName(_evaluatedProject.Name));
 
@@ -27,13 +27,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 _evaluatedProject.Name,
                 "Evaluated Project",
                 _evaluation?.Messages.Union(_evaluatedProject.Messages) ?? _evaluatedProject.Messages,
-                new Dictionary<string, IDictionary<string, string>> {
-                    {"General", new Dictionary<string, string>
+                new Dictionary<string, IDictionary<string, string?>?> {
+                    {"General", new Dictionary<string, string?>
                         {
                             {"Path", _evaluatedProject.Name}
                         }
                     },
-                    {"Build", new Dictionary<string, string>
+                    {"Build", new Dictionary<string, string?>
                         {
                             {"Started", _evaluatedProject.StartTime.ToString(CultureInfo.InvariantCulture)},
                             {"Finished", _evaluatedProject.EndTime.ToString(CultureInfo.InvariantCulture)}

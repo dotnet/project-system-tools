@@ -11,9 +11,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     internal sealed class TargetViewModel : NodeViewModel
     {
         private readonly Target _target;
-        private string _text;
-        private List<object> _children;
-        private SelectedObjectWrapper _properties;
+        private string? _text;
+        private List<object>? _children;
+        private SelectedObjectWrapper? _properties;
 
         protected override Node Node => _target;
 
@@ -28,8 +28,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 _target.Name,
                 "Target",
                 _target.Messages,
-                new Dictionary<string, IDictionary<string, string>> {
-                    {"Build", new Dictionary<string, string>
+                new Dictionary<string, IDictionary<string, string?>?> {
+                    {"Build", new Dictionary<string, string?>
                         {
                             {"Node", _target.NodeId.ToString() },
                             {"Source File", _target.SourceFilePath },

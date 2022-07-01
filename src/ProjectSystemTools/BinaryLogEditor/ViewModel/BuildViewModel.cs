@@ -9,9 +9,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     internal sealed class BuildViewModel : NodeViewModel
     {
         private readonly LogModel.Build _build;
-        private string _text;
-        private SelectedObjectWrapper _properties;
-        private IEnumerable<object> _children;
+        private string? _text;
+        private SelectedObjectWrapper? _properties;
+        private IEnumerable<object>? _children;
 
         public override IEnumerable<object> Children => _children ?? (_children = GetChildren());
 
@@ -24,14 +24,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 "Build",
                 "Build",
                 _build.Messages,
-                new Dictionary<string, IDictionary<string, string>> {
-                    {"Build", new Dictionary<string, string>
+                new Dictionary<string, IDictionary<string, string?>?> {
+                    {"Build", new Dictionary<string, string?>
                         {
                             {"Started", _build.StartTime.ToString(CultureInfo.InvariantCulture)},
                             {"Finished", _build.EndTime.ToString(CultureInfo.InvariantCulture)}
                         }
                     },
-                    {"Environment", _build.Environment}}));
+                    {"Environment", _build.Environment!}}));
 
         public BuildViewModel(LogModel.Build build)
         {

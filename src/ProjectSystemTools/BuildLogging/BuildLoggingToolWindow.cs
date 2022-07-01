@@ -81,6 +81,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                 TableColumnNames.Status
             };
 
+            Assumes.Present(ProjectSystemToolsPackage.TableManagerProvider);
+            Assumes.Present(ProjectSystemToolsPackage.TableControlProvider);
+
             var newManager = ProjectSystemToolsPackage.TableManagerProvider.GetTableManager(BuildLogging);
             var columnStates = TableSettingLoader.LoadSettings(BuildLogging, defaultColumns);
             var tableControl = (IWpfTableControl2)ProjectSystemToolsPackage.TableControlProvider.CreateControl(newManager, true, columnStates, columns);
@@ -161,7 +164,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             ProjectSystemToolsPackage.UpdateQueryStatus();
         }
 
-        protected override void SetTableControl(IWpfTableControl2 tableControl)
+        protected override void SetTableControl(IWpfTableControl2? tableControl)
         {
             if (TableControl != null)
             {
@@ -172,12 +175,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
 
             base.SetTableControl(tableControl);
 
-            if (TableControl != null)
+            if (tableControl != null)
             {
-                TableControl.FiltersChanged += OnFiltersChanged;
-                TableControl.GroupingsChanged += OnGroupingsChanged;
+                tableControl.FiltersChanged += OnFiltersChanged;
+                tableControl.GroupingsChanged += OnGroupingsChanged;
 
-                TableControl.Manager.AddSource(_dataSource);
+                tableControl.Manager.AddSource(_dataSource);
             }
         }
 
@@ -187,6 +190,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 return;
             }
+
+            Assumes.NotNull(TableControl);
 
             TableSettingLoader.SaveSettings(BuildLogging, TableControl);
         }
@@ -202,8 +207,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 return;
             }
+
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                Assumes.NotNull(TableControl);
+
                 foreach (var entry in TableControl.SelectedEntries)
                 {
                     if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
@@ -211,7 +219,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                         continue;
                     }
 
-                    string logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                    string? logPath = await _dataSource.GetLogForBuildAsync(buildID);
+
+                    if (logPath == null)
+                    {
+                        continue;
+                    }
+
                     var filename = Path.GetFileName(logPath);
 
                     if (filename == null)
@@ -254,6 +268,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
+            Assumes.NotNull(TableControl);
+
             foreach (var entry in TableControl.SelectedEntries)
             {
                 OpenLog(entry);
@@ -274,9 +290,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                string logPath = await _dataSource.GetLogForBuildAsync(buildID);
-                _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
-                frame?.Show();
+                string? logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                
+                if (logPath is not null)
+                {
+                    _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
+                    frame?.Show();
+                }
             });
         }
 
@@ -284,6 +304,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                Assumes.NotNull(TableControl);
+
                 foreach (var entry in TableControl.SelectedEntries)
                 {
                     if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
@@ -291,7 +313,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                         continue;
                     }
 
-                    string logPath = await _dataSource.GetLogForBuildAsync(buildID);
+                    string? logPath = await _dataSource.GetLogForBuildAsync(buildID);
+
+                    if (logPath is null)
+                    {
+                        continue;
+                    }
+
                     try
                     {
                         Process.Start(logPath);
@@ -467,6 +495,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
                         var selectedItem = Marshal.GetObjectForNativeVariant(pvaIn);
 
                         selectedType = selectedItem.ToString();
+
+                        Assumes.NotNull(TableControl);
+
                         var column = TableControl.ColumnDefinitionManager.GetColumnDefinition(TableColumnNames.BuildType);
                         if (selectedType.Equals(BuildLoggingResources.FilterBuildAll))
                         {

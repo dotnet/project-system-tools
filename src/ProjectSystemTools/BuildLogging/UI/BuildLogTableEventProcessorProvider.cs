@@ -20,6 +20,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
         public ITableControlEventProcessor GetAssociatedEventProcessor(IWpfTableControl tableControl)
         {
+            Assumes.Present(ProjectSystemToolsPackage.Instance);
+
             return new BuildLogTableEventProcessor(ProjectSystemToolsPackage.Instance.BuildLoggingToolWindow);
         }
     }

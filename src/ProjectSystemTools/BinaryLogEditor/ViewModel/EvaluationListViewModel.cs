@@ -7,7 +7,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 {
     internal sealed class EvaluationListViewModel : IViewModelWithProperties
     {
-        private SelectedObjectWrapper _properties;
+        private SelectedObjectWrapper? _properties;
 
         public string Name { get; }
         public string Description { get; }
@@ -23,10 +23,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                                                            Name ?? string.Empty,
                                                            Kind,
                                                            null,
-                                                           new Dictionary<string, IDictionary<string, string>>
+                                                           new Dictionary<string, IDictionary<string, string?>?>
                                                            {
                                                                {
-                                                                   "General", new Dictionary<string, string>
+                                                                   "General", new Dictionary<string, string?>
                                                                    {
                                                                        {"Description", Description}
                                                                    }

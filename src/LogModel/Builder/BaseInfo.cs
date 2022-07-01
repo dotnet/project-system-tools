@@ -7,9 +7,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 {
     internal abstract class BaseInfo
     {
-        private List<MessageInfo> _messages;
+        private List<MessageInfo>? _messages;
 
-        public IEnumerable<MessageInfo> Messages => _messages;
+        public IEnumerable<MessageInfo>? Messages => _messages;
 
         public void AddMessage(MessageInfo message)
         {

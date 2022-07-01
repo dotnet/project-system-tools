@@ -16,12 +16,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         private readonly BackEndBuildTableDataSource _dataSource;
 
         // lazily set but once set, will never change again
-        private Action<TraceSource> _setLoggerCall;
-        private Action<TraceSource> _removeLoggerCall;
+        private Action<TraceSource>? _setLoggerCall;
+        private Action<TraceSource>? _removeLoggerCall;
 
         // mutable state
-        private Build _build;
-        private TraceSource _roslynTraceSource;
+        private Build? _build;
+        private TraceSource? _roslynTraceSource;
 
         static RoslynLogger()
         {
@@ -97,10 +97,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             _roslynTraceSource.Flush();
             _roslynTraceSource.Close();
 
+            Assumes.NotNull(_removeLoggerCall);
+
             _removeLoggerCall(_roslynTraceSource);
 
             var listener = (RoslynTraceListener)_roslynTraceSource.Listeners[0];
             _roslynTraceSource = null;
+
+            Assumes.NotNull(_build);
 
             _build.Finish(succeeded: true, time: DateTime.Now);
             _build.SetLogPath(listener.LogPath);

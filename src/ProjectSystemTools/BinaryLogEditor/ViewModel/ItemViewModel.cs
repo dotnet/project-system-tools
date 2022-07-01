@@ -8,7 +8,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     internal sealed class ItemViewModel : BaseViewModel
     {
         private readonly Item _item;
-        private SelectedObjectWrapper _properties;
+        private SelectedObjectWrapper? _properties;
 
         public override string Text => _item.Name;
 
@@ -17,7 +17,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 _item.Name,
                 "Item",
                 null,
-                new Dictionary<string, IDictionary<string, string>> {{"Metadata", _item.Metadata}}));
+                new Dictionary<string, IDictionary<string, string?>?> {{"Metadata", _item.Metadata!}}));
 
         public ItemViewModel(Item item)
         {

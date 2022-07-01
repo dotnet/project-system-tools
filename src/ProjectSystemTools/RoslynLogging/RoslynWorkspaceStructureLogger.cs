@@ -224,7 +224,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             return o.GetType().GetMethod(methodName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         }
 
-        private static T TryCallNonPublicMethod<T>(this object o, string methodName, params object[] parameters) where T : class
+        private static T? TryCallNonPublicMethod<T>(this object o, string methodName, params object[] parameters) where T : class
         {
             var method = o.TryGetMethodInfo(methodName);
 
@@ -236,7 +236,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             return method.Invoke(o, parameters) as T;
         }
 
-        private static T TryCallNonPublicGenericMethod<T>(this object o, string methodName, Type typeParameter, params object[] parameters) where T : class
+        private static T? TryCallNonPublicGenericMethod<T>(this object o, string methodName, Type typeParameter, params object[] parameters) where T : class
         {
             var method = o.TryGetMethodInfo(methodName);
 
@@ -254,7 +254,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             return method.Invoke(o, parameters) as T;
         }
 
-        private static T TryGetNonPublicPropertyFromService<T>(this object o, string serviceTypeName, string propertyName) where T : class
+        private static T? TryGetNonPublicPropertyFromService<T>(this object o, string serviceTypeName, string propertyName) where T : class
         {
             var services = o.TryGetNonPublicProperty<object>("Services");
             if (services == null)
@@ -278,7 +278,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             return service.TryGetNonPublicProperty<T>(propertyName);
         }
 
-        private static T TryGetNonPublicProperty<T>(this object o, string propertyName) where T : class
+        private static T? TryGetNonPublicProperty<T>(this object o, string propertyName) where T : class
         {
             // Yes this method says NonPublic, but it could be a public property on a non-public type
             var method = o.GetType().GetProperty(propertyName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
@@ -306,7 +306,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             return task.Result;
         }
 
-        private static VSLangProj.VSProject TryFindLangProjProject(EnvDTE.DTE dte, Project project)
+        private static VSLangProj.VSProject? TryFindLangProjProject(EnvDTE.DTE dte, Project project)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 

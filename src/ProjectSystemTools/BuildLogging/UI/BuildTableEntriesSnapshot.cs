@@ -25,6 +25,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
         // As such, any index in us will map to the same index in any newer snapshot.
         public override int IndexOf(int currentIndex, ITableEntriesSnapshot newSnapshot) => currentIndex;
 
-        public override bool TryGetValue(int index, string keyName, out object content) => _builds[index].TryGetValue(keyName, out content);
+        public override bool TryGetValue(int index, string keyName, out object? content) => _builds[index].TryGetValue(keyName, out content);
     }
 }

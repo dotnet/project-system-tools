@@ -12,9 +12,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel
 
         public string Name { get; }
 
-        public string SourceFilePath { get; }
+        public string? SourceFilePath { get; }
 
-        public string ParentTarget { get; }
+        public string? ParentTarget { get; }
 
         public TargetBuiltReason Reason { get; }
 
@@ -28,7 +28,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel
 
         public ImmutableList<Task> Tasks { get; }
 
-        public Target(int nodeId, string name, bool isRequestedTarget, string sourceFilePath, string parentTarget, TargetBuiltReason reason, ImmutableList<ItemAction> itemActions, ImmutableList<PropertySet> propertySets, ImmutableList<Item> outputItems, ImmutableList<Task> tasks, DateTime startTime, DateTime endTime, ImmutableList<Message> messages, Result result)
+        public Target(int nodeId, string name, bool isRequestedTarget, string? sourceFilePath, string? parentTarget, TargetBuiltReason reason, ImmutableList<ItemAction> itemActions, ImmutableList<PropertySet> propertySets, ImmutableList<Item> outputItems, ImmutableList<Task> tasks, DateTime startTime, DateTime endTime, ImmutableList<Message> messages, Result result)
             : base(messages, startTime, endTime, result)
         {
             NodeId = nodeId;

@@ -11,7 +11,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
         private readonly IEnumerable<TItem> _list;
         private readonly Func<TItem, object> _selector;
 
-        private object[] _children;
+        private object[]? _children;
 
         public override string Text { get; }
 

@@ -21,8 +21,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private readonly object _gate = new object();
 
-        private ITableDataSink _tableDataSink;
-        private BuildTableEntriesSnapshot _lastSnapshot;
+        private ITableDataSink? _tableDataSink;
+        private BuildTableEntriesSnapshot? _lastSnapshot;
         private ImmutableList<UIBuildSummary> _entries = ImmutableList<UIBuildSummary>.Empty;
 
         private readonly IBuildLoggerService _loggerService;
@@ -97,6 +97,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public void NotifyChange()
         {
             CurrentVersionNumber++;
+
+            Assumes.NotNull(_tableDataSink);
             _tableDataSink.FactorySnapshotChanged(this);
         }
 
@@ -113,7 +115,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             }
         }
 
-        public ITableEntriesSnapshot GetSnapshot(int versionNumber)
+        public ITableEntriesSnapshot? GetSnapshot(int versionNumber)
         {
             lock (_gate)
             {
@@ -134,8 +136,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return null;
         }
 
-        public async Task<string> GetLogForBuildAsync(int buildID)
+        public async Task<string?> GetLogForBuildAsync(int buildID)
         {
+            Assumes.NotNull(_loggerService);
+
             return await _loggerService.GetLogForBuildAsync(buildID);
         }
 

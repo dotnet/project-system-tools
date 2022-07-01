@@ -12,11 +12,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 {
     internal sealed class BinaryLogDocumentData : IVsPersistDocData2, IPersistFileFormat
     {
-        private string _filename;
+        private string? _filename;
 
-        public Log Log { get; private set; }
+        public Log? Log { get; private set; }
 
-        public event EventHandler Loaded;
+        public event EventHandler? Loaded;
 
         public int GetGuidEditorType(out Guid classGuid)
         {
@@ -113,7 +113,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         public int SaveCompleted(string filename) => VSConstants.S_OK;
 
-        public int GetCurFile(out string filename, out uint formatIndex)
+        public int GetCurFile(out string? filename, out uint formatIndex)
         {
             filename = _filename;
             formatIndex = 1;

@@ -12,7 +12,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public LoggerVerbosity Verbosity { get => LoggerVerbosity.Diagnostic; set { } }
 
-        public string Parameters { get; set; }
+        public string? Parameters { get; set; }
 
         protected LoggerBase(BackEndBuildTableDataSource dataSource)
         {
