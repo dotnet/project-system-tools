@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Validation" Version="$(MicrosoftVisualStudioValidationVersion)" />
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.3.0-2.final" />
   </ItemGroup>
 
 </Project>
