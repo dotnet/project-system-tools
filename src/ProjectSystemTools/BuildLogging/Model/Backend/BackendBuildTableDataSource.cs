@@ -4,6 +4,8 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading;
+
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
@@ -51,11 +53,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public void Clear()
         {
-            foreach (var build in _entries)
+            var entries = Interlocked.Exchange(ref _entries, ImmutableList<Build>.Empty);
+
+            foreach (var build in entries)
             {
                 build.Dispose();
             }
-            _entries = ImmutableList<Build>.Empty;
         }
 
         public ILogger CreateLogger(bool isDesignTime) => new ProjectLogger(this, isDesignTime);
@@ -77,7 +80,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public void AddEntry(Build build)
         {
-            _entries = _entries.Add(build);
+            ImmutableInterlocked.Update(
+                ref _entries,
+                static (entries, build) => entries.Add(build),
+                build);
+
             NotifyChange();
         }
     }
