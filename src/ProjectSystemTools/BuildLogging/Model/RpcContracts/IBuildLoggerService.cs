@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Immutable;
-using System.Threading.Tasks;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts
 {
@@ -15,29 +14,27 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// <summary>
         /// Returns whether or not the build logging window is currently tracking logs or not
         /// </summary>
-        /// <returns>True if build logging window is tracking logs and false otherwise</returns>
-        Task<bool> IsLoggingAsync();
+        bool IsLogging { get; }
 
         /// <summary>
-        /// Returns whether or not build logging supports roslyn logging
+        /// Gets whether build logging supports roslyn logging or not
         /// </summary>
-        /// <returns>True if build logging supports roslyn logging, false if otherwise</returns>
-        Task<bool> SupportsRoslynLoggingAsync();
+        bool SupportsRoslynLogging { get; }
 
         /// <summary>
         /// Tell build logging to start tracking logs
         /// </summary>
-        Task StartAsync(Action notifyCallback);
+        void Start(Action notifyCallback);
 
         /// <summary>
         /// Tell build logging to stop tracking logs
         /// </summary>
-        Task StopAsync();
+        void Stop();
 
         /// <summary>
         /// Tell build logging to clear out all the accumulated logs contained on the server.
         /// </summary>
-        Task ClearAsync();
+        void Clear();
 
         /// <summary>
         /// Gives the user a log of a requested build

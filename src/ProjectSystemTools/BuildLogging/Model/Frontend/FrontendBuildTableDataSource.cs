@@ -4,10 +4,8 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
@@ -33,8 +31,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public string DisplayName => BuildDataSourceDisplayName;
 
-        public bool SupportRoslynLogging { get; private set; }
-
         public int CurrentVersionNumber { get; private set; }
 
         [ImportingConstructor]
@@ -42,41 +38,29 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         {
             _loggerService = loggerService;
             
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                SupportRoslynLogging = await _loggerService.SupportsRoslynLoggingAsync();
-            });
+            // cache this value to avoid redundant work
+            SupportRoslynLogging = loggerService.SupportsRoslynLogging;
         }
 
-        public async Task<bool> IsLoggingAsync()
-        {
-            return await _loggerService.IsLoggingAsync();
-        }
+        public bool IsLogging => _loggerService.IsLogging;
+
+        public bool SupportRoslynLogging { get; private set; }
 
         public void Start()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await _loggerService.StartAsync(UpdateEntries);
-            });
+            _loggerService.Start(UpdateEntries);
         }
 
         public void Stop()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await _loggerService.StopAsync();
-            });
+            _loggerService.Stop();
         }
 
         public void Clear()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await _loggerService.ClearAsync();
-                _entries = ImmutableArray<UIBuildSummary>.Empty;
-                NotifyChange();
-            });
+            _loggerService.Clear();
+            _entries = ImmutableArray<UIBuildSummary>.Empty;
+            NotifyChange();
         }
 
         public IDisposable Subscribe(ITableDataSink sink)

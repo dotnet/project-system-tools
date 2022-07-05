@@ -351,18 +351,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
             {
                 case ProjectSystemToolsPackage.StartLoggingCommandId:
                     visible = true;
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        enabled = !await _dataSource.IsLoggingAsync();
-                    });
+                    enabled = !_dataSource.IsLogging;
                     break;
 
                 case ProjectSystemToolsPackage.StopLoggingCommandId:
                     visible = true;
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        enabled = await _dataSource.IsLoggingAsync();
-                    });
+                    enabled = _dataSource.IsLogging;
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:
