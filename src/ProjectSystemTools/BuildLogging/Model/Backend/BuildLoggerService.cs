@@ -58,9 +58,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             return Task.FromResult(_dataSource.GetLogForBuild(buildID));
         }
 
-        public Task<ImmutableList<BuildSummary>> GetAllBuildsAsync()
+        public ImmutableArray<BuildSummary> GetAllBuilds()
         {
-            return Task.FromResult(_dataSource.GetAllBuilds());
+            return _dataSource.GetAllBuilds();
         }
     }
 }

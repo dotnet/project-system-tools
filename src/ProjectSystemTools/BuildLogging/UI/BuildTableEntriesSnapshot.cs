@@ -9,13 +9,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 {
     internal sealed class BuildTableEntriesSnapshot : WpfTableEntriesSnapshotBase
     {
-        private readonly ImmutableList<UIBuildSummary> _builds;
+        private readonly ImmutableArray<UIBuildSummary> _builds;
 
         public override int VersionNumber { get; }
 
         public override int Count => _builds.Count;
 
-        public BuildTableEntriesSnapshot(ImmutableList<UIBuildSummary> builds, int versionNumber)
+        public BuildTableEntriesSnapshot(ImmutableArray<UIBuildSummary> builds, int versionNumber)
         {
             _builds = builds;
             VersionNumber = versionNumber;

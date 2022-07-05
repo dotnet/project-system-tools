@@ -46,6 +46,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         /// </summary>
         /// <returns>An ImmutableList of builds,
         /// the list and the data inside it is immutable</returns>
-        ImmutableList<BuildSummary> GetAllBuilds();
+        ImmutableArray<BuildSummary> GetAllBuilds();
     }
 }

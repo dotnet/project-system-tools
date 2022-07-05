@@ -72,9 +72,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             return _entries.Find(x => x.BuildId == buildId)?.LogPath;
         }
 
-        ImmutableList<BuildSummary> ILoggingDataSource.GetAllBuilds()
+        ImmutableArray<BuildSummary> ILoggingDataSource.GetAllBuilds()
         {
-            return _entries.Select(build => build.BuildSummary).ToImmutableList();
+            var entries = _entries; // snapshot value to prevent exceptions
+            var builder = ImmutableArray.CreateBuilder<BuildSummary>(initialCapacity: entries.Count);
+            
+            foreach (Build entry in entries)
+            {
+                builder.Add(entry.BuildSummary);
+            }
+
+            return builder.MoveToImmutable();
         }
 
         public void NotifyChange()

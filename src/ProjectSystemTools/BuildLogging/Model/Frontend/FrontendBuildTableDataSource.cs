@@ -23,7 +23,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private ITableDataSink? _tableDataSink;
         private BuildTableEntriesSnapshot? _lastSnapshot;
-        private ImmutableList<UIBuildSummary> _entries = ImmutableList<UIBuildSummary>.Empty;
+        private ImmutableArray<UIBuildSummary> _entries = ImmutableArray<UIBuildSummary>.Empty;
 
         private readonly IBuildLoggerService _loggerService;
 
@@ -74,7 +74,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await _loggerService.ClearAsync();
-                _entries = ImmutableList<UIBuildSummary>.Empty;
+                _entries = ImmutableArray<UIBuildSummary>.Empty;
                 NotifyChange();
             });
         }
@@ -91,7 +91,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public void Dispose()
         {
-            _entries = ImmutableList<UIBuildSummary>.Empty;
+            _entries = ImmutableArray<UIBuildSummary>.Empty;
         }
 
         public void NotifyChange()
@@ -145,14 +145,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private void UpdateEntries()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                _entries = (await _loggerService.GetAllBuildsAsync())
+            _entries = _loggerService.GetAllBuilds()
                 .Select(summary => new UIBuildSummary(summary))
-                .ToImmutableList();
+                .ToImmutableArray();
 
-                NotifyChange();
-            });
+            NotifyChange();
         }
     }
 }
