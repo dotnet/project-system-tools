@@ -10,7 +10,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
     /// The main interface between the client and the server.
     /// These operations are async
     /// </summary>
-    public interface IBuildLoggerService
+    internal interface IBuildLoggerService
     {
         /// <summary>
         /// Returns whether or not the build logging window is currently tracking logs or not
