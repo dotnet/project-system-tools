@@ -2,7 +2,7 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.VisualStudio.ProjectSystem.LogModel;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor

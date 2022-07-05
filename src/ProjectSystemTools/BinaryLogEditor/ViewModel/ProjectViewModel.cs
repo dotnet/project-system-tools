@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.VisualStudio.ProjectSystem.LogModel;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 {

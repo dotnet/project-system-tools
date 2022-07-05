@@ -54,6 +54,10 @@
     <EmbeddedResource Include="BuildLogging\BuildLoggingResources.resx" GenerateSource="true">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="LogModel\Resources.resx">
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Include="RoslynLogging\RoslynLoggingResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>RoslynLoggingResources.Designer.cs</LastGenOutput>
@@ -67,10 +71,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LogModel\LogModel.csproj">
-      <Name>LogModel</Name>
-      <Private>true</Private>
-    </ProjectReference>
     <ProjectReference Include="..\LogProviders\LogProviders.csproj">
       <Name>LogProviders</Name>
       <Private>true</Private>
@@ -116,6 +116,11 @@
     </Compile>
     <Compile Update="BinaryLogEditor\LogViewControl.xaml.cs">
       <DependentUpon>LogViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="LogModel\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Update="RoslynLogging\RoslynLoggingResources.Designer.cs">
       <DesignTime>True</DesignTime>

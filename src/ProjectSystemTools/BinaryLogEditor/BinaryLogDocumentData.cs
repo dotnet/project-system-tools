@@ -4,8 +4,8 @@ using System;
 using System.Collections.Immutable;
 using Microsoft.Build.Logging;
 using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.ProjectSystem.LogModel;
-using Microsoft.VisualStudio.ProjectSystem.LogModel.Builder;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder;
 using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor

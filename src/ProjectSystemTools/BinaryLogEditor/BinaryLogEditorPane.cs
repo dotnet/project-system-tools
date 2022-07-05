@@ -7,12 +7,12 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.ProjectSystem.LogModel;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Constants = Microsoft.VisualStudio.OLE.Interop.Constants;
-using Task = Microsoft.VisualStudio.ProjectSystem.LogModel.Task;
+using Task = Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Task;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 {
