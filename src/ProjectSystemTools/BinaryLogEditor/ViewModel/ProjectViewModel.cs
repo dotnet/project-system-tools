@@ -10,9 +10,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     internal sealed class ProjectViewModel : NodeViewModel
     {
         private readonly Project _project;
-        private string _text;
-        private List<object> _children;
-        private SelectedObjectWrapper _properties;
+        private string? _text;
+        private List<object>? _children;
+        private SelectedObjectWrapper? _properties;
 
         protected override Node Node => _project;
 
@@ -25,8 +25,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 _project.Name,
                 "Project",
                 _project.Messages,
-                new Dictionary<string, IDictionary<string, string>> {
-                    {"Build", new Dictionary<string, string>
+                new Dictionary<string, IDictionary<string, string?>?> {
+                    {"Build", new Dictionary<string, string?>
                         {
                             {"Node", _project.NodeId.ToString() },
                             {"Project File", _project.ProjectFile },
@@ -35,8 +35,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                             {"Tools Version", _project.ToolsVersion }
                         }
                      },
-                    {"GlobalProperties", _project.GlobalProperties},
-                    {"Properties", _project.Properties}
+                    {"GlobalProperties", _project.GlobalProperties!},
+                    {"Properties", _project.Properties!}
                 }));
 
         public ProjectViewModel(Project project)

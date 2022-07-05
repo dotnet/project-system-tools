@@ -7,13 +7,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel
 {
     public sealed class Log
     {
-        public Build Build { get; }
+        public Build? Build { get; }
 
         public ImmutableList<Evaluation> Evaluations { get; }
 
         public ImmutableList<Exception> Exceptions { get; }
 
-        public Log(Build build, ImmutableList<Evaluation> evaluations, ImmutableList<Exception> exceptions)
+        public Log(Build? build, ImmutableList<Evaluation> evaluations, ImmutableList<Exception> exceptions)
         {
             Build = build;
             Evaluations = evaluations;

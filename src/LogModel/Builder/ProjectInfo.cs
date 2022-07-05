@@ -9,8 +9,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 {
     internal sealed class ProjectInfo : BaseInfo
     {
-        private List<TargetInfo> _executedTargets;
-        private Dictionary<int, TargetInfo> _targetInfos;
+        private List<TargetInfo>? _executedTargets;
+        private Dictionary<int, TargetInfo>? _targetInfos;
 
         public int Id { get; }
         public int NodeId { get; }
@@ -24,7 +24,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
         public ImmutableDictionary<string, string> GlobalProperties { get; }
         public ImmutableDictionary<string, string> Properties { get; }
         public ImmutableList<ItemGroupInfo> ItemGroups { get; }
-        public IReadOnlyList<TargetInfo> ExecutedTargets => _executedTargets;
+        public IReadOnlyList<TargetInfo>? ExecutedTargets => _executedTargets;
         public Result Result { get; private set; }
         public ImmutableHashSet<string> TargetsToBuild { get; }
         public string ToolsVersion { get; }

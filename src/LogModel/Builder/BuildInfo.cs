@@ -9,7 +9,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
     {
         public DateTime StartTime { get; private set; }
         public DateTime EndTime { get; private set; }
-        public ImmutableDictionary<string, string> Environment { get; private set; }
+        public ImmutableDictionary<string, string>? Environment { get; private set; }
         public Result Result { get; private set; }
 
         public void Start(DateTime startTime, ImmutableDictionary<string, string> environment)

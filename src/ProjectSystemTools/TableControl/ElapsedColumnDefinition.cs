@@ -26,9 +26,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         public override TextWrapping TextWrapping => TextWrapping.NoWrap;
 
-        public override bool TryCreateColumnContent(ITableEntryHandle entry, bool singleColumnView, out FrameworkElement content)
+        public override bool TryCreateColumnContent(ITableEntryHandle entry, bool singleColumnView, out FrameworkElement? content)
         {
-            if (TryCreateStringContent(entry, false, singleColumnView, out string text))
+            if (TryCreateStringContent(entry, false, singleColumnView, out string? text))
             {
                 content = new TextBlock
                 {
@@ -42,7 +42,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             return false;
         }
 
-        public override bool TryCreateStringContent(ITableEntryHandle entry, bool truncatedText, bool singleColumnView, out string content)
+        public override bool TryCreateStringContent(ITableEntryHandle entry, bool truncatedText, bool singleColumnView, out string? content)
         {
             if (entry.TryGetValue(TableKeyNames.Status, out var status) && status is BuildStatus and not BuildStatus.Running &&
                 entry.TryGetValue(TableKeyNames.Elapsed, out var value) && value is TimeSpan timeSpan)

@@ -55,6 +55,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
+                Assumes.Present(ProjectSystemToolsPackage.VsUIShell);
+
                 ProjectSystemToolsPackage.VsUIShell.ShowContextMenu(0, ref guidContextMenu, _contextMenuId,
                     locationPoints, pCmdTrgtActive: null);
             });

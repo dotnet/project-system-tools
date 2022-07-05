@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,16 +18,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
     {
         private static readonly Regex UsingTaskRegex = new("Using \"(?<task>.+)\" task from (assembly|the task factory) \"(?<assembly>.+)\"\\.", RegexOptions.Compiled);
 
-        private bool _done;
         private readonly BuildInfo _buildInfo = new();
         private readonly ConcurrentBag<Exception> _exceptions = new();
-        private Dictionary<int, EvaluationInfo> _evaluationInfos;
         private readonly ConcurrentDictionary<int, ProjectInfo> _projectInfos = new();
-        private readonly ConcurrentDictionary<string, string> _assemblies =
-            new(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, string> _assemblies = new(StringComparer.OrdinalIgnoreCase);
         private readonly ConcurrentDictionary<string, string> _strings = new();
-
         private readonly object _syncLock = new();
+
+        private Dictionary<int, EvaluationInfo>? _evaluationInfos;
+        private bool _done;
 
         public ModelBuilder(IEventSource eventSource)
         {
@@ -127,7 +127,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
             }
         }
 
-        private string Intern(string text)
+        [return: NotNullIfNotNull(parameterName: nameof(text))]
+        private string? Intern(string? text)
         {
             if (text == null)
             {
@@ -262,9 +263,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
                 args.ParentProjectBuildEventContext.TargetId,
                 args.ParentProjectBuildEventContext.TaskId,
                 args.Timestamp,
-                string.IsNullOrEmpty(args.TargetNames)
+                Strings.IsNullOrEmpty(args.TargetNames)
                     ? ImmutableHashSet<string>.Empty
-                    : args.TargetNames.Split(';').Select(Intern).ToImmutableHashSet(),
+                    : args.TargetNames.Split(';').Select(Intern).ToImmutableHashSet()!,
                 args.ToolsVersion,
                 Intern(Path.GetFileName(args.ProjectFile)),
                 Intern(args.ProjectFile),
@@ -728,7 +729,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 
         private void ProcessMessage(BuildEventArgs args)
         {
-            if (string.IsNullOrEmpty(args?.Message))
+            if (Strings.IsNullOrEmpty(args?.Message))
             {
                 return;
             }
@@ -825,7 +826,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
                 throw new LoggerException(Resources.UnexpectedProfile);
             }
 
-            IEnumerable<EvaluatedLocationInfo> CollectChildren(long parentId) => 
+            IEnumerable<EvaluatedLocationInfo>? CollectChildren(long parentId) => 
                 groups
                     .SingleOrDefault(g => g.Key == parentId)
                     ?.Select(location => new EvaluatedLocationInfo(
@@ -853,7 +854,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
         {
             var evaluationInfo = FindEvaluationContext(args);
             var evaluatedProjectInfo = evaluationInfo.EndEvaluatingProject(args.ProjectFile);
-            EvaluatedProfileInfo evaluationProfileInfo = null;
+            EvaluatedProfileInfo? evaluationProfileInfo = null;
             if (args.ProfilerResult != null)
             {
                 evaluationProfileInfo = InterpretEvaluationProfile(args.ProfilerResult.Value);
@@ -936,12 +937,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 
         private static DateTime OrderMessages(Message message) => message.Timestamp;
 
-        private static ImmutableDictionary<TKey, TValue> EmptyIfNull<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> values) =>
+        private static ImmutableDictionary<TKey, TValue> EmptyIfNull<TKey, TValue>(IReadOnlyDictionary<TKey, TValue>? values) where TKey : notnull =>
             values == null
                 ? ImmutableDictionary<TKey, TValue>.Empty 
                 : values.ToImmutableDictionary();
 
-        private static ImmutableList<T> EmptyIfNull<T>(IEnumerable<T> values) =>
+        private static ImmutableList<T> EmptyIfNull<T>(IEnumerable<T>? values) =>
             values == null
                 ? ImmutableList<T>.Empty
                 : values.ToImmutableList();
@@ -1091,13 +1092,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
             {
                 var parentProjectInfo = _projectInfos[projectInfo.ParentProject];
                 var parentDirectoryName = Path.GetDirectoryName(parentProjectInfo.ProjectFile) ?? "";
-                TaskInfo parentTask = null;
+                TaskInfo? parentTask = null;
 
                 if (projectInfo.ParentTask == -1 || projectInfo.ParentTarget == -1)
                 {
                     var tasks = parentProjectInfo.ExecutedTargets
                         .Where(target => target.TaskInfos != null)
-                        .SelectMany(target => target.TaskInfos.Values).ToArray();
+                        .SelectMany(target => target.TaskInfos!.Values).ToArray();
 
                     if (Path.GetExtension(projectInfo.ProjectFile) == ".tmp_proj" ||
                         Path.GetFileNameWithoutExtension(projectInfo.ProjectFile).EndsWith("_wpftmp"))
@@ -1150,7 +1151,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 
         public Log Finish()
         {
-            Build build = null;
+            Build? build = null;
             var evaluations = ImmutableList<Evaluation>.Empty;
 
             try

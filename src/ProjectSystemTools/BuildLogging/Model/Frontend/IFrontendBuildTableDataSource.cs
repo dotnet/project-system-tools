@@ -35,6 +35,6 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         /// </summary>
         /// <param name="buildId">an Id that refers to a specific build on the logging service</param>
         /// <returns>The filepath to the requested build's log file</returns>
-        Task<string> GetLogForBuildAsync(int buildId);
+        Task<string?> GetLogForBuildAsync(int buildId);
     }
 }

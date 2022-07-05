@@ -10,9 +10,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     internal sealed class TaskViewModel : NodeViewModel
     {
         private readonly Task _task;
-        private string _text;
-        private List<object> _children;
-        private SelectedObjectWrapper _properties;
+        private string? _text;
+        private List<object>? _children;
+        private SelectedObjectWrapper? _properties;
 
         protected override Node Node => _task;
 
@@ -25,8 +25,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 _task.Name,
                 "Task",
                 _task.Messages,
-                new Dictionary<string, IDictionary<string, string>> {
-                    {"Build", new Dictionary<string, string>
+                new Dictionary<string, IDictionary<string, string?>?> {
+                    {"Build", new Dictionary<string, string?>
                         {
                             {"Node", _task.NodeId.ToString() },
                             {"Source File", _task.SourceFilePath },

@@ -31,7 +31,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 _message = message;
             }
 
-            public bool TryGetValue(string keyName, out object content)
+            public bool TryGetValue(string keyName, out object? content)
             {
                 switch (keyName)
                 {
@@ -63,8 +63,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 
         private readonly string _className;
         private readonly string _componentName;
-        private readonly IEnumerable<Message> _messages;
-        private readonly IDictionary<string, IDictionary<string, string>> _dictionaries;
+        private readonly IEnumerable<Message>? _messages;
+        private readonly IDictionary<string, IDictionary<string, string?>?>? _dictionaries;
 
         public string SourceTypeIdentifier => MessageTableDataSourceSourceTypeIdentifier;
 
@@ -72,7 +72,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 
         public string DisplayName => MessageDataSourceDisplayName;
 
-        public SelectedObjectWrapper(string className, string componentName, IEnumerable<Message> messages, IDictionary<string, IDictionary<string, string>> dictionaries)
+        public SelectedObjectWrapper(string className, string componentName, IEnumerable<Message>? messages, IDictionary<string, IDictionary<string, string?>?>? dictionaries)
         {
             _className = className;
             _componentName = componentName;
@@ -88,7 +88,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 
         public override PropertyDescriptorCollection GetProperties() => GetProperties(null);
 
-        public override PropertyDescriptorCollection GetProperties(Attribute[] attributes) =>
+        public override PropertyDescriptorCollection GetProperties(Attribute[]? attributes) =>
             new PropertyDescriptorCollection(
                 (from dictionary in _dictionaries
                  where dictionary.Value != null

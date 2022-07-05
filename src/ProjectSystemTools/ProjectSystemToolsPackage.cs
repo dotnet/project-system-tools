@@ -58,23 +58,23 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
         public const string BinaryLogEditorUIContextGuidString = "6B0A6B53-F2AA-41A6-AE25-7C7E8F2D2CAE";
         public static readonly Guid BinaryLogEditorUIContextGuid = new Guid(BinaryLogEditorUIContextGuidString);
 
-        private BuildLoggingToolWindow _buildLoggingToolWindow;
+        private BuildLoggingToolWindow? _buildLoggingToolWindow;
 
-        public static IServiceProvider ServiceProvider { get; private set; }
+        public static IServiceProvider? ServiceProvider { get; private set; }
 
         public BuildLoggingToolWindow BuildLoggingToolWindow => _buildLoggingToolWindow ??= (BuildLoggingToolWindow)FindToolWindow(typeof(BuildLoggingToolWindow), 0, true);
 
-        public static IVsUIShell VsUIShell { get; private set; }
+        public static IVsUIShell? VsUIShell { get; private set; }
 
-        public static IVsFindManager VsFindManager { get; private set; }
+        public static IVsFindManager? VsFindManager { get; private set; }
 
-        public static ProjectSystemToolsPackage Instance;
+        public static ProjectSystemToolsPackage? Instance;
 
-        internal static ITableManagerProvider TableManagerProvider { get; private set; }
-        public static IWpfTableControlProvider TableControlProvider { get; private set; }
+        internal static ITableManagerProvider? TableManagerProvider { get; private set; }
+        public static IWpfTableControlProvider? TableControlProvider { get; private set; }
 
-        private static JoinableTaskCollection PackageTaskCollection { get; set; }
-        public static JoinableTaskFactory PackageTaskFactory { get; private set; }
+        private static JoinableTaskCollection? PackageTaskCollection { get; set; }
+        public static JoinableTaskFactory? PackageTaskFactory { get; private set; }
 
         public static bool IsDisposed { get; private set; }
 
@@ -150,6 +150,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
+            Assumes.Present(ServiceProvider);
             RoslynLogging.RoslynWorkspaceStructureLogger.ShowSaveDialogAndLog(ServiceProvider);
         }
 
@@ -181,9 +182,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
             return base.GetToolWindowTitle(toolWindowType, id);
         }
 
-        protected override Task<object> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
+        protected override Task<object?> InitializeToolWindowAsync(Type toolWindowType, int id, CancellationToken cancellationToken)
         {
-            return Task.FromResult<object>(null);
+            return Task.FromResult<object?>(null);
         }
     }
 }

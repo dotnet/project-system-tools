@@ -9,16 +9,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel
     {
         public int NodeId { get; }
         public string Name { get; }
-        public string FromAssembly { get; }
-        public string CommandLineArguments { get; }
-        public string SourceFilePath { get; }
+        public string? FromAssembly { get; }
+        public string? CommandLineArguments { get; }
+        public string? SourceFilePath { get; }
         public ImmutableList<Project> ChildProjects { get; }
         public ImmutableList<ItemGroup> ParameterItems { get; }
         public ImmutableDictionary<string, string> ParameterProperties { get; }
         public ImmutableList<ItemGroup> OutputItems { get; }
         public ImmutableDictionary<string, string> OutputProperties { get; }
 
-        public Task(int nodeId, string name, string fromAssembly, string commandLineArguments, string sourceFilePath, ImmutableList<Project> childProjects, ImmutableList<ItemGroup> parameterItems, ImmutableDictionary<string, string> parameterProperties, ImmutableList<ItemGroup> outputItems, ImmutableDictionary<string, string> outputProperties, DateTime startTime, DateTime endTime, ImmutableList<Message> messages, Result result)
+        public Task(int nodeId, string name, string? fromAssembly, string? commandLineArguments, string? sourceFilePath, ImmutableList<Project> childProjects, ImmutableList<ItemGroup> parameterItems, ImmutableDictionary<string, string> parameterProperties, ImmutableList<ItemGroup> outputItems, ImmutableDictionary<string, string> outputProperties, DateTime startTime, DateTime endTime, ImmutableList<Message> messages, Result result)
             : base(messages, startTime, endTime, result)
         {
             NodeId = nodeId;

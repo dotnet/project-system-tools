@@ -9,25 +9,25 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 {
     internal sealed class TargetInfo : BaseInfo
     {
-        private List<ItemActionInfo> _itemActionInfos;
-        private List<PropertySetInfo> _propertySetInfos;
-        private List<TaskInfo> _executedTasks;
-        private Dictionary<int, TaskInfo> _taskInfos;
+        private List<ItemActionInfo>? _itemActionInfos;
+        private List<PropertySetInfo>? _propertySetInfos;
+        private List<TaskInfo>? _executedTasks;
+        private Dictionary<int, TaskInfo>? _taskInfos;
 
         public int Id { get; }
         public int NodeId { get; }
         public string Name { get; }
-        public string SourceFilePath { get; }
-        public string ParentTarget { get; }
+        public string? SourceFilePath { get; }
+        public string? ParentTarget { get; }
         public TargetBuiltReason Reason { get; }
         public DateTime StartTime { get; }
         public DateTime EndTime { get; private set; }
         public Result Result { get; private set; }
-        public ImmutableList<ItemInfo> OutputItems { get; private set; }
+        public ImmutableList<ItemInfo>? OutputItems { get; private set; }
         public bool IsRequestedTarget { get; private set; }
-        public IReadOnlyList<ItemActionInfo> ItemActionInfos => _itemActionInfos;
-        public IReadOnlyList<PropertySetInfo> PropertySetInfos => _propertySetInfos;
-        public IReadOnlyDictionary<int, TaskInfo> TaskInfos => _taskInfos;
+        public IReadOnlyList<ItemActionInfo>? ItemActionInfos => _itemActionInfos;
+        public IReadOnlyList<PropertySetInfo>? PropertySetInfos => _propertySetInfos;
+        public IReadOnlyDictionary<int, TaskInfo>? TaskInfos => _taskInfos;
 
         public TargetInfo(int id, int nodeId, string name, string sourceFilePath, string parentTarget, TargetBuiltReason reason, DateTime startTime)
         {

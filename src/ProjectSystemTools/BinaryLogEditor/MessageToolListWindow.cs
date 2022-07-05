@@ -34,40 +34,40 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
         // Save this as a tuple so that, if accessed from another thread, the tuple gives a consistent snapshot.
         private Tuple<IReadOnlyCollection<ITableEntryHandle>, IReadOnlyCollection<ITableEntryHandle>> _entries = new(new ITableEntryHandle[0], new ITableEntryHandle[0]);
 
-        private IReadOnlyList<ColumnState> _columnStates;
+        private IReadOnlyList<ColumnState>? _columnStates;
 
-        private ITableDataSource _dataSource;
+        private ITableDataSource? _dataSource;
 
         private static readonly IReadOnlyList<string> ErrorStrings = new[] { BinaryLogEditorResources.ErrorsCategory, BinaryLogEditorResources.ErrorActiveCategory, BinaryLogEditorResources.ErrorInactiveCategory };
         private static readonly IReadOnlyList<string> WarningStrings = new[] { BinaryLogEditorResources.WarningsCategory, BinaryLogEditorResources.WarningActiveCategory, BinaryLogEditorResources.WarningInactiveCategory };
         private static readonly IReadOnlyList<string> MessageStrings = new[] { BinaryLogEditorResources.MessagesCategory, BinaryLogEditorResources.MessageActiveCategory, BinaryLogEditorResources.MessageInactiveCategory };
 
-        private readonly IVsMonitorSelection _monitorSelection;
+        private readonly IVsMonitorSelection? _monitorSelection;
         private uint _eventsCookie;
 
         private int _entriesChangedEventCount;
 
-        private string _errorsLabel;
-        private string _warningsLabel;
-        private string _messagesLabel;
+        private string? _errorsLabel;
+        private string? _warningsLabel;
+        private string? _messagesLabel;
 
         private bool AreErrorsShown
         {
-            get => FilterIncludes(TableControl.GetFilter(StandardTableColumnDefinitions.ErrorSeverity), ErrorStrings);
+            get => FilterIncludes(TableControl?.GetFilter(StandardTableColumnDefinitions.ErrorSeverity), ErrorStrings);
 
             set => SetIsShown(ErrorStrings, value);
         }
 
         private bool AreWarningsShown
         {
-            get => FilterIncludes(TableControl.GetFilter(StandardTableColumnDefinitions.ErrorSeverity), WarningStrings);
+            get => FilterIncludes(TableControl?.GetFilter(StandardTableColumnDefinitions.ErrorSeverity), WarningStrings);
 
             set => SetIsShown(WarningStrings, value);
         }
 
         private bool AreMessagesShown
         {
-            get => FilterIncludes(TableControl.GetFilter(StandardTableColumnDefinitions.ErrorSeverity), MessageStrings);
+            get => FilterIncludes(TableControl?.GetFilter(StandardTableColumnDefinitions.ErrorSeverity), MessageStrings);
 
             set => SetIsShown(MessageStrings, value);
         }
@@ -114,6 +114,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
                 StandardTableColumnDefinitions.ProjectName
             };
 
+            Assumes.Present(ProjectSystemToolsPackage.TableManagerProvider);
+            Assumes.Present(ProjectSystemToolsPackage.TableControlProvider);
+
             var tableManager = ProjectSystemToolsPackage.TableManagerProvider.GetTableManager(MessageTable);
             var columnState = TableSettingLoader.LoadSettings(MessageTable, defaultColumns);
             var tableControl = (IWpfTableControl2)ProjectSystemToolsPackage.TableControlProvider.CreateControl(tableManager, true, columnState, columns);
@@ -150,7 +153,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
                 _eventsCookie = VSConstants.VSCOOKIE_NIL;
             }
 
-            TableSettingLoader.SaveSettings(MessageTable, TableControl);
+            if (TableControl is not null)
+                TableSettingLoader.SaveSettings(MessageTable, TableControl);
+
             TableSettingLoader.SaveSwitch(MessageTable, nameof(AreErrorsShown), AreErrorsShown);
             TableSettingLoader.SaveSwitch(MessageTable, nameof(AreWarningsShown), AreWarningsShown);
             TableSettingLoader.SaveSwitch(MessageTable, nameof(AreMessagesShown), AreMessagesShown);
@@ -165,7 +170,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             _monitorSelection?.AdviseSelectionEvents(this, out _eventsCookie);
         }
 
-        protected override void SetTableControl(IWpfTableControl2 control)
+        protected override void SetTableControl(IWpfTableControl2? control)
         {
             if (TableControl != null)
             {
@@ -178,18 +183,20 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
             if (control != null)
             {
-                TableControl.PreEntriesChanged += OnPreEntriesChanged;
-                TableControl.EntriesChanged += OnEntriesChanged;
-                TableControl.SortFunction = Compare;
-                TableControl.Manager?.AddSource(_dataSource);
+                control.PreEntriesChanged += OnPreEntriesChanged;
+                control.EntriesChanged += OnEntriesChanged;
+                control.SortFunction = Compare;
+                control.Manager?.AddSource(_dataSource);
             }
         }
 
-        private static bool FilterIncludes(IEntryFilter entryFilter, IReadOnlyList<string> labels) =>
+        private static bool FilterIncludes(IEntryFilter? entryFilter, IReadOnlyList<string> labels) =>
             !(entryFilter is ColumnHashSetFilter filter) || labels.All(label => !filter.ExcludedContains(label));
 
         private void SetIsShown(IReadOnlyList<string> labels, bool value)
         {
+            Assumes.NotNull(TableControl);
+
             var filter = TableControl.GetFilter(StandardTableColumnDefinitions.ErrorSeverity) as ColumnHashSetFilter;
 
             var newFilter = value ? CloneAndRemove(filter, labels) : CloneAndAdd(filter, labels);
@@ -197,8 +204,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             TableControl.SetFilter(StandardTableColumnDefinitions.ErrorSeverity, newFilter);
         }
 
-        private ColumnHashSetFilter CloneAndAdd(ColumnHashSetFilter source, IReadOnlyList<string> labels)
+        private ColumnHashSetFilter CloneAndAdd(ColumnHashSetFilter? source, IReadOnlyList<string> labels)
         {
+            Assumes.NotNull(TableControl);
+
             source = source == null
                 ? new ColumnHashSetFilter(TableControl.ColumnDefinitionManager.GetColumnDefinition(StandardTableColumnDefinitions.ErrorSeverity),
                     labels)
@@ -207,7 +216,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             return source;
         }
 
-        private static ColumnHashSetFilter CloneAndRemove(ColumnHashSetFilter source, IReadOnlyList<string> labels)
+        private static ColumnHashSetFilter? CloneAndRemove(ColumnHashSetFilter? source, IReadOnlyList<string> labels)
         {
             for (var i = 0; i < labels.Count && source != null; ++i)
             {
@@ -273,6 +282,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
                 pinnedSnapshots.Add(snapshot, entry);
             }
 
+            Assumes.Present(ProjectSystemToolsPackage.PackageTaskFactory);
+
             ProjectSystemToolsPackage.PackageTaskFactory.RunAsync(async delegate
             {
                 await UpdateErrorCountAsync(currentEntriesChangedEventCount, pinnedSnapshots, e);
@@ -281,6 +292,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             _entries = Tuple.Create(e.AllEntries, e.FilteredAndSortedEntries);
 
             RestorePreviousSelection(e);
+
+            Assumes.NotNull(TableControl);
 
             var newColumnStates = TableControl.ColumnStates;
             if (_columnStates != null && !ColumnStatesAreDifferent(_columnStates, newColumnStates))
@@ -372,6 +385,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
             if (currentEntriesChangedEventCount == _entriesChangedEventCount)
             {
+                Assumes.Present(ProjectSystemToolsPackage.PackageTaskFactory);
+
                 await ProjectSystemToolsPackage.PackageTaskFactory.SwitchToMainThreadAsync();
 
                 if (currentEntriesChangedEventCount == _entriesChangedEventCount)
@@ -418,7 +433,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             // No item was selected. Try and select the item at the previous selected index (or the item at the end of the list if
             // the list has shrunk to the point that the item no longer exists).
             var index = 0;
-            ITableEntryHandle lastHandle = null;
+            ITableEntryHandle? lastHandle = null;
             foreach (var entryHandle in e.FilteredAndSortedEntries)
             {
                 lastHandle = entryHandle;
@@ -484,16 +499,24 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             return leftInt - rightInt;
         }
 
-        private bool AreActionableFiltersPresent() =>
-            (from filter in TableControl.GetAllFilters()
-             let definition = ProjectSystemToolsPackage.TableControlProvider.GetFilterDefinition(filter.Item1)
-             where definition != null
-             where !definition.HasAttribute(EntryFilterDefinition.NonActionable) &&
-                   filter.Item1 != SearchFilterKey
-             select filter).Any();
+        private bool AreActionableFiltersPresent()
+        {
+            Assumes.NotNull(TableControl);
+            Assumes.Present(ProjectSystemToolsPackage.TableControlProvider);
+
+            return (from filter in TableControl.GetAllFilters()
+                    let definition = ProjectSystemToolsPackage.TableControlProvider.GetFilterDefinition(filter.Item1)
+                    where definition != null
+                    where !definition.HasAttribute(EntryFilterDefinition.NonActionable) &&
+                          filter.Item1 != SearchFilterKey
+                    select filter).Any();
+        }
 
         private void ClearAllActionableFilters()
         {
+            Assumes.NotNull(TableControl);
+            Assumes.Present(ProjectSystemToolsPackage.TableControlProvider);
+
             foreach (var filter in TableControl.GetAllFilters())
             {
                 var definition = ProjectSystemToolsPackage.TableControlProvider.GetFilterDefinition(filter.Item1);

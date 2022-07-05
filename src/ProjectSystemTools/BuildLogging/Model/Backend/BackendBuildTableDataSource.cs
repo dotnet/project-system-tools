@@ -23,7 +23,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public bool SupportsRoslynLogging => _roslynLogger.Supported;
 
-        private Action NotifyUI { get; set; }
+        private Action? NotifyUI { get; set; }
 
         public BackEndBuildTableDataSource()
         {
@@ -60,15 +60,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public ILogger CreateLogger(bool isDesignTime) => new ProjectLogger(this, isDesignTime);
 
-        /// <summary>
-        /// return log path on server for a given build
-        /// </summary>
-        /// <param name="buildId">ID to return build for</param>
-        /// <returns> returns filepath to log path (on server)
-        /// returns null if no match is found.</returns>
-        public string GetLogForBuild(int buildId)
+        public string? GetLogForBuild(int buildId)
         {
-            return _entries.Find(x => x.BuildId == buildId).LogPath;
+            return _entries.Find(x => x.BuildId == buildId)?.LogPath;
         }
 
         ImmutableList<BuildSummary> ILoggingDataSource.GetAllBuilds()

@@ -53,6 +53,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 
         private void OnDocumentDataLoaded(object sender, EventArgs args)
         {
+            Assumes.NotNull(_documentData.Log);
+
             if (_documentData.Log.Exceptions.Any())
             {
                 _buildTreeViewItems.Add(new ListViewModel<Exception>("Exceptions", _documentData.Log.Exceptions, ex => new ExceptionViewModel(ex)));
@@ -70,27 +72,27 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
                 _buildTreeViewItems.Add(new BuildViewModel(_documentData.Log.Build));
 
                 var allTargets = CollectTargets(_documentData.Log.Build.Project);
-                var groupedTargets = allTargets.GroupBy(target => Tuple.Create(target.Name, target.SourceFilePath));
+                var groupedTargets = allTargets.GroupBy(target => (target.Name, target.SourceFilePath));
                 var totalTime = _documentData.Log.Build.EndTime - _documentData.Log.Build.StartTime;
                 foreach (var groupedTarget in groupedTargets)
                 {
                     var time = groupedTarget.Aggregate(TimeSpan.Zero, (current, target) => current + (target.EndTime - target.StartTime));
-                    _targetListViewItems.Add(new TargetListViewModel(groupedTarget.Key.Item1, groupedTarget.Key.Item2, groupedTarget.Count(), time, time.Ticks / (double)totalTime.Ticks));
+                    _targetListViewItems.Add(new TargetListViewModel(groupedTarget.Key.Name, groupedTarget.Key.SourceFilePath, groupedTarget.Count(), time, time.Ticks / (double)totalTime.Ticks));
                 }
 
                 var allTasks = CollectTasks(_documentData.Log.Build.Project);
-                var groupedTasks = allTasks.GroupBy(task => Tuple.Create(task.Name, task.SourceFilePath));
+                var groupedTasks = allTasks.GroupBy(task => (task.Name, task.SourceFilePath));
                 foreach (var groupedTask in groupedTasks)
                 {
                     var time = groupedTask.Aggregate(TimeSpan.Zero, (current, task) => current + (task.EndTime - task.StartTime));
-                    _taskListViewItems.Add(new TaskListViewModel(groupedTask.Key.Item1, groupedTask.Key.Item2, groupedTask.Count(), time, time.Ticks / (double)totalTime.Ticks));
+                    _taskListViewItems.Add(new TaskListViewModel(groupedTask.Key.Name, groupedTask.Key.SourceFilePath, groupedTask.Count(), time, time.Ticks / (double)totalTime.Ticks));
                 }
 
                 var allEvaluations = CollectEvaluations(_documentData.Log.Evaluations
                     .SelectMany(e => e.EvaluatedProjects)
                     .Select(p => p.EvaluationProfile)
                     .Where(p => p != null)
-                    .SelectMany(p => p.Passes)
+                    .SelectMany(p => p!.Passes)
                     .SelectMany(p => p.Locations)).ToList();
                 var totalEvaluationTime = allEvaluations.Aggregate(TimeSpan.Zero, (current, e) => current + e.Time.ExclusiveTime);
                 var groupedEvaluations =

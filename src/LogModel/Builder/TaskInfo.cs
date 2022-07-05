@@ -9,26 +9,26 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
 {
     internal sealed class TaskInfo : BaseInfo
     {
-        private List<ItemGroupInfo> _parameterItems;
-        private Dictionary<string, string> _parameterProperties;
-        private List<ItemGroupInfo> _outputItems;
-        private Dictionary<string, string> _outputProperties;
-        private List<ProjectInfo> _childProjectInfos;
+        private List<ItemGroupInfo>? _parameterItems;
+        private Dictionary<string, string>? _parameterProperties;
+        private List<ItemGroupInfo>? _outputItems;
+        private Dictionary<string, string>? _outputProperties;
+        private List<ProjectInfo>? _childProjectInfos;
 
         public int Id { get; }
         public int NodeId { get; }
         public string Name { get; }
         public DateTime StartTime { get; }
         public DateTime EndTime { get; private set; }
-        public string FromAssembly { get; }
-        public string SourceFilePath { get; }
+        public string? FromAssembly { get; }
+        public string? SourceFilePath { get; }
         public Result Result { get; private set; }
-        public string CommandLineArguments { get; private set; }
-        public IReadOnlyList<ProjectInfo> ChildProjectInfos => _childProjectInfos;
-        public IReadOnlyList<ItemGroupInfo> ParameterItems => _parameterItems;
-        public IReadOnlyDictionary<string, string> ParameterProperties => _parameterProperties;
-        public IReadOnlyList<ItemGroupInfo> OutputItems => _outputItems;
-        public IReadOnlyDictionary<string, string> OutputProperties => _outputProperties;
+        public string? CommandLineArguments { get; private set; }
+        public IReadOnlyList<ProjectInfo>? ChildProjectInfos => _childProjectInfos;
+        public IReadOnlyList<ItemGroupInfo>? ParameterItems => _parameterItems;
+        public IReadOnlyDictionary<string, string>? ParameterProperties => _parameterProperties;
+        public IReadOnlyList<ItemGroupInfo>? OutputItems => _outputItems;
+        public IReadOnlyDictionary<string, string>? OutputProperties => _outputProperties;
 
         public TaskInfo(int id, int nodeId, string name, DateTime startTime, string fromAssembly, string sourceFilePath)
         {
@@ -110,7 +110,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
             if (values == null)
             {
                 var value = ParameterProperties?.SingleOrDefault(property => property.Key == name);
-                if (string.IsNullOrEmpty(value?.Key))
+                if (Strings.IsNullOrEmpty(value?.Key))
                 {
                     return Enumerable.Empty<string>();
                 }

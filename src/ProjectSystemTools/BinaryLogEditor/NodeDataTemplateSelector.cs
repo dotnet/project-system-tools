@@ -9,7 +9,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
 {
     public sealed class NodeDataTemplateSelector : DataTemplateSelector
     {
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
             if (container is FrameworkElement frameworkElement)
             {

@@ -11,9 +11,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     internal sealed class EvaluatedLocationViewModel : BaseViewModel
     {
         private readonly EvaluatedLocation _evaluatedLocation;
-        private string _text;
-        private List<object> _children;
-        private SelectedObjectWrapper _properties;
+        private string? _text;
+        private List<object>? _children;
+        private SelectedObjectWrapper? _properties;
 
         public override string Text => _text ?? (_text = GetTextOfLocation());
 
@@ -24,8 +24,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 _evaluatedLocation.ElementName ?? string.Empty,
                 _evaluatedLocation.Kind.ToString(),
                 null,
-                new Dictionary<string, IDictionary<string, string>> {
-                    {"General", new Dictionary<string, string>
+                new Dictionary<string, IDictionary<string, string?>?> {
+                    {"General", new Dictionary<string, string?>
                         {
                             {"Description", _evaluatedLocation.ElementDescription},
                             {"File", _evaluatedLocation.File }
@@ -40,7 +40,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 
         private string GetTextOfLocation()
         {
-            string description = null;
+            string? description = null;
 
             switch (_evaluatedLocation.Kind)
             {

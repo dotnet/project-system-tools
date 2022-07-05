@@ -20,7 +20,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
         private readonly ContentWrapper _contentWrapper;
         protected bool IsDisposed;
 
-        protected IWpfTableControl2 TableControl { get; private set; }
+        protected IWpfTableControl2? TableControl { get; private set; }
 
         public override bool SearchEnabled => true;
 
@@ -57,7 +57,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
             ProjectSystemToolsPackage.UpdateQueryStatus();
         }
 
-        protected virtual void SetTableControl(IWpfTableControl2 tableControl)
+        protected virtual void SetTableControl(IWpfTableControl2? tableControl)
         {
             if (TableControl != null)
             {
@@ -71,9 +71,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
             if (tableControl != null)
             {
-                _contentWrapper.Child = TableControl.Control;
-                TableControl.FiltersChanged += OnFiltersChanged;
-                TableControl.GroupingsChanged += OnGroupingsChanged;
+                _contentWrapper.Child = tableControl.Control;
+                tableControl.FiltersChanged += OnFiltersChanged;
+                tableControl.GroupingsChanged += OnGroupingsChanged;
             }
         }
 
@@ -135,6 +135,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
                 return result;
             }
 
+            if (TableControl is null)
+            {
+                return VSConstants.E_FAIL;
+            }
+
             return ((IOleCommandTarget)TableControl).QueryStatus(ref commandGroupGuid, commandCount, commands, commandText);
         }
 
@@ -156,6 +161,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
                     _contentWrapper.OpenContextMenu();
                     return VSConstants.S_OK;
                 }
+            }
+
+            if (TableControl is null)
+            {
+                return VSConstants.E_FAIL;
             }
 
             return ((IOleCommandTarget)TableControl).Exec(ref commandGroupGuid, commandId, commandExecOption, pvaIn, pvaOut);

@@ -13,7 +13,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.LogModel.Builder
         public ImmutableArray<EvaluatedLocationInfo> Locations { get; }
         public TimeInfo Time { get; }
 
-        public EvaluatedPassInfo(EvaluationPass pass, string description, IEnumerable<EvaluatedLocationInfo> locations, TimeInfo time)
+        public EvaluatedPassInfo(EvaluationPass pass, string description, IEnumerable<EvaluatedLocationInfo>? locations, TimeInfo time)
         {
             Pass = pass;
             Description = description;

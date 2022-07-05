@@ -22,7 +22,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         public override TextWrapping TextWrapping => TextWrapping.NoWrap;
 
-        public override bool TryCreateStringContent(ITableEntryHandle entry, bool truncatedText, bool singleColumnView, out string content)
+        public override bool TryCreateStringContent(ITableEntryHandle entry, bool truncatedText, bool singleColumnView, out string? content)
         {
             if (entry.TryGetValue(TableKeyNames.Time, out var value) && value is DateTime time)
             {

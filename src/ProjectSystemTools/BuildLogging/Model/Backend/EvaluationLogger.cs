@@ -12,29 +12,36 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
     {
         private sealed class Evaluation
         {
-            public EventWrapper Wrapper { get; set; }
-            public Build Build { get; set; }
-            public string LogPath { get; set; }
+            public EventWrapper Wrapper { get; }
+            public Build Build { get; }
+            public string LogPath { get; }
+
+            public Evaluation(EventWrapper wrapper, Build build, string logPath)
+            {
+                Wrapper = wrapper;
+                Build = build;
+                LogPath = logPath;
+            }
         }
 
         private sealed class EventWrapper : IEventSource
         {
             public BinaryLogger BinaryLogger { get; }
 
-            public event BuildMessageEventHandler MessageRaised { add { } remove { } }
-            public event BuildErrorEventHandler ErrorRaised { add { } remove { } }
-            public event BuildWarningEventHandler WarningRaised { add { } remove { } }
-            public event BuildStartedEventHandler BuildStarted { add { } remove { } }
-            public event BuildFinishedEventHandler BuildFinished { add { } remove { } }
-            public event ProjectStartedEventHandler ProjectStarted { add { } remove { } }
-            public event ProjectFinishedEventHandler ProjectFinished { add { } remove { } }
-            public event TargetStartedEventHandler TargetStarted { add { } remove { } }
-            public event TargetFinishedEventHandler TargetFinished { add { } remove { } }
-            public event TaskStartedEventHandler TaskStarted { add { } remove { } }
-            public event TaskFinishedEventHandler TaskFinished { add { } remove { } }
-            public event CustomBuildEventHandler CustomEventRaised { add { } remove { } }
-            public event BuildStatusEventHandler StatusEventRaised { add { } remove { } }
-            public event AnyEventHandler AnyEventRaised;
+            public event BuildMessageEventHandler? MessageRaised { add { } remove { } }
+            public event BuildErrorEventHandler? ErrorRaised { add { } remove { } }
+            public event BuildWarningEventHandler? WarningRaised { add { } remove { } }
+            public event BuildStartedEventHandler? BuildStarted { add { } remove { } }
+            public event BuildFinishedEventHandler? BuildFinished { add { } remove { } }
+            public event ProjectStartedEventHandler? ProjectStarted { add { } remove { } }
+            public event ProjectFinishedEventHandler? ProjectFinished { add { } remove { } }
+            public event TargetStartedEventHandler? TargetStarted { add { } remove { } }
+            public event TargetFinishedEventHandler? TargetFinished { add { } remove { } }
+            public event TaskStartedEventHandler? TaskStarted { add { } remove { } }
+            public event TaskFinishedEventHandler? TaskFinished { add { } remove { } }
+            public event CustomBuildEventHandler? CustomEventRaised { add { } remove { } }
+            public event BuildStatusEventHandler? StatusEventRaised { add { } remove { } }
+            public event AnyEventHandler? AnyEventRaised;
 
             public EventWrapper(BinaryLogger binaryLogger)
             {
@@ -83,16 +90,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
                     var wrapper = new EventWrapper(binaryLogger);
                     var build = new Build(evaluationStarted.ProjectFile, Array.Empty<string>(), Array.Empty<string>(),
                         BuildType.Evaluation, args.Timestamp);
-                    _evaluations[evaluationStarted.BuildEventContext.EvaluationId] = new Evaluation
-                    {
-                        Wrapper = wrapper,
-                        Build = build,
-                        LogPath = logPath
-                    };
+                    _evaluations[evaluationStarted.BuildEventContext.EvaluationId] = new Evaluation(wrapper, build, logPath);
                     wrapper.RaiseEvent(sender, args);
                     DataSource.AddEntry(build);
+                    break;
                 }
-                break;
 
                 case ProjectEvaluationFinishedEventArgs _:
                 {
@@ -102,11 +104,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
                         evaluation.Wrapper.RaiseEvent(sender, args);
                         evaluation.Wrapper.BinaryLogger.Shutdown();
                         evaluation.Build.SetLogPath(GetLogPath(evaluation.Build));
+                        Assumes.NotNull(evaluation.Build.LogPath);
                         Copy(evaluation.LogPath, evaluation.Build.LogPath);
                         DataSource.NotifyChange();
                     }
+                    break;
                 }
-                break;
 
                 default:
                 {
@@ -114,8 +117,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
                     {
                         evaluation.Wrapper.RaiseEvent(sender, args);
                     }
+                    break;
                 }
-                break;
             }
         }
     }

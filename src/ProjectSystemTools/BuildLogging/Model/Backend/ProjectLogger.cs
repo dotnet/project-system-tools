@@ -14,10 +14,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         private static readonly string[] Dimensions = { "Configuration", "Platform", "TargetFramework" };
 
         private readonly bool _isDesignTime;
-        private int _projectInstanceId;
         private readonly string _logPath;
         private readonly BinaryLogger _binaryLogger;
-        private Build _build;
+
+        private int _projectInstanceId;
+        private Build? _build;
 
         public ProjectLogger(BackEndBuildTableDataSource dataSource, bool isDesignTime) :
             base(dataSource)
@@ -45,6 +46,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             if (_build != null)
             {
                 _build.SetLogPath(GetLogPath(_build));
+                Assumes.NotNull(_build.LogPath);
                 Copy(_logPath, _build.LogPath);
                 DataSource.NotifyChange();
             }
@@ -62,6 +64,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
                 return;
             }
 
+            Assumes.NotNull(_build);
             _build.Finish(e.Succeeded, e.Timestamp);
         }
 
