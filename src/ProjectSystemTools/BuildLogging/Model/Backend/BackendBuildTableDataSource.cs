@@ -49,7 +49,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             NotifyUI = null;
 
             IsLogging = false;
+
             ProjectCollection.GlobalProjectCollection.UnregisterAllLoggers();
+
             _roslynLogger.Stop();
         }
 
@@ -72,7 +74,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         ImmutableArray<BuildSummary> ILoggingDataSource.GetAllBuilds()
         {
-            var entries = _entries; // snapshot value to prevent exceptions
+            // Snapshot value to prevent exceptions
+            var entries = _entries;
+
+            // Copy summaries to new immutable array efficiently
             var builder = ImmutableArray.CreateBuilder<BuildSummary>(initialCapacity: entries.Count);
             
             foreach (Build entry in entries)
