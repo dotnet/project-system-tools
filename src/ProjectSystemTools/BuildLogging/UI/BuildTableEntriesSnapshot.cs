@@ -13,7 +13,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
         public override int VersionNumber { get; }
 
-        public override int Count => _builds.Count;
+        public override int Count => _builds.Length;
 
         public BuildTableEntriesSnapshot(ImmutableArray<UIBuildSummary> builds, int versionNumber)
         {
