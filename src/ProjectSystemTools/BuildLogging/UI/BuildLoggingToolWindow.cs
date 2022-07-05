@@ -20,7 +20,7 @@ using Microsoft.VisualStudio.Shell.TableManager;
 using Constants = Microsoft.VisualStudio.OLE.Interop.Constants;
 using DialogResult = System.Windows.Forms.DialogResult;
 
-namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging
+namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 {
     [Guid(BuildLoggingToolWindowGuidString)]
     internal sealed class BuildLoggingToolWindow : TableToolWindow

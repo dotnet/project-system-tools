@@ -11,6 +11,7 @@ using Microsoft.Internal.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging;
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
 using Microsoft.VisualStudio.Threading;
