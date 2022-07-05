@@ -44,7 +44,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContr
         /// </summary>
         /// <param name="buildID">an ID used to retrieve a unique log for a build</param>
         /// <returns>The log tied to the requested BuildHandle</returns>
-        Task<string?> GetLogForBuildAsync(int buildID);
+        string? GetLogForBuild(int buildID);
 
         /// <summary>
         /// Gives the user a requested build

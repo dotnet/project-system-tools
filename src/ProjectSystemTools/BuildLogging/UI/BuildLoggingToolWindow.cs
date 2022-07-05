@@ -208,48 +208,45 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            Assumes.NotNull(TableControl);
+
+            foreach (var entry in TableControl.SelectedEntries)
             {
-                Assumes.NotNull(TableControl);
-
-                foreach (var entry in TableControl.SelectedEntries)
+                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
                 {
-                    if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
-                    {
-                        continue;
-                    }
-
-                    string? logPath = await _dataSource.GetLogForBuildAsync(buildID);
-
-                    if (logPath == null)
-                    {
-                        continue;
-                    }
-
-                    var filename = Path.GetFileName(logPath);
-
-                    if (filename == null)
-                    {
-                        continue;
-                    }
-
-                    if (entry.TryGetValue(TableKeyNames.Status, out string status))
-                    {
-                        // Status is defined by enum BuildStatus with members: Running, Finished or Failed
-                        filename = $"{filename}_{CapitalizeFailed(status)}";
-                    }
-
-                    try
-                    {
-                        File.Copy(logPath, Path.Combine(folderBrowser.SelectedPath, filename));
-                    }
-                    catch (Exception e)
-                    {
-                        var title = $"Error saving {filename}";
-                        ShowExceptionMessageDialog(e, title);
-                    }
+                    continue;
                 }
-            });
+
+                string? logPath = _dataSource.GetLogForBuild(buildID);
+
+                if (logPath == null)
+                {
+                    continue;
+                }
+
+                var filename = Path.GetFileName(logPath);
+
+                if (filename == null)
+                {
+                    continue;
+                }
+
+                if (entry.TryGetValue(TableKeyNames.Status, out string status))
+                {
+                    // Status is defined by enum BuildStatus with members: Running, Finished or Failed
+                    filename = $"{filename}_{CapitalizeFailed(status)}";
+                }
+
+                try
+                {
+                    File.Copy(logPath, Path.Combine(folderBrowser.SelectedPath, filename));
+                }
+                catch (Exception e)
+                {
+                    var title = $"Error saving {filename}";
+                    ShowExceptionMessageDialog(e, title);
+                }
+            }
 
             return;
 
@@ -285,52 +282,45 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
                 return;
             }
 
-            var guid = VSConstants.LOGVIEWID_Primary;
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-                string? logPath = await _dataSource.GetLogForBuildAsync(buildID);
+            string? logPath = _dataSource.GetLogForBuild(buildID);
                 
-                if (logPath is not null)
-                {
-                    _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
-                    frame?.Show();
-                }
-            });
+            if (logPath is not null)
+            {
+                var guid = VSConstants.LOGVIEWID_Primary;
+                _openDocument.OpenDocumentViaProject(logPath, ref guid, out _, out _, out _, out var frame);
+                frame?.Show();
+            }
         }
 
         private void OpenLogsExternal()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.ThrowIfNotOnUIThread();
+            Assumes.NotNull(TableControl);
+
+            foreach (var entry in TableControl.SelectedEntries)
             {
-                Assumes.NotNull(TableControl);
-
-                foreach (var entry in TableControl.SelectedEntries)
+                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
                 {
-                    if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
-                    {
-                        continue;
-                    }
-
-                    string? logPath = await _dataSource.GetLogForBuildAsync(buildID);
-
-                    if (logPath is null)
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        Process.Start(logPath);
-                    }
-                    catch (Exception e)
-                    {
-                        var title = $"Error opening {Path.GetFileName(logPath)}";
-                        ShowExceptionMessageDialog(e, title);
-                    }
+                    continue;
                 }
-            });
+
+                string? logPath = _dataSource.GetLogForBuild(buildID);
+
+                if (logPath is null)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    Process.Start(logPath);
+                }
+                catch (Exception e)
+                {
+                    var title = $"Error opening {Path.GetFileName(logPath)}";
+                    ShowExceptionMessageDialog(e, title);
+                }
+            }
         }
 
         private static void ShowExceptionMessageDialog(Exception e, string title)

@@ -136,11 +136,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return null;
         }
 
-        public async Task<string?> GetLogForBuildAsync(int buildID)
+        public string? GetLogForBuild(int buildID)
         {
             Assumes.NotNull(_loggerService);
 
-            return await _loggerService.GetLogForBuildAsync(buildID);
+            return _loggerService.GetLogForBuild(buildID);
         }
 
         private void UpdateEntries()
