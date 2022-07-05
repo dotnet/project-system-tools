@@ -4,7 +4,8 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
+
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
 using Microsoft.VisualStudio.Shell.TableManager;
 
@@ -23,7 +24,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         private BuildTableEntriesSnapshot? _lastSnapshot;
         private ImmutableArray<UIBuildSummary> _entries = ImmutableArray<UIBuildSummary>.Empty;
 
-        private readonly IBuildLoggerService _loggerService;
+        private readonly ILoggingDataSource _loggerService;
+        private readonly ILoggingController _loggingController;
 
         public string SourceTypeIdentifier => BuildTableDataSourceSourceTypeIdentifier;
 
@@ -34,15 +36,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         public int CurrentVersionNumber { get; private set; }
 
         [ImportingConstructor]
-        public FrontEndBuildTableDataSource(IBuildLoggerService loggerService)
+        public FrontEndBuildTableDataSource(ILoggingDataSource loggerService, ILoggingController loggingController)
         {
             _loggerService = loggerService;
-            
+            _loggingController = loggingController;
+
             // cache this value to avoid redundant work
             SupportRoslynLogging = loggerService.SupportsRoslynLogging;
         }
 
-        public bool IsLogging => _loggerService.IsLogging;
+        public bool IsLogging => _loggingController.IsLogging;
 
         public bool SupportRoslynLogging { get; private set; }
 
