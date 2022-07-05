@@ -38,7 +38,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             NotifyUI = notifyCallback;
 
             IsLogging = true;
+
+            // CPS projects are not present in the global project collection.
+            // Legacy CSPROJ projects are present.
             ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
+
             _roslynLogger.Start();
         }
 
