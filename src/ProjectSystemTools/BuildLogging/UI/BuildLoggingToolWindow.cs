@@ -212,12 +212,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
             foreach (var entry in TableControl.SelectedEntries)
             {
-                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
+                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildId))
                 {
                     continue;
                 }
 
-                string? logPath = _dataSource.GetLogForBuild(buildID);
+                string? logPath = _dataSource.GetLogForBuild(buildId);
 
                 if (logPath == null)
                 {
@@ -277,12 +277,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (!tableEntry.TryGetValue(TableKeyNames.BuildID, out int buildID))
+            if (!tableEntry.TryGetValue(TableKeyNames.BuildID, out int buildId))
             {
                 return;
             }
 
-            string? logPath = _dataSource.GetLogForBuild(buildID);
+            string? logPath = _dataSource.GetLogForBuild(buildId);
                 
             if (logPath is not null)
             {
@@ -299,12 +299,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
             foreach (var entry in TableControl.SelectedEntries)
             {
-                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildID))
+                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildId))
                 {
                     continue;
                 }
 
-                string? logPath = _dataSource.GetLogForBuild(buildID);
+                string? logPath = _dataSource.GetLogForBuild(buildId);
 
                 if (logPath is null)
                 {

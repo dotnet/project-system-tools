@@ -136,11 +136,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return null;
         }
 
-        public string? GetLogForBuild(int buildID)
+        public string? GetLogForBuild(int buildId)
         {
             Assumes.NotNull(_loggerService);
 
-            return _loggerService.GetLogForBuild(buildID);
+            return _loggerService.GetLogForBuild(buildId);
         }
 
         private void UpdateEntries()
