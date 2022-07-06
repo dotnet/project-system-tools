@@ -13,7 +13,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
         private readonly Evaluation? _evaluation;
         private readonly EvaluatedProject _evaluatedProject;
         private string? _text;
-        private List<object>? _children;
+        private IEnumerable<object>? _children;
         private SelectedObjectWrapper? _properties;
 
         public override string Text => _text ??= Path.GetFileName(_evaluatedProject.Name);
@@ -52,16 +52,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
             _evaluation = evaluation;
         }
 
-        private List<object> GetChildren()
+        private IEnumerable<object> GetChildren()
         {
-            var list = new List<object>();
-
-            if (_evaluatedProject.EvaluationProfile != null)
-            {
-                list.AddRange(_evaluatedProject.EvaluationProfile.Passes.Select(pass => new EvaluatedPassViewModel(pass)));
-            }
-
-            return list;
+            return _evaluatedProject.EvaluationProfile is null
+                ? Enumerable.Empty<object>()
+                : _evaluatedProject
+                    .EvaluationProfile
+                    .Passes
+                    .Select(pass => new EvaluatedPassViewModel(pass))
+                    .ToList();
         }
     }
 }
