@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 		LICENSE.md = LICENSE.md
 		NuGet.config = NuGet.config
+		eng\official.yml = eng\official.yml
 		README.md = README.md
 		SECURITY.md = SECURITY.md
 		test.cmd = test.cmd
