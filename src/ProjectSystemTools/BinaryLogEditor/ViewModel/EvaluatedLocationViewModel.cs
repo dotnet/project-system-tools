@@ -64,7 +64,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                     break;
             }
 
-            description ??= $"{_evaluatedLocation.File}";
+            description ??= _evaluatedLocation.File;
 
             return $"{description} {(_evaluatedLocation.Line == null ? string.Empty : $" Line {_evaluatedLocation.Line}")} [{FormatTime(_evaluatedLocation.Time)}]";
         }
