@@ -127,7 +127,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
             }
         }
 
-        [return: NotNullIfNotNull(parameterName: nameof(text))]
+        [return: NotNullIfNotNull(parameterName: "text")]
         private string? Intern(string? text)
         {
             if (text == null)
