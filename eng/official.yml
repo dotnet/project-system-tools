@@ -6,7 +6,7 @@ resources:
     type: git
     ref: main
 pool:
-  name: VSEngSS-MicroBuild2019-1ES
+  name: VSEngSS-MicroBuild2022-1ES
   demands: Cmd
   timeoutInMinutes: 90
 
