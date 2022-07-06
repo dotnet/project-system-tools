@@ -273,7 +273,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             // Pinning snapshots on the UI thread is cheaper because they are already created and all we need to do is to increase the ref count.
             foreach (var entry in e.AllEntries)
             {
-                if (!entry.TryGetSnapshot(out var snapshot, out var _) ||
+                if (!entry.TryGetSnapshot(out var snapshot, out _) ||
                     pinnedSnapshots.ContainsKey(snapshot))
                 {
                     continue;
