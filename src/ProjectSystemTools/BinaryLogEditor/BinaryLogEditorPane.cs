@@ -115,7 +115,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (!(GetService(typeof(STrackSelection)) is ITrackSelection track))
+            if (GetService(typeof(STrackSelection)) is not ITrackSelection track)
             {
                 return;
             }
@@ -148,7 +148,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             
-            if (!(GetService(typeof(STrackSelection)) is ITrackSelection track))
+            if (GetService(typeof(STrackSelection)) is not ITrackSelection track)
             {
                 return;
             }

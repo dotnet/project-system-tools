@@ -191,7 +191,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
         }
 
         private static bool FilterIncludes(IEntryFilter? entryFilter, IReadOnlyList<string> labels) =>
-            !(entryFilter is ColumnHashSetFilter filter) || labels.All(label => !filter.ExcludedContains(label));
+            entryFilter is not ColumnHashSetFilter filter || labels.All(label => !filter.ExcludedContains(label));
 
         private void SetIsShown(IReadOnlyList<string> labels, bool value)
         {
@@ -652,7 +652,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             var objects = new object[1];
 
             if (newSelectionContainer.GetObjects(SelectionContainer.SELECTED, 1, objects) != VSConstants.S_OK ||
-                !(objects[0] is SelectedObjectWrapper selectedObjectWrapper))
+                objects[0] is not SelectedObjectWrapper selectedObjectWrapper)
             {
                 return VSConstants.S_OK;
             }
