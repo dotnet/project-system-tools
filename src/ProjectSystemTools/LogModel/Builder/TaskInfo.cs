@@ -55,20 +55,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         public void AddParameterItems(ItemGroupInfo parameterItems)
         {
-            if (_parameterItems == null)
-            {
-                _parameterItems = new List<ItemGroupInfo>();
-            }
+            _parameterItems ??= new List<ItemGroupInfo>();
 
             _parameterItems.Add(parameterItems);
         }
 
         public void AddParameterProperty(string name, string value)
         {
-            if (_parameterProperties == null)
-            {
-                _parameterProperties = new Dictionary<string, string>();
-            }
+            _parameterProperties ??= new Dictionary<string, string>();
 
             if (_parameterProperties.ContainsKey(name))
             {
@@ -80,20 +74,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         public void AddOutputItems(ItemGroupInfo outputItems)
         {
-            if (_outputItems == null)
-            {
-                _outputItems = new List<ItemGroupInfo>();
-            }
+            _outputItems ??= new List<ItemGroupInfo>();
 
             _outputItems.Add(outputItems);
         }
 
         public void AddOutputProperty(string name, string value)
         {
-            if (_outputProperties == null)
-            {
-                _outputProperties = new Dictionary<string, string>();
-            }
+            _outputProperties ??= new Dictionary<string, string>();
 
             if (_outputProperties.ContainsKey(name))
             {
@@ -123,10 +111,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         public void AddChildProject(ProjectInfo childProject)
         {
-            if (_childProjectInfos == null)
-            {
-                _childProjectInfos = new List<ProjectInfo>();
-            }
+            _childProjectInfos ??= new List<ProjectInfo>();
 
             _childProjectInfos.Add(childProject);
         }

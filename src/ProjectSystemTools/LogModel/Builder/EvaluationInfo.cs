@@ -19,10 +19,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         public void StartEvaluatingProject(EvaluatedProjectInfo evaluatedProject)
         {
-            if (_evaluatingProjects == null)
-            {
-                _evaluatingProjects = new List<EvaluatedProjectInfo>();
-            }
+            _evaluatingProjects ??= new List<EvaluatedProjectInfo>();
 
             _evaluatingProjects.Add(evaluatedProject);
         }
@@ -37,10 +34,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
                 throw new LoggerException(Resources.CannotFindEvaluatedProject);
             }
 
-            if (_evaluatedProjects == null)
-            {
-                _evaluatedProjects = new List<EvaluatedProjectInfo>();
-            }
+            _evaluatedProjects ??= new List<EvaluatedProjectInfo>();
 
             _evaluatedProjects.Add(evaluatedProject);
             _evaluatingProjects.Remove(evaluatedProject);

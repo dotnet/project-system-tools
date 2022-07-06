@@ -16,13 +16,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
         private List<object>? _children;
         private SelectedObjectWrapper? _properties;
 
-        public override string Text => _text ?? (_text = Path.GetFileName(_evaluatedProject.Name));
+        public override string Text => _text ??= Path.GetFileName(_evaluatedProject.Name);
 
         protected override Node Node => _evaluatedProject;
 
-        public override IEnumerable<object> Children => _children ?? (_children = GetChildren());
+        public override IEnumerable<object> Children => _children ??= GetChildren();
 
-        public override SelectedObjectWrapper Properties => _properties ?? (_properties =
+        public override SelectedObjectWrapper Properties => _properties ??=
             new SelectedObjectWrapper(
                 _evaluatedProject.Name,
                 "Evaluated Project",
@@ -39,7 +39,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                             {"Finished", _evaluatedProject.EndTime.ToString(CultureInfo.InvariantCulture)}
                         }
                      }
-                }));
+                });
 
         public EvaluatedProjectViewModel(EvaluatedProject evaluatedProject)
         {

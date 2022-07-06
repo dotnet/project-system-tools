@@ -15,11 +15,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
         private List<object>? _children;
         private SelectedObjectWrapper? _properties;
 
-        public override string Text => _text ?? (_text = GetTextOfLocation());
+        public override string Text => _text ??= GetTextOfLocation();
 
-        public override IEnumerable<object> Children => _children ?? (_children = GetChildren());
+        public override IEnumerable<object> Children => _children ??= GetChildren();
 
-        public override SelectedObjectWrapper Properties => _properties ?? (_properties =
+        public override SelectedObjectWrapper Properties => _properties ??=
             new SelectedObjectWrapper(
                 _evaluatedLocation.ElementName ?? string.Empty,
                 _evaluatedLocation.Kind.ToString(),
@@ -31,7 +31,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                             {"File", _evaluatedLocation.File }
                         }
                      }
-                }));
+                });
 
         public EvaluatedLocationViewModel(EvaluatedLocation evaluatedLocation)
         {
@@ -64,10 +64,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                     break;
             }
 
-            if (description == null)
-            {
-                description = $"{_evaluatedLocation.File}";
-            }
+            description ??= $"{_evaluatedLocation.File}";
 
             return $"{description} {(_evaluatedLocation.Line == null ? string.Empty : $" Line {_evaluatedLocation.Line}")} [{FormatTime(_evaluatedLocation.Time)}]";
         }

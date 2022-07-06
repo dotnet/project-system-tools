@@ -70,25 +70,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         public void AddItemAction(ItemActionInfo itemActionInfo)
         {
-            if (_itemActionInfos == null)
-            {
-                _itemActionInfos = new List<ItemActionInfo>();
-            }
+            _itemActionInfos ??= new List<ItemActionInfo>();
 
             _itemActionInfos.Add(itemActionInfo);
         }
 
         public void AddTask(int id, TaskInfo taskInfo)
         {
-            if (_taskInfos == null)
-            {
-                _taskInfos = new Dictionary<int, TaskInfo>();
-            }
+            _taskInfos ??= new Dictionary<int, TaskInfo>();
 
-            if (_executedTasks == null)
-            {
-                _executedTasks = new List<TaskInfo>();
-            }
+            _executedTasks ??= new List<TaskInfo>();
 
             if (_taskInfos.ContainsKey(id))
             {
@@ -101,20 +92,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         public void AddExecutedTask(TaskInfo taskInfo)
         {
-            if (_executedTasks == null)
-            {
-                _executedTasks = new List<TaskInfo>();
-            }
+            _executedTasks ??= new List<TaskInfo>();
 
             _executedTasks.Add(taskInfo);
         }
 
         public void AddPropertySet(PropertySetInfo propertySetInfo)
         {
-            if (_propertySetInfos == null)
-            {
-                _propertySetInfos = new List<PropertySetInfo>();
-            }
+            _propertySetInfos ??= new List<PropertySetInfo>();
 
             _propertySetInfos.Add(propertySetInfo);
         }

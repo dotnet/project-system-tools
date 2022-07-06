@@ -13,10 +13,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         public void AddMessage(MessageInfo message)
         {
-            if (_messages == null)
-            {
-                _messages = new List<MessageInfo>();
-            }
+            _messages ??= new List<MessageInfo>();
 
             _messages.Add(message);
         }

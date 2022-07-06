@@ -192,10 +192,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
             evaluationInfo = new EvaluationInfo();
 
-            if (_evaluationInfos == null)
-            {
-                _evaluationInfos = new Dictionary<int, EvaluationInfo>();
-            }
+            _evaluationInfos ??= new Dictionary<int, EvaluationInfo>();
 
             if (_evaluationInfos.ContainsKey(args.BuildEventContext.EvaluationId))
             {

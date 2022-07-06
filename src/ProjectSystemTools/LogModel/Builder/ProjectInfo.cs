@@ -59,10 +59,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         public void AddTarget(int id, TargetInfo targetInfo)
         {
-            if (_targetInfos == null)
-            {
-                _targetInfos = new Dictionary<int, TargetInfo>();
-            }
+            _targetInfos ??= new Dictionary<int, TargetInfo>();
 
             if (_targetInfos.ContainsKey(id))
             {
@@ -74,10 +71,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         public void AddExecutedTarget(string name, TargetInfo targetInfo)
         {
-            if (_executedTargets == null)
-            {
-                _executedTargets = new List<TargetInfo>();
-            }
+            _executedTargets ??= new List<TargetInfo>();
 
             _executedTargets.Add(targetInfo);
         }
