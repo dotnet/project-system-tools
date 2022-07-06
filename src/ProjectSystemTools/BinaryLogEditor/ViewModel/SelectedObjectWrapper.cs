@@ -15,9 +15,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     {
         private class DummyDisposable : IDisposable
         {
-            public void Dispose()
-            {
-            }
+            public static IDisposable Instance { get; } = new DummyDisposable();
+
+            private DummyDisposable() { }
+
+            public void Dispose() { }
         }
 
         private class MessageWrapper : ITableEntry
@@ -103,7 +105,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 sink.AddEntries(_messages.Select(m => new MessageWrapper(m)).ToList(), true);
             }
             // Don't care when they don't need updates any more.
-            return new DummyDisposable();
+            return DummyDisposable.Instance;
         }
     }
 }
