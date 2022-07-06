@@ -32,7 +32,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
         // _entries.Item1 == all entries from the last entries changed event;
         // _entries.Item2 == the filtered entries from the same event.
         // Save this as a tuple so that, if accessed from another thread, the tuple gives a consistent snapshot.
-        private Tuple<IReadOnlyCollection<ITableEntryHandle>, IReadOnlyCollection<ITableEntryHandle>> _entries = new(new ITableEntryHandle[0], new ITableEntryHandle[0]);
+        private Tuple<IReadOnlyCollection<ITableEntryHandle>, IReadOnlyCollection<ITableEntryHandle>> _entries = new(Array.Empty<ITableEntryHandle>(), Array.Empty<ITableEntryHandle>());
 
         private IReadOnlyList<ColumnState>? _columnStates;
 
