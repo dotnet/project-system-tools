@@ -27,6 +27,7 @@
     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost" Version="$(MicrosoftVisualStudioComponentModelHostVersion)" />
     <PackageReference Include="Microsoft.VisualStudio.Editor" Version="$(MicrosoftVisualStudioEditorVersion)" />
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="$(MicrosoftVisualStudioLanguageServicesVersion)" />
+    <PackageReference Include="Microsoft.VisualStudio.ProjectSystem" Version="$(MicrosoftVisualStudioProjectSystemSDKVersion)" />
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.SDK.Tools" Version="$(MicrosoftVisualStudioProjectSystemSDKVersion)" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="$(MicrosoftVisualStudioShell150Version)" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.Framework" Version="$(MicrosoftVisualStudioShellFrameworkVersion)" />
@@ -54,6 +55,10 @@
     <EmbeddedResource Include="BuildLogging\BuildLoggingResources.resx" GenerateSource="true">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="LogModel\Resources.resx">
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Include="RoslynLogging\RoslynLoggingResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>RoslynLoggingResources.Designer.cs</LastGenOutput>
@@ -65,16 +70,6 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LogModel\LogModel.csproj">
-      <Name>LogModel</Name>
-      <Private>true</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\LogProviders\LogProviders.csproj">
-      <Name>LogProviders</Name>
-      <Private>true</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="ProjectSystemToolsPackage.vsct">
@@ -116,6 +111,11 @@
     </Compile>
     <Compile Update="BinaryLogEditor\LogViewControl.xaml.cs">
       <DependentUpon>LogViewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="LogModel\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Update="RoslynLogging\RoslynLoggingResources.Designer.cs">
       <DesignTime>True</DesignTime>

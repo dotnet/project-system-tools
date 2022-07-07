@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.ProjectSystem.LogModel;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 {
@@ -12,9 +12,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
         private string? _text;
         private List<object>? _children;
 
-        public override string Text => _text ?? (_text = $"{_evaluatedPass.Description} [{FormatTime(_evaluatedPass.Time)}]");
+        public override string Text => _text ??= $"{_evaluatedPass.Description} [{FormatTime(_evaluatedPass.Time)}]";
 
-        public override IEnumerable<object> Children => _children ?? (_children = GetChildren());
+        public override IEnumerable<object> Children => _children ??= GetChildren();
 
         public EvaluatedPassViewModel(EvaluatedPass evaluatedPass)
         {

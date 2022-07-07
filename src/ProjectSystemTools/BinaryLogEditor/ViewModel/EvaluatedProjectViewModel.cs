@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.ProjectSystem.LogModel;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 {
@@ -13,16 +13,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
         private readonly Evaluation? _evaluation;
         private readonly EvaluatedProject _evaluatedProject;
         private string? _text;
-        private List<object>? _children;
+        private IEnumerable<object>? _children;
         private SelectedObjectWrapper? _properties;
 
-        public override string Text => _text ?? (_text = Path.GetFileName(_evaluatedProject.Name));
+        public override string Text => _text ??= Path.GetFileName(_evaluatedProject.Name);
 
         protected override Node Node => _evaluatedProject;
 
-        public override IEnumerable<object> Children => _children ?? (_children = GetChildren());
+        public override IEnumerable<object> Children => _children ??= GetChildren();
 
-        public override SelectedObjectWrapper Properties => _properties ?? (_properties =
+        public override SelectedObjectWrapper Properties => _properties ??=
             new SelectedObjectWrapper(
                 _evaluatedProject.Name,
                 "Evaluated Project",
@@ -39,7 +39,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                             {"Finished", _evaluatedProject.EndTime.ToString(CultureInfo.InvariantCulture)}
                         }
                      }
-                }));
+                });
 
         public EvaluatedProjectViewModel(EvaluatedProject evaluatedProject)
         {
@@ -52,16 +52,15 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
             _evaluation = evaluation;
         }
 
-        private List<object> GetChildren()
+        private IEnumerable<object> GetChildren()
         {
-            var list = new List<object>();
-
-            if (_evaluatedProject.EvaluationProfile != null)
-            {
-                list.AddRange(_evaluatedProject.EvaluationProfile.Passes.Select(pass => new EvaluatedPassViewModel(pass)));
-            }
-
-            return list;
+            return _evaluatedProject.EvaluationProfile is null
+                ? Enumerable.Empty<object>()
+                : _evaluatedProject
+                    .EvaluationProfile
+                    .Passes
+                    .Select(pass => new EvaluatedPassViewModel(pass))
+                    .ToList();
         }
     }
 }

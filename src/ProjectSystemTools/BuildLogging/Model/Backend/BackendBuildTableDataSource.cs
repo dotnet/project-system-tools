@@ -3,10 +3,10 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
-using System.Linq;
+using System.Threading;
+
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
-using Microsoft.VisualStudio.ProjectSystem.Tools.Providers;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 {
@@ -36,7 +36,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             NotifyUI = notifyCallback;
 
             IsLogging = true;
+
+            // CPS projects are not present in the global project collection.
+            // Legacy CSPROJ projects are present.
             ProjectCollection.GlobalProjectCollection.RegisterLogger(_evaluationLogger);
+
             _roslynLogger.Start();
         }
 
@@ -45,17 +49,20 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             NotifyUI = null;
 
             IsLogging = false;
+
             ProjectCollection.GlobalProjectCollection.UnregisterAllLoggers();
+
             _roslynLogger.Stop();
         }
 
         public void Clear()
         {
-            foreach (var build in _entries)
+            var entries = Interlocked.Exchange(ref _entries, ImmutableList<Build>.Empty);
+
+            foreach (var build in entries)
             {
                 build.Dispose();
             }
-            _entries = ImmutableList<Build>.Empty;
         }
 
         public ILogger CreateLogger(bool isDesignTime) => new ProjectLogger(this, isDesignTime);
@@ -65,9 +72,20 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             return _entries.Find(x => x.BuildId == buildId)?.LogPath;
         }
 
-        ImmutableList<BuildSummary> ILoggingDataSource.GetAllBuilds()
+        ImmutableArray<BuildSummary> ILoggingDataSource.GetAllBuilds()
         {
-            return _entries.Select(build => build.BuildSummary).ToImmutableList();
+            // Snapshot value to prevent exceptions
+            var entries = _entries;
+
+            // Copy summaries to new immutable array efficiently
+            var builder = ImmutableArray.CreateBuilder<BuildSummary>(initialCapacity: entries.Count);
+            
+            foreach (Build entry in entries)
+            {
+                builder.Add(entry.BuildSummary);
+            }
+
+            return builder.MoveToImmutable();
         }
 
         public void NotifyChange()
@@ -77,7 +95,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         public void AddEntry(Build build)
         {
-            _entries = _entries.Add(build);
+            ImmutableInterlocked.Update(
+                ref _entries,
+                static (entries, build) => entries.Add(build),
+                build);
+
             NotifyChange();
         }
     }

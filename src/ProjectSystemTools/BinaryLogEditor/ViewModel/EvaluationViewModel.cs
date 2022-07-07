@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.ProjectSystem.LogModel;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 {
@@ -14,11 +14,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
         private SelectedObjectWrapper? _properties;
         private IEnumerable<object>? _children;
 
-        public override IEnumerable<object> Children => _children ?? (_children = GetChildren());
+        public override IEnumerable<object> Children => _children ??= GetChildren();
 
-        public override string Text => _text ?? (_text = $"Evaluation {_evaluation.EvaluatedProjects.Aggregate(TimeSpan.Zero, (t, p) => t + (p.EndTime - p.StartTime)):mm':'ss'.'ffff}");
+        public override string Text => _text ??= $"Evaluation {_evaluation.EvaluatedProjects.Aggregate(TimeSpan.Zero, (t, p) => t + (p.EndTime - p.StartTime)):mm':'ss'.'ffff}";
 
-        public override SelectedObjectWrapper Properties => _properties ?? (_properties = new SelectedObjectWrapper("Evaluation", "Evaluation", _evaluation.Messages, null));
+        public override SelectedObjectWrapper Properties => _properties ??= new SelectedObjectWrapper("Evaluation", "Evaluation", _evaluation.Messages, null);
 
         public EvaluationViewModel(Evaluation evaluation)
         {

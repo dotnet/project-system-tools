@@ -2,7 +2,9 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.VisualStudio.ProjectSystem.LogModel;
+using System.Linq;
+
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 {
@@ -13,13 +15,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
         private SelectedObjectWrapper? _properties;
         private IEnumerable<object>? _children;
 
-        public override IEnumerable<object> Children => _children ?? (_children = GetChildren());
+        public override IEnumerable<object> Children => _children ??= GetChildren();
 
         protected override Node Node => _build;
 
-        public override string Text => _text ?? (_text = "Build");
+        public override string Text => _text ??= "Build";
 
-        public override SelectedObjectWrapper Properties => _properties ?? (_properties =
+        public override SelectedObjectWrapper Properties => _properties ??=
             new SelectedObjectWrapper(
                 "Build",
                 "Build",
@@ -31,7 +33,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                             {"Finished", _build.EndTime.ToString(CultureInfo.InvariantCulture)}
                         }
                     },
-                    {"Environment", _build.Environment!}}));
+                    {"Environment", _build.Environment!}});
 
         public BuildViewModel(LogModel.Build build)
         {
@@ -40,14 +42,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
 
         private IEnumerable<object> GetChildren()
         {
-            var list = new List<object>();
-
-            if (_build.Project != null)
-            {
-                list.Add(new ProjectViewModel(_build.Project));
-            }
-
-            return list;
+            return _build.Project is null
+                ? Enumerable.Empty<object>()
+                : new[] { new ProjectViewModel(_build.Project) };
         }
     }
 }

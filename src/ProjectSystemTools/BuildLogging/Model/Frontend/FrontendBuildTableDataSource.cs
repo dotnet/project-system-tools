@@ -4,10 +4,9 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.RpcContracts;
+
+using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableManager;
 
 namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
@@ -23,9 +22,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         private ITableDataSink? _tableDataSink;
         private BuildTableEntriesSnapshot? _lastSnapshot;
-        private ImmutableList<UIBuildSummary> _entries = ImmutableList<UIBuildSummary>.Empty;
+        private ImmutableArray<UIBuildSummary> _entries = ImmutableArray<UIBuildSummary>.Empty;
 
-        private readonly IBuildLoggerService _loggerService;
+        private readonly ILoggingDataSource _loggerService;
+        private readonly ILoggingController _loggingController;
 
         public string SourceTypeIdentifier => BuildTableDataSourceSourceTypeIdentifier;
 
@@ -33,50 +33,37 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public string DisplayName => BuildDataSourceDisplayName;
 
-        public bool SupportRoslynLogging { get; private set; }
-
         public int CurrentVersionNumber { get; private set; }
 
         [ImportingConstructor]
-        public FrontEndBuildTableDataSource(IBuildLoggerService loggerService)
+        public FrontEndBuildTableDataSource(ILoggingDataSource loggerService, ILoggingController loggingController)
         {
             _loggerService = loggerService;
-            
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                SupportRoslynLogging = await _loggerService.SupportsRoslynLoggingAsync();
-            });
+            _loggingController = loggingController;
+
+            // cache this value to avoid redundant work
+            SupportRoslynLogging = loggerService.SupportsRoslynLogging;
         }
 
-        public async Task<bool> IsLoggingAsync()
-        {
-            return await _loggerService.IsLoggingAsync();
-        }
+        public bool IsLogging => _loggingController.IsLogging;
+
+        public bool SupportRoslynLogging { get; private set; }
 
         public void Start()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await _loggerService.StartAsync(UpdateEntries);
-            });
+            _loggerService.Start(UpdateEntries);
         }
 
         public void Stop()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await _loggerService.StopAsync();
-            });
+            _loggerService.Stop();
         }
 
         public void Clear()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await _loggerService.ClearAsync();
-                _entries = ImmutableList<UIBuildSummary>.Empty;
-                NotifyChange();
-            });
+            _loggerService.Clear();
+            _entries = ImmutableArray<UIBuildSummary>.Empty;
+            NotifyChange();
         }
 
         public IDisposable Subscribe(ITableDataSink sink)
@@ -91,7 +78,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public void Dispose()
         {
-            _entries = ImmutableList<UIBuildSummary>.Empty;
+            _entries = ImmutableArray<UIBuildSummary>.Empty;
         }
 
         public void NotifyChange()
@@ -136,23 +123,20 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
             return null;
         }
 
-        public async Task<string?> GetLogForBuildAsync(int buildID)
+        public string? GetLogForBuild(int buildId)
         {
             Assumes.NotNull(_loggerService);
 
-            return await _loggerService.GetLogForBuildAsync(buildID);
+            return _loggerService.GetLogForBuild(buildId);
         }
 
         private void UpdateEntries()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                _entries = (await _loggerService.GetAllBuildsAsync())
+            _entries = _loggerService.GetAllBuilds()
                 .Select(summary => new UIBuildSummary(summary))
-                .ToImmutableList();
+                .ToImmutableArray();
 
-                NotifyChange();
-            });
+            NotifyChange();
         }
     }
 }

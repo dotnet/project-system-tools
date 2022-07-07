@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Microsoft.VisualStudio.ProjectSystem.LogModel;
+using Microsoft.VisualStudio.ProjectSystem.Tools.LogModel;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -15,9 +15,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
     {
         private class DummyDisposable : IDisposable
         {
-            public void Dispose()
-            {
-            }
+            public static IDisposable Instance { get; } = new DummyDisposable();
+
+            private DummyDisposable() { }
+
+            public void Dispose() { }
         }
 
         private class MessageWrapper : ITableEntry
@@ -103,7 +105,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
                 sink.AddEntries(_messages.Select(m => new MessageWrapper(m)).ToList(), true);
             }
             // Don't care when they don't need updates any more.
-            return new DummyDisposable();
+            return DummyDisposable.Instance;
         }
     }
 }

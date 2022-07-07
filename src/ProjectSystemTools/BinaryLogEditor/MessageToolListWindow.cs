@@ -32,7 +32,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
         // _entries.Item1 == all entries from the last entries changed event;
         // _entries.Item2 == the filtered entries from the same event.
         // Save this as a tuple so that, if accessed from another thread, the tuple gives a consistent snapshot.
-        private Tuple<IReadOnlyCollection<ITableEntryHandle>, IReadOnlyCollection<ITableEntryHandle>> _entries = new(new ITableEntryHandle[0], new ITableEntryHandle[0]);
+        private Tuple<IReadOnlyCollection<ITableEntryHandle>, IReadOnlyCollection<ITableEntryHandle>> _entries = new(Array.Empty<ITableEntryHandle>(), Array.Empty<ITableEntryHandle>());
 
         private IReadOnlyList<ColumnState>? _columnStates;
 
@@ -191,7 +191,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
         }
 
         private static bool FilterIncludes(IEntryFilter? entryFilter, IReadOnlyList<string> labels) =>
-            !(entryFilter is ColumnHashSetFilter filter) || labels.All(label => !filter.ExcludedContains(label));
+            entryFilter is not ColumnHashSetFilter filter || labels.All(label => !filter.ExcludedContains(label));
 
         private void SetIsShown(IReadOnlyList<string> labels, bool value)
         {
@@ -273,7 +273,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             // Pinning snapshots on the UI thread is cheaper because they are already created and all we need to do is to increase the ref count.
             foreach (var entry in e.AllEntries)
             {
-                if (!entry.TryGetSnapshot(out var snapshot, out var _) ||
+                if (!entry.TryGetSnapshot(out var snapshot, out _) ||
                     pinnedSnapshots.ContainsKey(snapshot))
                 {
                     continue;
@@ -652,7 +652,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             var objects = new object[1];
 
             if (newSelectionContainer.GetObjects(SelectionContainer.SELECTED, 1, objects) != VSConstants.S_OK ||
-                !(objects[0] is SelectedObjectWrapper selectedObjectWrapper))
+                objects[0] is not SelectedObjectWrapper selectedObjectWrapper)
             {
                 return VSConstants.S_OK;
             }
