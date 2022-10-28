@@ -9,6 +9,10 @@ pool:
   name: VSEngSS-MicroBuild2022-1ES
   demands: Cmd
   timeoutInMinutes: 90
+variables:
+  # Allows CodeQL to run on our Build job.
+  # https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/codeql/configuring-codeql3000-ado-pipelines
+  Codeql.Enabled: true
 
 steps:
 - checkout: self
