@@ -100,7 +100,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
                 {
                     if (_evaluations.TryGetValue(args.BuildEventContext.EvaluationId, out var evaluation))
                     {
-                        evaluation.Build.Finish(true, args.Timestamp);
+                        evaluation.Build.Finish(succeeded: true, args.Timestamp);
                         evaluation.Wrapper.RaiseEvent(sender, args);
                         evaluation.Wrapper.BinaryLogger.Shutdown();
                         evaluation.Build.SetLogPath(GetLogPath(evaluation.Build));
