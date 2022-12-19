@@ -2,6 +2,7 @@
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <Extern href="stdidcmd.h"/>
   <Extern href="vsshlids.h"/>
+  <Include href="KnownImageIds.vsct"/>
   <Commands package="PackageGuid">
     <Menus>
       <Menu guid="UIGuid" id="BuildLoggingToolbarMenuId" priority="0x0000" type="ToolWindowToolbar">
@@ -37,6 +38,8 @@
     </Groups>
     <Buttons>
       <Button guid="CommandSetGuid" id="BuildLoggingCommandId" type="Button">
+        <Icon guid="ImageCatalogGuid" id="Log"/>
+        <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>Build Logging</ButtonText>
         </Strings>
@@ -81,6 +84,8 @@
         </Strings>
       </Button>
       <Button guid="CommandSetGuid" id="MessageListCommandId" type="Button">
+        <Icon guid="ImageCatalogGuid" id="BuildErrorList" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>Build Log Message List</ButtonText>
         </Strings>
