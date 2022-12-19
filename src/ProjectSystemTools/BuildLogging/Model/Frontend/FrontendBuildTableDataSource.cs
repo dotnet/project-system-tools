@@ -47,7 +47,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
 
         public bool IsLogging => _loggingController.IsLogging;
 
-        public bool SupportRoslynLogging { get; private set; }
+        public bool SupportRoslynLogging { get; }
 
         public void Start()
         {
