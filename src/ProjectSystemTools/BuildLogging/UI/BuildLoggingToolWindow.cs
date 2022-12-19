@@ -198,6 +198,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
         private void SaveLogs()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             using var folderBrowser = new FolderBrowserDialog()
             {
                 Description = BuildLoggingResources.LogFolderDescription
@@ -265,6 +267,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
         public void OpenLog(ITableEntryHandle tableEntry)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             string? logPath = GetLogPath(tableEntry);
 
             if (logPath is not null)
@@ -326,6 +330,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
         protected override int InnerQueryStatus(ref Guid commandGroupGuid, uint commandCount, OLECMD[] commands, IntPtr commandText)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (commandCount != 1 || commandGroupGuid != ProjectSystemToolsPackage.CommandSetGuid)
             {
                 return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
