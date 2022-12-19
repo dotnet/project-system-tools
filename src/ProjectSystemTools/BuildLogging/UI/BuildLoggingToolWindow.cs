@@ -198,6 +198,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
         private void SaveLogs()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             using var folderBrowser = new FolderBrowserDialog()
             {
                 Description = BuildLoggingResources.LogFolderDescription
@@ -210,19 +212,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
             Assumes.NotNull(TableControl);
 
-            foreach (var entry in TableControl.SelectedEntries)
+            foreach (var tableEntry in TableControl.SelectedEntries)
             {
-                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildId))
-                {
-                    continue;
-                }
-
-                string? logPath = _dataSource.GetLogForBuild(buildId);
-
-                if (logPath == null)
-                {
-                    continue;
-                }
+                string? logPath = GetLogPath(tableEntry);
 
                 var filename = Path.GetFileName(logPath);
 
@@ -231,7 +223,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
                     continue;
                 }
 
-                if (entry.TryGetValue(TableKeyNames.Status, out string status))
+                if (tableEntry.TryGetValue(TableKeyNames.Status, out string status))
                 {
                     // Status is defined by enum BuildStatus with members: Running, Finished or Failed
                     filename = $"{filename}_{CapitalizeFailed(status)}";
@@ -277,13 +269,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (!tableEntry.TryGetValue(TableKeyNames.BuildID, out int buildId))
-            {
-                return;
-            }
+            string? logPath = GetLogPath(tableEntry);
 
-            string? logPath = _dataSource.GetLogForBuild(buildId);
-                
             if (logPath is not null)
             {
                 var guid = VSConstants.LOGVIEWID_Primary;
@@ -297,14 +284,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
             ThreadHelper.ThrowIfNotOnUIThread();
             Assumes.NotNull(TableControl);
 
-            foreach (var entry in TableControl.SelectedEntries)
+            foreach (var tableEntry in TableControl.SelectedEntries)
             {
-                if (!entry.TryGetValue(TableKeyNames.BuildID, out int buildId))
-                {
-                    continue;
-                }
-
-                string? logPath = _dataSource.GetLogForBuild(buildId);
+                string? logPath = GetLogPath(tableEntry);
 
                 if (logPath is null)
                 {
@@ -323,6 +305,18 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
             }
         }
 
+        private string? GetLogPath(ITableEntryHandle tableEntry)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            if (tableEntry.TryGetValue(TableKeyNames.BuildID, out int buildId))
+            {
+                return _dataSource.GetLogForBuild(buildId);
+            }
+
+            return null;
+        }
+
         private static void ShowExceptionMessageDialog(Exception e, string title)
         {
             var message = $@"{e.GetType().FullName}
@@ -336,6 +330,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
 
         protected override int InnerQueryStatus(ref Guid commandGroupGuid, uint commandCount, OLECMD[] commands, IntPtr commandText)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (commandCount != 1 || commandGroupGuid != ProjectSystemToolsPackage.CommandSetGuid)
             {
                 return (int)Constants.OLECMDERR_E_NOTSUPPORTED;
@@ -360,10 +356,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.UI
                     break;
 
                 case ProjectSystemToolsPackage.ClearCommandId:
-                case ProjectSystemToolsPackage.SaveLogsCommandId:
-                case ProjectSystemToolsPackage.OpenLogsCommandId:
                     visible = true;
                     enabled = true;
+                    break;
+
+                case ProjectSystemToolsPackage.SaveLogsCommandId:
+                case ProjectSystemToolsPackage.OpenLogsCommandId:
+                case ProjectSystemToolsPackage.OpenLogsExternalCommandId:
+                    visible = true;
+                    // Only enabled if we have at least one selected entry that maps to a log file
+                    enabled = TableControl?.SelectedEntries.Any(tableEntry => GetLogPath(tableEntry) is not null) == true;
                     break;
 
                 default:
