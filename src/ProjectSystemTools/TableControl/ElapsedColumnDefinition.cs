@@ -22,7 +22,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
         public override double MinWidth => 60.0;
 
-        public override GridLength ColumnDefinition => new GridLength(60);
+        public override GridLength ColumnDefinition => new(60);
 
         public override TextWrapping TextWrapping => TextWrapping.NoWrap;
 

@@ -21,7 +21,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
     internal static class RoslynWorkspaceStructureLogger
     {
         private static int s_NextCompilationId;
-        private static readonly ConditionalWeakTable<Compilation, StrongBox<int>> s_CompilationIds = new ConditionalWeakTable<Compilation, StrongBox<int>>();
+        private static readonly ConditionalWeakTable<Compilation, StrongBox<int>> s_CompilationIds = new();
 
         public static void ShowSaveDialogAndLog(IServiceProvider serviceProvider)
         {
@@ -442,7 +442,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
 
         private sealed class ThreadedWaitCallback : IVsThreadedWaitDialogCallback
         {
-            private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+            private readonly CancellationTokenSource _cancellationTokenSource = new();
 
             public CancellationToken CancellationToken
             {
