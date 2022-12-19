@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -45,7 +46,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         {
             if (Status != BuildStatus.Running)
             {
-                throw new InvalidOperationException();
+                // Just log the error. If we throw here, we may cause the build to fail.
+                // https://github.com/dotnet/project-system-tools/issues/467
+                Trace.WriteLine($"Build already finished with status {Status}.");
+                return;
             }
 
             BuildStatus newStatus = succeeded ? BuildStatus.Finished : BuildStatus.Failed;
