@@ -52,7 +52,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             public void RaiseEvent(object sender, BuildEventArgs args) => AnyEventRaised?.Invoke(sender, args);
         }
 
-        private readonly Dictionary<int, Evaluation> _evaluations = new Dictionary<int, Evaluation>();
+        private readonly Dictionary<int, Evaluation> _evaluations = new();
 
         public EvaluationLogger(BackEndBuildTableDataSource dataSource) :
             base(dataSource)

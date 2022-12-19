@@ -18,7 +18,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.FrontEnd
         private const string BuildTableDataSourceIdentifier = nameof(BuildTableDataSourceIdentifier);
         private const string BuildTableDataSourceSourceTypeIdentifier = nameof(BuildTableDataSourceSourceTypeIdentifier);
 
-        private readonly object _gate = new object();
+        private readonly object _gate = new();
 
         private ITableDataSink? _tableDataSink;
         private BuildTableEntriesSnapshot? _lastSnapshot;

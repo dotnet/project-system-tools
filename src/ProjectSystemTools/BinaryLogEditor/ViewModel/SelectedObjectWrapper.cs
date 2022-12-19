@@ -91,7 +91,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel
         public override PropertyDescriptorCollection GetProperties() => GetProperties(null);
 
         public override PropertyDescriptorCollection GetProperties(Attribute[]? attributes) =>
-            new PropertyDescriptorCollection(
+            new(
                 (from dictionary in _dictionaries
                  where dictionary.Value != null
                  from kvp in dictionary.Value

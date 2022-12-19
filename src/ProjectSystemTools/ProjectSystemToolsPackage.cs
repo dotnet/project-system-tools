@@ -32,7 +32,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
     {
         public const string PackageGuidString = "e3bfb509-b8fd-4692-b4c4-4b2f6ed62bc7";
 
-        public static readonly Guid CommandSetGuid = new Guid("cf0c6f43-4716-4419-93d0-2c246c8eb5ee");
+        public static readonly Guid CommandSetGuid = new("cf0c6f43-4716-4419-93d0-2c246c8eb5ee");
 
         public const int BuildLoggingCommandId = 0x0100;
         public const int StartLoggingCommandId = 0x0101;
@@ -47,17 +47,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
         public const int LogRoslynWorkspaceStructureCommandId = 0x0200;
 
-        public static readonly Guid UIGuid = new Guid("629080DF-2A44-40E5-9AF4-371D4B727D16");
+        public static readonly Guid UIGuid = new("629080DF-2A44-40E5-9AF4-371D4B727D16");
 
         public const int BuildLoggingToolbarMenuId = 0x0100;
         public const int BuildLoggingContextMenuId = 0x0102;
         public const int MessageListToolbarMenuId = 0x0106;
 
         public const string BinaryLogEditorFactoryGuidString = "C5A2E7ED-F7E7-4199-BD68-17668AA2F2D4";
-        public static readonly Guid BinaryLogEditorFactoryGuid = new Guid(BinaryLogEditorFactoryGuidString);
+        public static readonly Guid BinaryLogEditorFactoryGuid = new(BinaryLogEditorFactoryGuidString);
 
         public const string BinaryLogEditorUIContextGuidString = "6B0A6B53-F2AA-41A6-AE25-7C7E8F2D2CAE";
-        public static readonly Guid BinaryLogEditorUIContextGuid = new Guid(BinaryLogEditorUIContextGuidString);
+        public static readonly Guid BinaryLogEditorUIContextGuid = new(BinaryLogEditorUIContextGuidString);
 
         private BuildLoggingToolWindow? _buildLoggingToolWindow;
 
