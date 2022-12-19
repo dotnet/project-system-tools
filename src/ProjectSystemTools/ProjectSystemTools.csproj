@@ -103,15 +103,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>BinaryLogEditorResources.resx</DependentUpon>
     </Compile>
-    <Compile Update="BinaryLogEditor\BuildTreeViewControl.xaml.cs">
-      <DependentUpon>BuildTreeViewControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="BinaryLogEditor\EvaluationTreeViewControl.xaml.cs">
-      <DependentUpon>EvaluationTreeViewControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="BinaryLogEditor\LogViewControl.xaml.cs">
-      <DependentUpon>LogViewControl.xaml</DependentUpon>
-    </Compile>
     <Compile Update="LogModel\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
