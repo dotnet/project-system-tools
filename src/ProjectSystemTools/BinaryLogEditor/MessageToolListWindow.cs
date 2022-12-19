@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Internal.VisualStudio.Shell.TableControl;
+using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor.ViewModel;
 using Microsoft.VisualStudio.ProjectSystem.Tools.TableControl;
@@ -136,6 +137,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BinaryLogEditor
             AreMessagesShown = areMessagesShown;
 
             _monitorSelection = GetService(typeof(SVsShellMonitorSelection)) as IVsMonitorSelection;
+
+            BitmapImageMoniker = KnownMonikers.BuildErrorList;
         }
 
         protected override void Dispose(bool disposing)

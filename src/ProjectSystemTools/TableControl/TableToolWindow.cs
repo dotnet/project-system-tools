@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
@@ -41,6 +42,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.TableControl
 
             _contentWrapper = new ContentWrapper(ContextMenuId);
             Content = _contentWrapper;
+
+            BitmapImageMoniker = KnownMonikers.Log;
         }
 
         private static void OnFiltersChanged(object sender, FiltersChangedEventArgs e)
