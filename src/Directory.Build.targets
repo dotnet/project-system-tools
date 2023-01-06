@@ -4,7 +4,7 @@
 
   <!-- TODO remove this once we update Arcade to a newer version -->
   <ItemGroup>
-    <PackageReference Update="Microsoft.VSSDK.BuildTools" Version="17.0.1056-Dev17PIAs-g9dffd635" />
+    <PackageReference Update="Microsoft.VSSDK.BuildTools" Version="17.4.2119" />
   </ItemGroup>
 
 </Project>
