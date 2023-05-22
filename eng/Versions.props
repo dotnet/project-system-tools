@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- Search for public MS packages at https://dev.azure.com/dnceng/public/_packaging?_a=feed&feed=dotnet-public%40Local -->
+  <!--
+    Search for public MS packages at:
+    https://dev.azure.com/dnceng/public/_artifacts/feed/dotnet-public
+    https://dev.azure.com/azure-public/vside/_artifacts/feed/vs-impl
+    https://dev.azure.com/azure-public/vside/_artifacts/feed/vssdk
+  -->
   <PropertyGroup>
     <VersionPrefix>1.0.2</VersionPrefix>
     <PreReleaseVersionLabel>beta1</PreReleaseVersionLabel>
@@ -10,20 +15,20 @@
     <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
     <!-- MSBuild -->
-    <MicrosoftBuildVersion>16.8.0</MicrosoftBuildVersion>
+    <MicrosoftBuildVersion>16.11.0</MicrosoftBuildVersion>
     <!-- Roslyn -->
     <MicrosoftVisualStudioLanguageServicesVersion>2.0.0</MicrosoftVisualStudioLanguageServicesVersion>
     <!-- VS SDK -->
     <MicrosoftVisualStudioComponentModelHostVersion>17.0.491</MicrosoftVisualStudioComponentModelHostVersion>
     <MicrosoftVisualStudioCoreUtilityVersion>17.0.32112.339</MicrosoftVisualStudioCoreUtilityVersion>
-    <MicrosoftVisualStudioEditorVersion>17.0.30-g62d2639511</MicrosoftVisualStudioEditorVersion>
+    <MicrosoftVisualStudioEditorVersion>17.0.491</MicrosoftVisualStudioEditorVersion>
     <MicrosoftVisualStudioImageCatalogVersion>17.0.32112.339</MicrosoftVisualStudioImageCatalogVersion>
     <MicrosoftVisualStudioInteropVersion>17.0.32112.339</MicrosoftVisualStudioInteropVersion>
-    <MicrosoftVisualStudioProjectSystemSDKVersion>17.0.596-pre</MicrosoftVisualStudioProjectSystemSDKVersion>
+    <MicrosoftVisualStudioProjectSystemSDKVersion>17.0.1313-pre</MicrosoftVisualStudioProjectSystemSDKVersion>
     <MicrosoftVisualStudioShell150Version>17.0.32112.339</MicrosoftVisualStudioShell150Version>
     <MicrosoftVisualStudioShellFrameworkVersion>17.0.32112.339</MicrosoftVisualStudioShellFrameworkVersion>
     <MicrosoftVisualStudioUtilitiesVersion>17.0.32112.339</MicrosoftVisualStudioUtilitiesVersion>
-    <MicrosoftVisualStudioValidationVersion>17.0.11-alpha</MicrosoftVisualStudioValidationVersion>
+    <MicrosoftVisualStudioValidationVersion>17.6.11</MicrosoftVisualStudioValidationVersion>
     <!-- Libs -->
     <SystemCompositionVersion>5.0.1</SystemCompositionVersion>
     <SystemCollectionsImmutableVersion>5.0.0</SystemCollectionsImmutableVersion>
