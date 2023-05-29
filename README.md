@@ -48,11 +48,17 @@ The build events this extension subscribes contain the most useful information f
 In cases where more information is needed in binlogs, you can configure MSBuild to automatically write diagnostic data to disk. To do this for all builds within Visual Studio:
 
 1. Open a Developer Command Prompt for the version of Visual Studio you want to use
-1. Set two environment variables as follows:
-   ```
-   set MSBuildDebugEngine=1
-   set MSBUILDDEBUGPATH=c:\some\path
-   ```
+1. Set two environment variables:
+   - Command
+      ```cmd
+      set MSBuildDebugEngine=1
+      set MSBUILDDEBUGPATH=c:\some\path
+      ```
+   - PowerShell
+      ```powershell
+      $env:MSBuildDebugEngine = "1"
+      $env:MSBUILDDEBUGPATH = "c:\some\path"
+      ```
    You can use whatever path you like for `MSBUILDDEBUGPATH`, but it must be writeable by the current user.
 1. Type `devenv` to start Visual Studio with this configuration
 1. Open the `MSBUILDDEBUGPATH` path in Windows Explorer to see the captured binlog and other diagnostic files
