@@ -66,7 +66,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         private void AnyEvent(object sender, BuildEventArgs args)
         {
-            if (args.BuildEventContext == null || args.BuildEventContext.EvaluationId == BuildEventContext.InvalidEvaluationId)
+            if (args.BuildEventContext is null || args.BuildEventContext.EvaluationId == BuildEventContext.InvalidEvaluationId)
             {
                 return;
             }
@@ -75,7 +75,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             {
                 case ProjectEvaluationStartedEventArgs evaluationStarted:
                 {
-                    if (!DataSource.IsLogging || evaluationStarted.ProjectFile == "(null)")
+                    if (!DataSource.IsLogging || evaluationStarted.ProjectFile is "(null)" or null)
                     {
                         return;
                     }
@@ -87,10 +87,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
                         Verbosity = LoggerVerbosity.Diagnostic,
                         CollectProjectImports = BinaryLogger.ProjectImportsCollectionMode.None
                     };
+
                     var wrapper = new EventWrapper(binaryLogger);
-                    var build = new Build(evaluationStarted.ProjectFile, Array.Empty<string>(), Array.Empty<string>(),
-                        BuildType.Evaluation, args.Timestamp);
-                    _evaluations[evaluationStarted.BuildEventContext.EvaluationId] = new Evaluation(wrapper, build, logPath);
+                    var build = new Build(evaluationStarted.ProjectFile, Array.Empty<string>(), Array.Empty<string>(), BuildType.Evaluation, args.Timestamp);
+                    _evaluations[args.BuildEventContext.EvaluationId] = new Evaluation(wrapper, build, logPath);
                     wrapper.RaiseEvent(sender, args);
                     DataSource.AddEntry(build);
                     break;

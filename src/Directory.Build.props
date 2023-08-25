@@ -15,8 +15,4 @@
     <ImportFrameworkWinFXTargets>true</ImportFrameworkWinFXTargets>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Validation" Version="$(MicrosoftVisualStudioValidationVersion)" />
-  </ItemGroup>
-
 </Project>

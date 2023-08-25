@@ -68,6 +68,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
 
                 foreach (var project in solution.GetProjectDependencyGraph().GetTopologicallySortedProjects(threadedWaitCallback.CancellationToken).Select(solution.GetProject))
                 {
+                    if (project is null)
+                        continue;
+
                     // Dump basic project attributes
                     var projectElement = new XElement("project");
                     workspaceElement.Add(projectElement);
@@ -79,11 +82,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
                     projectElement.SetAttributeValue("path", SanitizePath(project.FilePath ?? "(none)"));
                     projectElement.SetAttributeValue("outputPath", SanitizePath(project.OutputFilePath ?? "(none)"));
 
-                    var hasSuccesfullyLoaded = TryGetHasSuccessfullyLoaded(project, cancellationToken);
+                    var hasSuccessfullyLoaded = TryGetHasSuccessfullyLoaded(project, cancellationToken);
 
-                    if (hasSuccesfullyLoaded.HasValue)
+                    if (hasSuccessfullyLoaded.HasValue)
                     {
-                        projectElement.SetAttributeValue("hasSuccessfullyLoaded", hasSuccesfullyLoaded.Value);
+                        projectElement.SetAttributeValue("hasSuccessfullyLoaded", hasSuccessfullyLoaded.Value);
                     }
 
                     // Dump MSBuild <Reference> nodes
@@ -364,12 +367,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.RoslynLogging
             {
                 return new XElement("peReference",
                     new XAttribute("file", SanitizePath(portableExecutableReference.FilePath ?? "(none)")),
-                    new XAttribute("display", SanitizePath(portableExecutableReference.Display)),
+                    new XAttribute("display", SanitizePath(portableExecutableReference.Display ?? "(none)")),
                     aliasesAttribute);
             }
             else
             {
-                return new XElement("metadataReference", new XAttribute("display", SanitizePath(reference.Display)));
+                return new XElement("metadataReference", new XAttribute("display", SanitizePath(reference.Display ?? "(none)")));
             }
         }
 

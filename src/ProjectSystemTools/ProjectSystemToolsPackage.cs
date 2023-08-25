@@ -121,7 +121,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools
 
             // Force the shell to refresh the QueryStatus for all the command since some of them may have been flagged as
             // not supported (because the host had focus but the view did not) and switching focus from the zoom control
-            // back to the view will not automatically force the shell to requery for the command status.
+            // back to the view will not automatically force the shell to re-query for the command status.
             VsUIShell?.UpdateCommandUI(0);
         }
 

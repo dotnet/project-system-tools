@@ -15,23 +15,22 @@
     <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
     <!-- MSBuild -->
-    <MicrosoftBuildVersion>16.11.0</MicrosoftBuildVersion>
+    <MicrosoftBuildVersion>17.7.2</MicrosoftBuildVersion>
     <!-- Roslyn -->
-    <MicrosoftVisualStudioLanguageServicesVersion>2.0.0</MicrosoftVisualStudioLanguageServicesVersion>
+    <MicrosoftVisualStudioLanguageServicesVersion>4.7.0</MicrosoftVisualStudioLanguageServicesVersion>
     <!-- VS SDK -->
-    <MicrosoftVisualStudioComponentModelHostVersion>17.0.491</MicrosoftVisualStudioComponentModelHostVersion>
-    <MicrosoftVisualStudioCoreUtilityVersion>17.0.32112.339</MicrosoftVisualStudioCoreUtilityVersion>
-    <MicrosoftVisualStudioEditorVersion>17.0.491</MicrosoftVisualStudioEditorVersion>
-    <MicrosoftVisualStudioImageCatalogVersion>17.0.32112.339</MicrosoftVisualStudioImageCatalogVersion>
-    <MicrosoftVisualStudioInteropVersion>17.0.32112.339</MicrosoftVisualStudioInteropVersion>
-    <MicrosoftVisualStudioProjectSystemSDKVersion>17.0.1313-pre</MicrosoftVisualStudioProjectSystemSDKVersion>
-    <MicrosoftVisualStudioShell150Version>17.0.32112.339</MicrosoftVisualStudioShell150Version>
-    <MicrosoftVisualStudioShellFrameworkVersion>17.0.32112.339</MicrosoftVisualStudioShellFrameworkVersion>
-    <MicrosoftVisualStudioUtilitiesVersion>17.0.32112.339</MicrosoftVisualStudioUtilitiesVersion>
+    <MicrosoftVisualStudioComponentModelHostVersion>17.7.188</MicrosoftVisualStudioComponentModelHostVersion>
+    <MicrosoftVisualStudioCoreUtilityVersion>17.7.37355</MicrosoftVisualStudioCoreUtilityVersion>
+    <MicrosoftVisualStudioEditorVersion>17.7.188</MicrosoftVisualStudioEditorVersion>
+    <MicrosoftVisualStudioImageCatalogVersion>17.7.37355</MicrosoftVisualStudioImageCatalogVersion>
+    <MicrosoftVisualStudioInteropVersion>17.7.37355</MicrosoftVisualStudioInteropVersion>
+    <MicrosoftVisualStudioProjectSystemSDKVersion>17.8.53-pre</MicrosoftVisualStudioProjectSystemSDKVersion>
+    <MicrosoftVisualStudioShell150Version>17.7.37355</MicrosoftVisualStudioShell150Version>
+    <MicrosoftVisualStudioShellFrameworkVersion>17.7.37355</MicrosoftVisualStudioShellFrameworkVersion>
+    <MicrosoftVisualStudioUtilitiesVersion>17.7.37355</MicrosoftVisualStudioUtilitiesVersion>
     <MicrosoftVisualStudioValidationVersion>17.6.11</MicrosoftVisualStudioValidationVersion>
     <!-- Libs -->
-    <SystemCompositionVersion>5.0.1</SystemCompositionVersion>
-    <SystemCollectionsImmutableVersion>5.0.0</SystemCollectionsImmutableVersion>
+    <SystemCompositionVersion>7.0.0</SystemCompositionVersion>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreSources>
