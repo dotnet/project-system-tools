@@ -59,7 +59,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
         private void ProjectFinished(object sender, ProjectFinishedEventArgs e)
         {
-            if (e.BuildEventContext.ProjectInstanceId != _projectInstanceId)
+            if (e.BuildEventContext?.ProjectInstanceId != _projectInstanceId)
             {
                 return;
             }
@@ -68,8 +68,11 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
             _build.Finish(e.Succeeded, e.Timestamp);
         }
 
-        private static IEnumerable<string> GatherDimensions(IDictionary<string, string> globalProperties)
+        private static IEnumerable<string> GatherDimensions(IDictionary<string, string>? globalProperties)
         {
+            if (globalProperties is null)
+                yield break;
+
             foreach (var dimension in Dimensions)
             {
                 if (globalProperties.TryGetValue(dimension, out var dimensionValue))
@@ -82,7 +85,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         private void ProjectStarted(object sender, ProjectStartedEventArgs e)
         {
             // We only want to register the outermost project build
-            if (!DataSource.IsLogging || e.ParentProjectBuildEventContext.ProjectInstanceId != -1)
+            if (!DataSource.IsLogging || e.ParentProjectBuildEventContext?.ProjectInstanceId != -1 || e.ProjectFile is null || e.BuildEventContext is null)
             {
                 return;
             }

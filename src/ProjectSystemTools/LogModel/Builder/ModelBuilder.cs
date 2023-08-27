@@ -151,7 +151,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         private ProjectInfo FindProjectContext(BuildEventArgs args)
         {
-            if (!_projectInfos.TryGetValue(args.BuildEventContext.ProjectContextId, out var projectInfo))
+            if (args.BuildEventContext is null || !_projectInfos.TryGetValue(args.BuildEventContext.ProjectContextId, out var projectInfo))
             {
                 throw new LoggerException(Resources.CannotFindProject);
             }
@@ -159,14 +159,14 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
             return projectInfo;
         }
 
-        private TargetInfo FindTargetContext(BuildEventArgs args) => 
-            !_projectInfos.TryGetValue(args.BuildEventContext.ProjectContextId, out var projectInfo)
+        private TargetInfo FindTargetContext(BuildEventArgs args) =>
+            args.BuildEventContext is null || !_projectInfos.TryGetValue(args.BuildEventContext.ProjectContextId, out var projectInfo)
                 ? throw new LoggerException(Resources.CannotFindProject)
                 : projectInfo.GetTarget(args.BuildEventContext.TargetId);
 
         private TaskInfo FindTaskContext(BuildEventArgs args)
         {
-            if (!_projectInfos.TryGetValue(args.BuildEventContext.ProjectContextId, out var projectInfo))
+            if (args.BuildEventContext is null || !_projectInfos.TryGetValue(args.BuildEventContext.ProjectContextId, out var projectInfo))
             {
                 throw new LoggerException(Resources.CannotFindProject);
             }
@@ -182,10 +182,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
             return taskInfo;
         }
 
-        private EvaluationInfo FindEvaluationContext(BuildEventArgs args)
+        private EvaluationInfo FindEvaluationContext(int evaluationId)
         {
             if (_evaluationInfos != null &&
-                _evaluationInfos.TryGetValue(args.BuildEventContext.EvaluationId, out var evaluationInfo))
+                _evaluationInfos.TryGetValue(evaluationId, out var evaluationInfo))
             {
                 return evaluationInfo;
             }
@@ -194,12 +194,12 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
             _evaluationInfos ??= new Dictionary<int, EvaluationInfo>();
 
-            if (_evaluationInfos.ContainsKey(args.BuildEventContext.EvaluationId))
+            if (_evaluationInfos.ContainsKey(evaluationId))
             {
                 throw new LoggerException(Resources.DoubleEvaluation);
             }
 
-            _evaluationInfos[args.BuildEventContext.EvaluationId] = evaluationInfo;
+            _evaluationInfos[evaluationId] = evaluationInfo;
 
             return evaluationInfo;
         }
@@ -211,7 +211,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
                 throw new LoggerException(Resources.BadState);
             }
 
-            _buildInfo.Start(args.Timestamp, args.BuildEnvironment.ToImmutableDictionary());
+            _buildInfo.Start(args.Timestamp, args.BuildEnvironment?.ToImmutableDictionary() ?? ImmutableDictionary<string, string>.Empty);
             AddMessage(_buildInfo, args);
         }
 
@@ -228,7 +228,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         private static void CheckProjectEventContext(BuildEventArgs args)
         {
-            if (args.BuildEventContext.TargetId != -1 ||
+            if (args.BuildEventContext is null ||
+                args.BuildEventContext.TargetId != -1 ||
                 args.BuildEventContext.TaskId != -1)
             {
                 throw new LoggerException(Resources.BadState);
@@ -248,7 +249,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
         {
             CheckProjectEventContext(args);
 
-            if (_projectInfos.ContainsKey(args.BuildEventContext.ProjectContextId))
+            if (_projectInfos.ContainsKey(args.BuildEventContext!.ProjectContextId))
             {
                 throw new LoggerException(Resources.DoubleCreationOfProject);
             }
@@ -256,16 +257,16 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
             var projectInfo = new ProjectInfo(
                 args.BuildEventContext.ProjectContextId,
                 args.BuildEventContext.NodeId,
-                args.ParentProjectBuildEventContext.ProjectContextId,
+                args.ParentProjectBuildEventContext!.ProjectContextId,
                 args.ParentProjectBuildEventContext.TargetId,
                 args.ParentProjectBuildEventContext.TaskId,
                 args.Timestamp,
                 Strings.IsNullOrEmpty(args.TargetNames)
                     ? ImmutableHashSet<string>.Empty
                     : args.TargetNames.Split(';').Select(Intern).ToImmutableHashSet()!,
-                args.ToolsVersion,
+                args.ToolsVersion!,
                 Intern(Path.GetFileName(args.ProjectFile)),
-                Intern(args.ProjectFile),
+                Intern(args.ProjectFile!),
                 EmptyIfNull(args.GlobalProperties?
                     .Select(d => new KeyValuePair<string, string>(Intern(d.Key), Intern(d.Value)))
                     .ToImmutableDictionary()),
@@ -321,7 +322,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         private static void CheckTargetEventContext(BuildEventArgs args)
         {
-            if (args.BuildEventContext.TaskId != -1 ||
+            if (args.BuildEventContext is null ||
+                args.BuildEventContext.TaskId != -1 ||
                 args.BuildEventContext.EvaluationId != -1)
             {
                 throw new LoggerException(Resources.BadState);
@@ -335,7 +337,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
             var projectInfo = FindProjectContext(args);
 
             var targetInfo = new TargetInfo(
-                args.BuildEventContext.TargetId,
+                args.BuildEventContext!.TargetId,
                 args.BuildEventContext.NodeId,
                 Intern(args.TargetName),
                 Intern(args.TargetFile),
@@ -376,7 +378,8 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         private static void CheckTaskEventContext(BuildEventArgs args)
         {
-            if (args.BuildEventContext.EvaluationId != -1)
+            if (args.BuildEventContext is null ||
+                args.BuildEventContext.EvaluationId != -1)
             {
                 throw new LoggerException(Resources.BadState);
             }
@@ -389,7 +392,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
             var targetInfo = FindTargetContext(args);
 
             var taskInfo = new TaskInfo(
-                args.BuildEventContext.TaskId,
+                args.BuildEventContext!.TaskId,
                 args.BuildEventContext.NodeId,
                 Intern(args.TaskName),
                 args.Timestamp,
@@ -583,7 +586,9 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
             var message = args.Message;
             var projectInfo = FindProjectContext(args);
 
-            if (message.StartsWith("Target") && message.Contains("skipped"))
+            if (message is not null &&
+                message.StartsWith("Target") &&
+                message.Contains("skipped"))
             {
                 var targetName = Intern(ParseQuotedSubstring(message));
                 if (targetName == null)
@@ -609,7 +614,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
             var message = args.Message;
             var targetInfo = FindTargetContext(args);
 
-            if (message.StartsWith("Using"))
+            if (message is null)
+            {
+            }
+            else if (message.StartsWith("Using"))
             {
                 // A task from assembly message (parses out the task name and assembly path).
                 var match = UsingTaskRegex.Match(args.Message);
@@ -620,28 +628,25 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
                     _assemblies.GetOrAdd(taskName, t => assembly);
                 }
             }
-
-            if (message.StartsWith(itemGroupIncludeMessagePrefix))
+            else if (message.StartsWith(itemGroupIncludeMessagePrefix))
             {
-                var itemGroupInfo = ParseItemGroupInfo(args.Message, itemGroupIncludeMessagePrefix);
+                var itemGroupInfo = ParseItemGroupInfo(message, itemGroupIncludeMessagePrefix);
                 var itemActionInfo = new ItemActionInfo(true, itemGroupInfo, args.Timestamp);
                 AddMessage(itemActionInfo, args);
                 targetInfo.AddItemAction(itemActionInfo);
                 return;
             }
-
-            if (message.StartsWith(itemGroupRemoveMessagePrefix))
+            else if (message.StartsWith(itemGroupRemoveMessagePrefix))
             {
-                var itemGroupInfo = ParseItemGroupInfo(args.Message, itemGroupRemoveMessagePrefix);
+                var itemGroupInfo = ParseItemGroupInfo(message, itemGroupRemoveMessagePrefix);
                 var itemActionInfo = new ItemActionInfo(false, itemGroupInfo, args.Timestamp);
                 AddMessage(itemActionInfo, args);
                 targetInfo.AddItemAction(itemActionInfo);
                 return;
             }
-
-            if (message.StartsWith(propertyGroupMessagePrefix))
+            else if (message.StartsWith(propertyGroupMessagePrefix))
             {
-                message = args.Message.Substring(propertyGroupMessagePrefix.Length);
+                message = message.Substring(propertyGroupMessagePrefix.Length);
 
                 var kvp = ParseNameValue(message);
                 var propertySetInfo = new PropertySetInfo(kvp.Key, kvp.Value, args.Timestamp);
@@ -649,8 +654,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
                 targetInfo.AddPropertySet(propertySetInfo);
                 return;
             }
-
-            if (message.StartsWith("Task") && message.Contains("skipped"))
+            else if (message.StartsWith("Task") && message.Contains("skipped"))
             {
                 var taskName = Intern(ParseQuotedSubstring(message));
                 if (taskName == null)
@@ -676,22 +680,23 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
             var taskInfo = FindTaskContext(args);
             var message = args.Message;
 
-            if (message.StartsWith(outputItemsMessagePrefix))
+            if (message is null)
+            {
+            }
+            else if (message.StartsWith(outputItemsMessagePrefix))
             {
                 taskInfo.AddOutputItems(ParseItemGroupInfo(message, outputItemsMessagePrefix));
                 AddMessage(taskInfo, args);
                 return;
             }
-
-            if (message.StartsWith(outputPropertyMessagePrefix))
+            else if (message.StartsWith(outputPropertyMessagePrefix))
             {
                 var property = ParseProperty(message, outputPropertyMessagePrefix);
                 taskInfo.AddOutputProperty(property.Key, property.Value);
                 AddMessage(taskInfo, args);
                 return;
             }
-
-            if (message.StartsWith(taskParameterMessagePrefix))
+            else if (message.StartsWith(taskParameterMessagePrefix))
             {
                 if (message.IndexOf('\n') != taskParameterMessagePrefix.Length)
                 {
@@ -712,16 +717,17 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         private void ProcessEvaluationMessage(BuildEventArgs args)
         {
-            if (args.BuildEventContext.ProjectContextId != BuildEventContext.InvalidProjectContextId ||
+            if (args.BuildEventContext is null ||
+                args.BuildEventContext.ProjectContextId != BuildEventContext.InvalidProjectContextId ||
                 args.BuildEventContext.TargetId != BuildEventContext.InvalidTargetId ||
                 args.BuildEventContext.TaskId != BuildEventContext.InvalidTaskId)
             {
                 throw new LoggerException(Resources.UnexpectedMessage);
             }
 
-            var evaluationInfo = FindEvaluationContext(args);
+            var evaluationInfo = FindEvaluationContext(args.BuildEventContext.EvaluationId);
 
-            evaluationInfo.AddMessage(args.Message, args.Timestamp);
+            evaluationInfo.AddMessage(args.Message!, args.Timestamp);
         }
 
         private void ProcessMessage(BuildEventArgs args)
@@ -772,7 +778,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
         }
 
         private void AddMessage(BaseInfo info, BuildEventArgs args) => 
-            info.AddMessage(Intern(args.Message), args.Timestamp);
+            info.AddMessage(Intern(args.Message!), args.Timestamp);
 
         private void OnBuildMessage(object sender, BuildMessageEventArgs args) => 
             ProcessMessage(args);
@@ -786,7 +792,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         private void OnProjectEvaluationStarted(object sender, ProjectEvaluationStartedEventArgs args)
         {
-            var evaluationInfo = FindEvaluationContext(args);
+            if (args.BuildEventContext is null || args.ProjectFile is null)
+                return;
+
+            var evaluationInfo = FindEvaluationContext(args.BuildEventContext.EvaluationId);
             var evaluatedProject = new EvaluatedProjectInfo(args.ProjectFile, args.Timestamp);
             AddMessage(evaluatedProject, args);
             evaluationInfo.StartEvaluatingProject(evaluatedProject);
@@ -849,7 +858,10 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         private void OnProjectEvaluationFinished(object sender, ProjectEvaluationFinishedEventArgs args)
         {
-            var evaluationInfo = FindEvaluationContext(args);
+            if (args.BuildEventContext is null || args.ProjectFile is null)
+                return;
+            
+            var evaluationInfo = FindEvaluationContext(args.BuildEventContext.EvaluationId);
             var evaluatedProjectInfo = evaluationInfo.EndEvaluatingProject(args.ProjectFile);
             EvaluatedProfileInfo? evaluationProfileInfo = null;
             if (args.ProfilerResult != null)
@@ -862,22 +874,13 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
         private BaseInfo FindMessageContext(BuildEventArgs buildEventArgs)
         {
-            if (buildEventArgs.BuildEventContext.TaskId != BuildEventContext.InvalidTaskId)
+            return buildEventArgs.BuildEventContext switch
             {
-                return FindTaskContext(buildEventArgs);
-            }
-
-            if (buildEventArgs.BuildEventContext.TargetId != BuildEventContext.InvalidTargetId)
-            {
-                return FindTargetContext(buildEventArgs);
-            }
-
-            if (buildEventArgs.BuildEventContext.ProjectContextId != BuildEventContext.InvalidProjectContextId)
-            {
-                return FindProjectContext(buildEventArgs);
-            }
-
-            return _buildInfo;
+                { TaskId: BuildEventContext.InvalidTaskId } => FindTaskContext(buildEventArgs),
+                { TargetId: BuildEventContext.InvalidTargetId } => FindTargetContext(buildEventArgs),
+                { ProjectContextId: BuildEventContext.InvalidProjectContextId } => FindProjectContext(buildEventArgs),
+                _ => _buildInfo
+            };
         }
 
         private void OnBuildWarning(object sender, BuildWarningEventArgs args)
@@ -886,7 +889,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
             var warning = new DiagnosticInfo(
                 false, 
-                Intern(args.Message), 
+                Intern(args.Message!), 
                 args.Timestamp, 
                 Intern(args.Code),
                 args.ColumnNumber, 
@@ -906,7 +909,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.LogModel.Builder
 
             var error = new DiagnosticInfo(
                 true, 
-                Intern(args.Message), 
+                Intern(args.Message!), 
                 args.Timestamp, 
                 Intern(args.Code),
                 args.ColumnNumber, 
