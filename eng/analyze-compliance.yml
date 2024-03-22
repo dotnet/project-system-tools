@@ -1,0 +1,45 @@
+parameters:
+  - name: SoftwareVersion
+    type: string
+
+# Overview of tasks offered for security and compliance:
+# - https://dev.azure.com/securitytools/SecurityIntegration/_wiki/wikis/Guardian/1425/Guardian-Tools
+# - https://eng.ms/docs/security-compliance-identity-and-management-scim/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki
+# - https://eng.ms/docs/security-compliance-identity-and-management-scim/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/sdl-azdo-extension/secure-development-tools-extension-for-azure-devops#tools
+# Other tools to consider:
+# - InferSharp: https://dev.azure.com/securitytools/SecurityIntegration/_wiki/wikis/Guardian/1638/InferSharp-Usage
+# - CodeQL: https://eng.ms/docs/security-compliance-identity-and-management-scim/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/sdl-azdo-extension/codeql-build-task
+steps:
+# Verify the loose DLLs are signed appropriately.
+# Note: This task takes ~3 minutes only because it is the first Guardian task in this job. So, it installs the Guardian components so the other tasks don't have to.
+# YAML reference: https://eng.ms/docs/security-compliance-identity-and-management-scim/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/sdl-azdo-extension/code-signing-validation-build-task#v1-preview
+- task: CodeSign@1
+  displayName: Verify Signed DLLs
+  inputs:
+    Path: $(Build.SourcesDirectory)/artifacts/DLLs/
+    # Glob Format: https://dev.azure.com/securitytools/SecurityIntegration/_wiki/wikis/Guardian/1378/Glob-Format
+    Targets: '**.dll'
+  condition: succeededOrFailed()
+
+# Scan for the use of undocumented APIs.
+# YAML reference: https://eng.ms/docs/security-compliance-identity-and-management-scim/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/sdl-azdo-extension/apiscan-build-task#v2
+- task: APIScan@2
+  displayName: Run APIScan
+  inputs:
+    softwareFolder: $(Build.SourcesDirectory)/artifacts/DLLs
+    softwareName: 'Dotnet-Project-System-Tools'
+    softwareVersionNum: ${{ parameters.SoftwareVersion }}
+    softwareBuildNum: $(Build.BuildId)
+    symbolsFolder: SRV*http://symweb
+    noCopySymbols: true
+    noCopyBinaries: true
+    noDecompress: true
+    isLargeApp: true
+    verbosityLevel: minimal
+    preserveTempFiles: true
+  # APIScan requires an Azure Identity to run. That is provided via an Azure service principal.
+  # - https://microsoft.sharepoint.com/teams/apiscan/APIScan%20User%20Wiki/authentication_using_AAD_identities.aspx
+  # - https://microsoft.sharepoint.com/teams/apiscan/Lists/Contacts%20%20System%20Account%20and%20Wrappers/AllItems.aspx?skipSignal=true
+  # This value is provided from the DotNet-Project-System variable group, defined in the stage variables.
+  env:
+    AzureServicesAuthConnectionString:  $(ApiScanConnectionString)

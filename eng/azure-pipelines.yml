@@ -1,3 +1,7 @@
+# Dotnet.project-system-tools
+# PR pipeline
+# URL: https://dev.azure.com/dnceng-public/public/_build?definitionId=185&_a=summary
+
 # Branches that trigger a build on commit
 trigger:
   branches:
