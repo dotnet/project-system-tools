@@ -43,10 +43,7 @@ extends:
     - stage: Build
       displayName: Build
       variables:
-        # https://devdiv.visualstudio.com/DevDiv/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=434&path=DotNet-Project-System
-        # Variables used:
-        # - ApiScanConnectionString
-        - group: DotNet-Project-System
+        - group: VSEng sponsored APIScan # Expected to provide ApiScanClientId
       jobs:
       - job: Build
         templateContext:
