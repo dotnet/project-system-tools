@@ -30,7 +30,9 @@
     <MicrosoftVisualStudioUtilitiesVersion>17.7.37355</MicrosoftVisualStudioUtilitiesVersion>
     <MicrosoftVisualStudioValidationVersion>17.6.11</MicrosoftVisualStudioValidationVersion>
     <!-- Libs -->
+    <MicrosoftIORedistVersion>6.0.1</MicrosoftIORedistVersion>
     <SystemCompositionVersion>7.0.0</SystemCompositionVersion>
+    <SystemTextJsonVersion>8.0.4</SystemTextJsonVersion>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreSources>
