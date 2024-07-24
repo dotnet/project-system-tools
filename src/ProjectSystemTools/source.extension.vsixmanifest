@@ -6,7 +6,7 @@
     <Description>Tools for working with the C#, Visual Basic, and F# project systems.</Description>
     <Icon>Icon.png</Icon>
     <PreviewImage>Icon.png</PreviewImage>
-    <Tags>project, csproj, vbproj</Tags>
+    <Tags>project, csproj, vbproj, binlog</Tags>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
