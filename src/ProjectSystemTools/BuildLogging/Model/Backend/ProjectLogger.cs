@@ -23,7 +23,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
         public ProjectLogger(BackEndBuildTableDataSource dataSource, bool isDesignTime) :
             base(dataSource)
         {
-            _logPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.binlog");
+            _logPath = PathUtil.GetTempFileName($"{Guid.NewGuid()}.binlog");
             _binaryLogger = new BinaryLogger
             {
                 Parameters = _logPath,
