@@ -80,7 +80,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
                         return;
                     }
 
-                    var logPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.binlog");
+                    var logPath = PathUtil.GetTempFileName($"{Guid.NewGuid()}.binlog");
                     var binaryLogger = new BinaryLogger
                     {
                         Parameters = logPath,
