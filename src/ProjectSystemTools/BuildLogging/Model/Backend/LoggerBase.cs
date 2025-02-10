@@ -26,7 +26,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
             var filename = $"{Path.GetFileNameWithoutExtension(build.ProjectPath)}_{dimensionsString}{build.BuildType}_{build.StartTime:o}.binlog".Replace(':', '_');
 
-            return Path.Combine(Path.GetTempPath(), filename);
+            return PathUtil.GetTempFileName(filename);
         }
 
         protected void Copy(string from, string to)

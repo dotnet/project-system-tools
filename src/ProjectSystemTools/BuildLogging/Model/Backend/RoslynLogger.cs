@@ -171,7 +171,7 @@ namespace Microsoft.VisualStudio.ProjectSystem.Tools.BuildLogging.Model.BackEnd
 
             public RoslynTraceListener(IImmutableSet<string> roslynEvents)
             {
-                LogPath = Path.Combine(Path.GetTempPath(), $"RoslynLog-{Guid.NewGuid()}.txt");
+                LogPath = PathUtil.GetTempFileName($"RoslynLog-{Guid.NewGuid()}.txt");
 
                 _set = roslynEvents;
 
