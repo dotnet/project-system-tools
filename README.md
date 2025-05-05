@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **This extension has been discontinued.** For various reasons, the build logs it captures cannot contain as much detail as you generally need. To capture high quality build logs, follow [these instructions](#getting-higher-fidelity-logs-from-vs-vs2022-onwards) instead.
+
+---
+
 # Project System Tools
 
 _Project System Tools_ is a diagnostic extension for the C#, Visual Basic, and F# Project Systems in Visual Studio.
@@ -51,12 +56,12 @@ In cases where more information is needed in binlogs, you can configure MSBuild 
 1. Set two environment variables:
    - Command
       ```cmd
-      set MSBuildDebugEngine=1
+      set MSBUILDDEBUGENGINE=1
       set MSBUILDDEBUGPATH=c:\some\path
       ```
    - PowerShell
       ```powershell
-      $env:MSBuildDebugEngine = "1"
+      $env:MSBUILDDEBUGENGINE = "1"
       $env:MSBUILDDEBUGPATH = "c:\some\path"
       ```
    You can use whatever path you like for `MSBUILDDEBUGPATH`, but it must be writeable by the current user.
